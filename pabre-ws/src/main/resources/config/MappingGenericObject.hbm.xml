@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<!-- Legacy object pending to be reviewed -->
+	<class
+		name="edu.upc.gessi.rptool.domain.statistics.RequirementData"
+		lazy="false" table="REQUIREMENT_DATA">
+
+		<id name="id" column="ID" type="long">
+			<generator class="hilo" />
+		</id>
+		<property name="projectName" column="PROJECT_NAME"
+			not-null="true" />
+		<many-to-one name="classificationSchema"
+			column="CLASSIFICATION_SCHEMA" not-null="true" lazy="false" />
+		<many-to-one name="generalClassifier"
+			column="GENERAL_CLASSIFIER" not-null="true" lazy="false" />
+
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.statistics.InstancedRequirementData"
+			lazy="false" table="INSTANCED_REQUIREMENT_DATA">
+			<key column="ID" />
+			<property name="numInstancesInProject"
+				column="NUM_INSTANCES_IN_PROJECT" type="integer" not-null="true" />
+			<many-to-one name="isInstanceOf" column="IS_INSTANCE_OF"
+				not-null="true" lazy="false" />
+		</joined-subclass>
+
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.statistics.NoInstancedRequirementData"
+			lazy="false" table="NO_INSTANCED_REQUIREMENT_DATA">
+			<key column="ID" />
+			<property name="name" column="NAME" not-null="true" />
+			<property name="formText" type="text" length="2000"
+				column="FORM_TEXT" not-null="true" />
+			<property name="questionText" type="text" length="2000"
+				column="QUESTION_TEXT" not-null="true" />
+			<property name="state" column="STATE" not-null="true" />
+
+			<joined-subclass
+				name="edu.upc.gessi.rptool.domain.statistics.PatternAssociatedRequirementData"
+				lazy="false" table="PATTERN_ASSOCIATED_REQUIREMENT_DATA">
+				<key column="ID" />
+				<many-to-one name="requirementPattern"
+					column="REQUIREMENT_PATTERN" not-null="true" lazy="false" />
+				<property name="formName" column="FORM_NAME"
+					not-null="false" />
+			</joined-subclass>
+
+			<joined-subclass
+				name="edu.upc.gessi.rptool.domain.statistics.FormAssociatedRequirementData"
+				lazy="false" table="FORM_ASSOCIATED_REQUIREMENT_DATA">
+				<key column="ID" />
+				<many-to-one name="requirementPattern"
+					column="REQUIREMENT_PATTERN" not-null="true" lazy="false" />
+				<many-to-one name="requirementForm"
+					column="REQUIREMENT_FORM" not-null="true" />
+				<property name="partName" column="PART_NAME"
+					not-null="false" />
+			</joined-subclass>
+
+			<joined-subclass
+				name="edu.upc.gessi.rptool.domain.statistics.NewRequirementData"
+				lazy="false" table="NEW_REQUIREMENT_DATA">
+				<key column="ID" />
+				<property name="patternName" column="PATTERN_NAME"
+					not-null="false" />
+			</joined-subclass>
+
+		</joined-subclass>
+	</class>
+
+	<class
+		name="edu.upc.gessi.rptool.domain.statistics.GenericObject"
+		table="GENERIC_OBJECT">
+
+		<id name="id" column="ID" type="long">
+			<generator class="hilo" />
+		</id>
+		<property name="name" column="NAME" not-null="true" />
+		<property name="description" type="text" length="2000"
+			column="DESCRIPTION" not-null="true" />
+		<property name="comments" type="text" length="2000"
+			column="COMMENTS" not-null="true" />
+
+		<set name="sources" table="OBJECT_SOURCE" lazy="false">
+			<key column="OBJECT_ID" />
+			<many-to-many column="SOURCE_ID"
+				class="edu.upc.gessi.rptool.domain.Source" />
+		</set>
+	</class>
+
+</hibernate-mapping>

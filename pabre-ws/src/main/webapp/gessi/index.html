@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+
+<meta name="description" content="GESSI Research Group website" />
+
+
+<meta name="keywords"
+	content="software engineering,requirements engineering,agent-oriented modeling,software architecture,model-driven engineering,service-oriented architectures,service monitoring,metamodeling,software quality,requirement patterns" />
+
+
+<meta name="author" content="The GESSI group" />
+
+
+<link rel="stylesheet" type="text/css" href="Patterns_files/gessiStyle.css"
+	title="gessiStyle" media="screen,projection" />
+<link href="Patterns_files/patternsStyle.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="Patterns_files/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript"
+	src="Patterns_files/js/jstree-v.pre1.0/jquery.jstree.js"></script>
+<script type="text/javascript">
+	var apiURI = "http://localhost:8080/pabre-ws/api";
+</script>
+<script type="text/javascript" src="Patterns_files/js/pabre.js"></script>
+<title>PABRE</title>
+
+
+
+<link rel="shortcut icon" href="http://www.upc.edu/gessi/PABRE/favicon.ico" />
+
+
+<style type="text/css">
+
+/*Credits: Dynamic Drive CSS Library */
+/*URL: http://www.dynamicdrive.com/style/ */
+.sidebarmenu ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	font: 12px Verdana, Tahoma, Arial, sans-serif;
+	width: 190px; /* Main Menu Item widths */
+}
+
+.sidebarmenu ul li {
+	position: relative;
+}
+
+/* Top level menu links style */
+.sidebarmenu ul li a {
+	display: block;
+	overflow: auto; /*force hasLayout in IE7 */
+	color: white;
+	text-decoration: none;
+	padding: 6px;
+	border-bottom: 1px solid #ffffff;
+	border-right: 1px solid #ffffff;
+}
+
+.sidebarmenu ul li a:link, .sidebarmenu ul li a:visited, .sidebarmenu ul li a:active
+	{
+	background-color: #80B0DA; /*background of tabs (default state)*/
+}
+
+.sidebarmenu ul li a:visited {
+	color: white;
+}
+
+.sidebarmenu ul li a:hover {
+	background-color: black;
+}
+
+/*Sub level menu items */
+.sidebarmenu ul li ul {
+	position: absolute;
+	width: 190px; /*Sub Menu Items width */
+	top: 0;
+	visibility: hidden;
+}
+
+.sidebarmenu a.subfolderstyle {
+	background: url(Patterns_files/images/right.gif) no-repeat 97% 50%;
+}
+
+/* Holly Hack for IE \*/
+* html .sidebarmenu ul li {
+	float: left;
+	height: 1%;
+}
+
+* html .sidebarmenu ul li a {
+	height: 1%;
+}
+/* End */
+</style>
+</head>
+<body>
+	<div id="container">
+		<div id="header">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<h1>Catalogue</h1>
+						</td>
+						<td style="width: 540px;"><br /></td>
+						<td><img src="Patterns_files/images/logosGESSIandHT.png"
+							align="right" height="90" width="246" /></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="navigation">
+			<ul>
+				<li><a href="http://www.upc.edu/gessi/PABRE/index.html">Presentation</a></li>
+				<li class="selected"><a
+					href="http://www.upc.edu/gessi/PABRE/Patterns.html">Catalogue</a></li>
+				<li><a href="http://www.upc.edu/gessi/PABRE/WhoWeAre.html">Who we
+						are?</a></li>
+				<li><a href="http://www.upc.edu/gessi/PABRE/Publications.html">Publications</a></li>
+				<li><a href="http://www.upc.edu/gessi/PABRE/Tools.html">Tools</a></li>
+				<li><a href="http://www.upc.edu/gessi/PABRE/Use.html">PABRE Use</a></li>
+				<li><a href="http://www.upc.edu/gessi/PABRE/REFSQ2013-Survey.html">Survey</a></li>
+			</ul>
+		</div>
+		<div id="content">
+			<div id="selectedPatternInfo">
+				<iframe name="patternShower" src="Patterns_files/PatternsPresentation.htm"
+					target="_self" frameborder="1" height="505" scrolling="auto" width="660">Your
+				web broser do not support this kind of frames</iframe>
+				<table id="patternInfoTemplate" class="template" width="660" border="1">
+					<tbody>
+						<tr>
+							<td rowspan="7"><b>Requirement <br /> Pattern <br />
+							</b><i id="pt_name">####</i></td>
+							<td><b>Description</b></td>
+							<td colspan="2" id="pt_description">####</td>
+						</tr>
+						<tr>
+							<td><b>Comments</b></td>
+							<td colspan="2" id="pt_comments">####</td>
+						</tr>
+						<tr>
+							<td><b>Pattern goal</b></td>
+							<td colspan="2" id="pt_goal">####</td>
+						</tr>
+						<tr>
+							<td><b>Author</b></td>
+							<td colspan="2" id="pt_author">####</td>
+						</tr>
+						<tr>
+							<td><b>Sources (0..*)</b></td>
+							<td colspan="2">
+								<ul id="pt_sources">
+									<li>####</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td><b>Keywords (0..*)</b></td>
+							<td colspan="2" id="pt_keywords">####</td>
+						</tr>
+						<tr>
+							<td><b>Dependencies (0..*)</b></td>
+							<td colspan="2" id="pt_dependencies">####</td>
+						</tr>
+					</tbody>
+				</table>
+				<table id="patternFormTemplate" class="template">
+					<tr class="pt_form">
+						<td class="pt_requirementForm" rowspan="6"><b>Requirement <br />
+								Form <br />
+						</b><i class="pt_formName">####</i></td>
+						<td><b>Description</b></td>
+						<td colspan="2" class="pt_formDescription">####</td>
+					</tr>
+					<tr>
+						<td><b>Comments</b></td>
+						<td colspan="2" class="pt_formComments">####</td>
+					</tr>
+					<!--
+					<tr>
+						<td><b>Modification date</b></td><td colspan="2" class="pt_formModificationDate">####</td>
+					</tr>
+					 -->
+					<tr>
+						<td><b>Author</b></td>
+						<td colspan="2" class="pt_formAuthor">####</td>
+					</tr>
+					<tr>
+						<td><b>Sources (0..*)</b></td>
+						<td colspan="2"><ul class="pt_formSources">
+								<li>####</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<td class="pt_fixedPart" rowspan="2"><b>Fixed Part</b></td>
+						<td><b>Question text</b></td>
+						<td class="pt_formQuestionText">####</td>
+					</tr>
+					<tr>
+						<td><b>Form text</b></td>
+						<td class="pt_formFormText">####</td>
+					</tr>
+				</table>
+				<table id="parameterTemplate" class="template">
+					<tr class="pt_formParameterHeaders">
+						<td align="center"><b>Parameter</b></td>
+						<td align="center"><b>Metric</b></td>
+					</tr>
+					<tr class="pt_formParameter">
+						<td class="pt_formParameterName">data: is a non-empty set of data
+							items to be filed</td>
+						<td class="pt_formParameterMetric">DataFiledTypes: DataFiledTypes =
+							Set(DataFiledType)<br />DataFiledType = String
+						</td>
+					</tr>
+				</table>
+				<table class="pt_extendedPartTemplate template">
+					<tr>
+						<td class="pt_extendedPart" rowspan="2"><b>Extended Part</b></td>
+						<td><b>Question text</b></td>
+						<td class="pt_formQuestionText">####</td>
+					</tr>
+					<tr>
+						<td><b>Form text</b></td>
+						<td class="pt_formFormText">####</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div id="subcontent">
+			<select id="schemaSelector" name="schemaSelector">
+			</select>
+			<div id="schemaNavigationBar">
+				<div id="schemaNavigationTree"></div>
+			</div>
+			<p align="center">
+				<img src="Patterns_files/images/copyright.gif" alt="Copyright" />
+			</p>
+		</div>
+
+		<div id="footer">
+			<p>
+				© 2009 The GESSI group | Original design by <a
+					href="http://andreasviklund.com/">Andreas Viklund</a>
+			</p>
+		</div>
+	</div>
+
+</body>
+</html>

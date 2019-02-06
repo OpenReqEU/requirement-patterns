@@ -1,0 +1,254 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>pabre-ws</groupId>
+	<artifactId>pabre-ws</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.7</version>
+	<name>PABRE-WS</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
+		<project.basedir>${project.basedir}</project.basedir>
+
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<db.auto>update</db.auto>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>pro</id>
+			<properties>
+				<db.auto>update</db.auto><!-- TODO pending to review which want to use -->
+			</properties>
+		</profile>
+		<profile>
+			<id>postgres</id>
+			<properties>
+				<db.name>Postgresql Local</db.name>
+				<db.driver_class>org.postgresql.Driver</db.driver_class>
+				<db.connectionURL>jdbc:postgresql://localhost:5433/Testing</db.connectionURL>
+				<db.username>postgres</db.username>
+				<db.password>jupiter</db.password>
+				<db.dialect>org.hibernate.dialect.PostgreSQLDialect</db.dialect>
+				<db.show_sql>false</db.show_sql>
+			</properties>
+		</profile>
+		<profile>
+			<id>derby</id>
+			<properties>
+				<db.name>Derby Local</db.name>
+				<db.driver_class>org.apache.derby.jdbc.ClientDriver</db.driver_class>
+				<db.connectionURL>jdbc:derby://localhost:1527/database;create=true</db.connectionURL>
+				<db.username>Patterns</db.username>
+				<db.password>ReqPatterns2012</db.password>
+				<db.dialect>org.hibernate.dialect.DerbyDialect</db.dialect>
+				<db.show_sql>false</db.show_sql>
+			</properties>
+		</profile>
+		<profile>
+			<id>derbyEm</id>
+			<properties>
+				<db.name>Derby Embedded</db.name>
+				<db.driver_class>org.apache.derby.jdbc.EmbeddedDriver</db.driver_class>
+				<db.connectionURL></db.connectionURL>
+				<db.username></db.username>
+				<db.password></db.password>
+				<db.dialect>org.hibernate.dialect.DerbyDialect</db.dialect>
+				<db.show_sql>false</db.show_sql>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault><!-- DEFAULT DATABASE -->
+			</activation>
+		</profile>
+
+	</profiles>
+
+	<!-- Add repository to get the DKPro models -->
+	<repositories>
+		<repository>
+			<id>ukp-oss-model-releases</id>
+			<url>http://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-model-releases-local</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.5</version>
+		</dependency>
+		<!-- JAVA RX -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<!-- JERSEY -->
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>2.27</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>2.27</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.ext</groupId>
+			<artifactId>jersey-declarative-linking</artifactId>
+			<version>2.27</version>
+		</dependency>
+		<!-- JACKSON -->
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>2.27</version>
+		</dependency>
+		<!-- LOG4J -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<!-- SWAGGER -->
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-jersey2-jaxrs</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+		<!-- HIBERNATE -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>3.6.10.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>3.6.10.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.2.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.16.1-GA</version>
+		</dependency>
+		<!-- C3P0 -->
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.2.1</version>
+		</dependency>
+		<!-- DERBY -->
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.13.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derbyclient</artifactId>
+			<version>10.13.1.1</version>
+		</dependency>
+		<!-- MYSQL -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.14</version>
+		</dependency>
+		<!-- POSTGRES -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.1.4</version>
+		</dependency>
+		<!-- UIMA -->
+		<dependency>
+			<groupId>org.apache.uima</groupId>
+			<artifactId>uimafit-core</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		<!-- DKPRO -->
+		<dependency>
+			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
+			<artifactId>de.tudarmstadt.ukp.dkpro.core.clearnlp-asl</artifactId>
+			<version>1.8.0</version>
+		</dependency>
+		<!-- DKPRO Models -->
+		<dependency>
+			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
+			<artifactId>de.tudarmstadt.ukp.dkpro.core.clearnlp-model-dictionary-en-default</artifactId>
+			<version>20130715.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
+			<artifactId>de.tudarmstadt.ukp.dkpro.core.clearnlp-model-tagger-en-ontonotes</artifactId>
+			<version>20131128.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>pabre-ws</finalName>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<!-- context root for Java web apps -->
+					<path>/pabre-ws</path>
+					<serverXml>src/main/resources/server.xml</serverXml>
+					<!-- name of executable jar file -->
+					<finalName>pabre-ws.jar</finalName>
+				</configuration>
+
+			</plugin>
+		</plugins>
+
+	</build>
+	<url>http://www.upc.edu/gessi/PABRE/</url>
+	<description>Pabre is a project from GESSI research group of Universitat Politècnica de Catalunya (UPC). This project is located at: http://www.upc.edu/gessi/PABRE/index.html</description>
+</project>

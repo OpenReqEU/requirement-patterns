@@ -1,0 +1,84 @@
+@CHARSET "ISO-8859-1";
+
+.template {
+	display:none;
+}
+
+#content {
+	padding: 20px 4px 20px 4px;
+}
+
+#subcontent {
+	padding-right: 0px;
+	padding-left: 1px;
+	width: 211px;
+}
+
+#subcontent p{
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+
+#schemaNavigationBar {
+/*	float: left; */
+	width: 210px;
+}
+
+#schemaSelector {
+	display: block;
+	margin-bottom: 0px;
+	width: 210px;
+}
+
+#selectedPatternInfo {
+	float: right;
+	min-width: 495px;
+}
+
+#schemaNavigationTree {
+	background: #80B0DA;
+	border: 1px solid #000000;
+	padding: 0px 20px 0px 0px;
+	min-height: 474px;
+	margin-bottom: 10px;
+	font
+}
+
+#schemaNavigationTree a {
+	white-space: normal !important;
+	padding:1px 2px; 
+	height: auto;
+	color: #202020;
+}
+
+#schemaNavigationTree li > ins {
+	vertical-align:top;
+}
+
+#schemaNavigationTree .jstree-hovered, #schemaNavigationTree .jstree-clicked {
+	border:0;
+}
+
+#patternInfo {
+	background-color: rgb(232, 234, 236);
+	border-style: inset;
+	border-width: 2px;
+	border-color: #EEE;
+	border-image-source: initial;
+	border-image-slice: initial;
+	border-image-width: initial;
+	border-image-outset: initial;
+	border-image-repeat: initial;
+}
+
+#patternInfo td {
+	border-style: inset;
+	border-width: 1px;
+	border-color: #EEE;
+	border-image-source: initial;
+	border-image-slice: initial;
+	border-image-width: initial;
+	border-image-outset: initial;
+	border-image-repeat: initial;
+	padding: 2px;
+}

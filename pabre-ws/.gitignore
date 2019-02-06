@@ -1,0 +1,8 @@
+.classpath
+.project
+bin/
+target/
+release.properties
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar

@@ -1,0 +1,489 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+
+	<!-- OLD Legacy file saved as copy, just in case -->
+
+
+	<class name="edu.upc.gessi.rptool.domain.metrics.MetricObject"
+		table="METRIC_OBJECT">
+
+		<id name="id" column="ID" type="long">
+			<generator
+				class="edu.upc.gessi.rptool.data.mediators.IdGenerator" />
+		</id>
+		<property name="name" column="NAME" not-null="true" />
+		<property name="description" type="text" length="2000"
+			column="DESCRIPTION" not-null="true" />
+		<property name="comments" type="text" length="2000"
+			column="COMMENTS" not-null="true" />
+
+		<set name="sources" table="OBJECT_SOURCE_METRIC_OBJECT"
+			lazy="false">
+			<key column="OBJECT_ID" />
+			<many-to-many column="SOURCE_ID"
+				class="edu.upc.gessi.rptool.domain.Source" />
+		</set>
+
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.metrics.Metric" table="METRIC"
+			lazy="false">
+			<key column="ID" />
+			<property name="name" column="NAME" not-null="true"
+				unique="true" />
+
+			<joined-subclass
+				name="edu.upc.gessi.rptool.domain.metrics.SimpleMetric"
+				table="SIMPLE_METRIC">
+				<key column="ID" />
+
+				<joined-subclass
+					name="edu.upc.gessi.rptool.domain.metrics.FloatMetric"
+					table="FLOAT_METRIC">
+					<key column="ID" />
+					<property name="minValue" type="float" column="MIN_VALUE"
+						not-null="true" />
+					<property name="defaultValue" type="float"
+						column="DEFAULT_VALUE" not-null="false" />
+					<property name="hasDefault" type="boolean"
+						column="HAS_DEFAULT" not-null="false" />
+					<property name="maxValue" type="float" column="MAX_VALUE"
+						not-null="true" />
+				</joined-subclass>
+
+				<joined-subclass
+					name="edu.upc.gessi.rptool.domain.metrics.IntegerMetric"
+					table="INTEGER_METRIC">
+					<key column="ID" />
+					<property name="minValue" type="integer"
+						column="MIN_VALUE" not-null="true" />
+					<property name="defaultValue" type="integer"
+						column="DEFAULT_VALUE" not-null="false" />
+					<property name="hasDefault" type="boolean"
+						column="HAS_DEFAULT" not-null="false" />
+					<property name="maxValue" type="integer"
+						column="MAX_VALUE" not-null="true" />
+				</joined-subclass>
+
+				<joined-subclass
+					name="edu.upc.gessi.rptool.domain.metrics.StringMetric"
+					table="STRING_METRIC">
+					<key column="ID" />
+					<property name="defaultValue" type="text" length="2000"
+						column="DEFAULT_VALUE" not-null="false" />
+				</joined-subclass>
+
+				<joined-subclass
+					name="edu.upc.gessi.rptool.domain.metrics.TimePointMetric"
+					table="TIME_POINT_METRIC">
+					<key column="ID" />
+					<property name="month" type="integer" column="MONTH"
+						not-null="false" />
+					<property name="day" type="integer" column="DAY"
+						not-null="false" />
+					<property name="hour" type="integer" column="HOUR_1"
+						not-null="false" />
+					<property name="minute" type="integer" column="MINUTE_1"
+						not-null="false" />
+					<property name="second" type="integer" column="SECOND_1"
+						not-null="false" />
+					<property name="year" type="integer" column="YEAR_1"
+						not-null="false" />
+				</joined-subclass>
+
+				<joined-subclass
+					name="edu.upc.gessi.rptool.domain.metrics.DomainMetric"
+					lazy="false" table="METRIC_DOMAIN">
+					<key column="ID" />
+					<set name="possibleValues" lazy="false">
+						<key column="POSSIBLE_VALUE" />
+						<one-to-many
+							class="edu.upc.gessi.rptool.domain.metrics.DomainMetricValue" />
+					</set>
+					<many-to-one name="defaultValue" column="DEFAULT_VALUE"
+						unique="true" not-null="false" />
+				</joined-subclass>
+
+			</joined-subclass>
+
+			<joined-subclass
+				name="edu.upc.gessi.rptool.domain.metrics.SetMetric" lazy="false"
+				table="METRIC_SET">
+				<key column="ID" />
+				<many-to-one name="simple" lazy="false"
+					column="NAME_SIMPLE" not-null="true" />
+			</joined-subclass>
+
+		</joined-subclass>
+	</class>
+
+
+	<class name="edu.upc.gessi.rptool.domain.PatternObject"
+		table="PATTERN_OBJECT">
+
+		<id name="id" column="ID" type="long">
+			<generator
+				class="edu.upc.gessi.rptool.data.mediators.IdGenerator" />
+		</id>
+		<set name="dependencies" table="PATTERN_OBJECT_TO_DEPENDENCY"
+			lazy="false" cascade="delete-orphan">
+			<key column="PATTERN_OBJECT_ID" />
+			<many-to-many column="DEPENDENCY_ID"
+				class="edu.upc.gessi.rptool.domain.PatternObjectDependency" />
+		</set>
+
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.patternelements.PatternItem"
+			lazy="false" table="PATTERN_ITEM">
+
+
+			<key column="ID" />
+			<property name="patternText" type="text" length="2000"
+				column="PATTERN_TEXT" not-null="true" />
+			<property name="questionText" type="text" length="2000"
+				column="QUESTION_TEXT" not-null="false" />
+			<property name="numInstances" column="NUMINSTANCES"
+				type="integer" not-null="true" />
+			<property name="available" column="AVAILABLE" type="boolean"
+				not-null="true" />
+			<property name="statsNumInstances"
+				column="STATS_NUM_INSTANCES" type="integer" not-null="true" />
+			<property name="artifactRelation" type="text" length="2000"
+				column="ARTIFACTS_RELATION" not-null="false" />
+
+			<set name="parameters" lazy="false" cascade="all-delete-orphan">
+				<key column="PATTERN_ITEM" />
+				<one-to-many
+					class="edu.upc.gessi.rptool.domain.patternelements.Parameter" />
+			</set>
+
+			<joined-subclass
+				name="edu.upc.gessi.rptool.domain.patternelements.ExtendedPart"
+				lazy="false" table="EXTENDED_PATTERN">
+				<key column="ID" />
+				<property name="name" column="NAME" not-null="true" />
+				<property name="rank" column="RANK" />
+			</joined-subclass>
+
+			<joined-subclass
+				name="edu.upc.gessi.rptool.domain.patternelements.FixedPart"
+				lazy="false" table="FIXED_PATTERN">
+				<key column="ID" />
+			</joined-subclass>
+
+		</joined-subclass>
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.patternelements.Parameter"
+			lazy="false" table="PARAMETER">
+			<key column="ID" />
+			<property name="name" column="NAME" unique="false"
+				not-null="true" />
+			<property name="correctnessCondition" type="text"
+				length="2000" column="CORRECTNESS_CONDITION" not-null="false" />
+			<property name="description" type="text" length="2000"
+				column="DESCRIPTION" not-null="true" />
+			<many-to-one name="metric" column="METRIC"
+				not-null="true" cascade="save-update" />
+		</joined-subclass>
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.PatternElement"
+			table="PATTERN_ELEMENT">
+			<key column="ID" />
+			<property name="name" column="NAME" not-null="true" />
+			<property name="description" type="text" length="2000"
+				column="DESCRIPTION" not-null="true" />
+			<property name="comments" type="text" length="2000"
+				column="COMMENTS" not-null="true" />
+
+			<set name="sources" table="OBJECT_SOURCE_PATTERN_ELEMENT"
+				lazy="false">
+				<key column="OBJECT_ID" />
+				<many-to-many column="SOURCE_ID"
+					class="edu.upc.gessi.rptool.domain.Source" />
+			</set>
+			<joined-subclass
+				name="edu.upc.gessi.rptool.domain.patternelements.RequirementPattern"
+				table="REQUIREMENT_PATTERN">
+				<key column="ID" />
+				<property name="name" column="NAME" not-null="true"
+					unique="true" />
+				<property name="editable" column="EDITABLE" type="integer"
+					not-null="true" />
+				<set name="classifiers" table="CLASSIFIER_PATTERN" lazy="false">
+					<key column="PATTERN_ID" />
+					<many-to-many column="CLASSIFIER_ID"
+						class="edu.upc.gessi.rptool.domain.schema.Classifier" />
+				</set>
+				<set name="versions" lazy="false" inverse="true">
+					<key column="REQ_PATTERN" />
+					<one-to-many
+						class="edu.upc.gessi.rptool.domain.patternelements.RequirementPatternVersion" />
+				</set>
+			</joined-subclass>
+
+			<joined-subclass
+				name="edu.upc.gessi.rptool.domain.patternelements.RequirementForm"
+				table="REQUIREMENT_FORM">
+				<key column="ID" />
+				<property name="author" column="AUTHOR" not-null="true" />
+				<property name="version" type="timestamp" column="VERSION"
+					not-null="true" />
+				<property name="numInstances" column="NUMINSTANCES"
+					type="integer" not-null="true" />
+				<property name="available" column="AVAILABLE"
+					type="boolean" not-null="true" />
+				<property name="statsNumInstances"
+					column="STATS_NUM_INSTANCES" type="integer" not-null="true" />
+				<property name="statsNumAssociates"
+					column="STATS_NUM_ASSOCIATES" type="integer" not-null="true" />
+				<property name="rank" type="short" column="RANK" />
+
+				<many-to-one name="fixedPart" column="FIXED_PATTERN"
+					unique="true" not-null="true" cascade="delete-orphan" />
+				<set name="extendedParts" lazy="false" cascade="delete-orphan">
+					<key column="EXTENDED_PATTERN" />
+					<one-to-many
+						class="edu.upc.gessi.rptool.domain.patternelements.ExtendedPart" />
+				</set>
+			</joined-subclass>
+
+		</joined-subclass>
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.patternelements.RequirementPatternVersion"
+			table="REQUIREMENT_VERSION">
+			<key column="ID" />
+			<property name="author" column="AUTHOR" not-null="true" />
+			<property name="reason" type="text" length="2000"
+				column="REASON" not-null="false" />
+			<property name="goal" type="text" length="2000"
+				column="GOAL" not-null="true" />
+			<property name="numInstances" column="NUMINSTANCES"
+				type="integer" not-null="true" />
+			<property name="available" column="AVAILABLE" type="boolean"
+				not-null="true" />
+			<property name="statsNumInstances"
+				column="STATS_NUM_INSTANCES" type="integer" not-null="true" />
+			<property name="statsNumAssociates"
+				column="STATS_NUM_ASSOCIATES" type="integer" not-null="true" />
+			<property name="versionDate" type="timestamp"
+				column="VERSION_DATE" not-null="true" />
+			<property name="artifactRelation" type="text" length="2000"
+				column="ARTIFACTS_RELATION" not-null="false" />
+			<property name="lemmatizedVersion" type="text" length="2000"
+				column="LEMMATIZED_VERSION" not-null="true" />
+
+
+			<set name="keywords" table="REQ_PATTERN_KEYWORD" lazy="false">
+				<key column="VERSION_ID" />
+				<many-to-many column="KEYWORD_ID"
+					class="edu.upc.gessi.rptool.domain.patternelements.Keyword" />
+			</set>
+
+			<set name="forms" lazy="false" cascade="delete-orphan">
+				<key column="VERSION_ID" />
+				<one-to-many
+					class="edu.upc.gessi.rptool.domain.patternelements.RequirementForm" />
+			</set>
+			<set name="versionDependencies" lazy="false"
+				cascade="all-delete-orphan">
+				<key column="DEPENDENCIES" />
+				<one-to-many
+					class="edu.upc.gessi.rptool.domain.patternelements.Dependency" />
+			</set>
+			<set name="externalObjects" lazy="false"
+				cascade="all-delete-orphan">
+				<key column="VERSION_ID" />
+				<one-to-many
+					class="edu.upc.gessi.rptool.domain.ExternalObject" />
+			</set>
+			<many-to-one name="requirementPattern"
+				column="REQ_PATTERN" not-null="false" lazy="false" />
+		</joined-subclass>
+
+
+	</class>
+
+
+
+
+	<class name="edu.upc.gessi.rptool.domain.CustomId"
+		table="CUSTOM_ID_HOLDER">
+		<id name="id" column="ID" type="long" unsaved-value="1">
+			<generator class="assigned" />
+		</id>
+		<property name="nextIDToUse" type="long" not-null="true"
+			column="NEXT_ID_TO_USE" />
+	</class>
+
+	<class name="edu.upc.gessi.rptool.domain.PatternObjectDependency"
+		table="PATTERN_OBJECT_DEPENDENCY">
+		<id name="id" column="ID" type="long">
+			<generator
+				class="edu.upc.gessi.rptool.data.mediators.IdGenerator" />
+		</id>
+		<property name="dependencyType" column="TYPE">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">edu.upc.gessi.rptool.domain.ObjectDependencyDomain</param>
+			</type>
+		</property>
+		<property name="dependencyDirection" column="DIRECTION">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">edu.upc.gessi.rptool.domain.DependencyDirectionDomain</param>
+			</type>
+		</property>
+		<many-to-one name="dependency" column="ID_PATTERN_OBJECT"
+			not-null="true" lazy="false"
+			class="edu.upc.gessi.rptool.domain.PatternObject" />
+	</class>
+
+
+	<class name="edu.upc.gessi.rptool.domain.patternelements.Keyword"
+		table="KEYWORD">
+		<id name="id" column="ID" type="long">
+			<generator
+				class="edu.upc.gessi.rptool.data.mediators.IdGenerator" />
+		</id>
+		<property name="name" column="NAME" unique="true"
+			not-null="true" />
+	</class>
+
+	<class
+		name="edu.upc.gessi.rptool.domain.metrics.DomainMetricValue"
+		lazy="false" table="METRICS_DOMAIN_VALUE">
+		<id name="id" column="ID" type="long">
+			<generator
+				class="edu.upc.gessi.rptool.data.mediators.IdGenerator" />
+		</id>
+		<property name="value" column="VALUE" not-null="true" />
+		<property name="order" column="VALUE_ORDER" not-null="true" />
+	</class>
+
+	<class name="edu.upc.gessi.rptool.domain.Source" table="SOURCE">
+		<id name="id" column="ID" type="long">
+			<generator
+				class="edu.upc.gessi.rptool.data.mediators.IdGenerator" />
+		</id>
+		<property name="identifier" column="IDENTIFIER" unique="true"
+			not-null="true" />
+		<property name="reference" type="text" length="2000"
+			column="REFERENCE" not-null="false" />
+		<property name="type" type="text" length="2000" column="TYPE"
+			not-null="false" />
+		<property name="comments" type="text" length="2000"
+			column="COMMENTS" not-null="false" />
+	</class>
+
+	<class name="edu.upc.gessi.rptool.domain.ExternalObject"
+		table="EXTERNAL_OBJECT">
+		<id name="id" column="ID" type="long">
+			<generator
+				class="edu.upc.gessi.rptool.data.mediators.IdGenerator" />
+		</id>
+		<many-to-one name="patternVersion" column="PATTERN_ID"
+			class="edu.upc.gessi.rptool.domain.patternelements.RequirementPatternVersion"
+			not-null="false" lazy="false" />
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.CostFunction" table="COST_FUNCTION">
+			<key column="ID" />
+			<property name="name" column="NAME" not-null="true"
+				unique="true" />
+			<property name="function" type="text" length="2000"
+				column="COMPLETE_FUNCTION" not-null="true" />
+		</joined-subclass>
+	</class>
+	<class
+		name="edu.upc.gessi.rptool.domain.patternelements.Dependency"
+		table="DEPENDENCY">
+		<id name="id" column="ID" type="long">
+			<generator
+				class="edu.upc.gessi.rptool.data.mediators.IdGenerator" />
+		</id>
+		<properties name="unique-constraint" unique="true">
+			<property name="idType" type="integer" column="ID_TYPE"
+				not-null="true" />
+			<property name="idFirst" type="long" column="ID_FIRST"
+				not-null="true" />
+			<property name="idSecond" type="long" column="ID_SECOND"
+				not-null="true" />
+		</properties>
+		<many-to-one name="first" column="FIRST_1" not-null="true"
+			lazy="false" />
+		<many-to-one name="second" column="SECOND_2"
+			not-null="true" lazy="false" />
+	</class>
+
+
+	<class
+		name="edu.upc.gessi.rptool.domain.schema.ClassificationObject"
+		table="CLASSIFICATION_OBJECT">
+		<id name="id" column="ID" type="long">
+			<generator
+				class="edu.upc.gessi.rptool.data.mediators.IdGenerator" />
+		</id>
+		<property name="name" column="NAME" not-null="true" />
+		<property name="description" type="text" length="2000"
+			column="DESCRIPTION" not-null="true" />
+		<property name="comments" type="text" length="2000"
+			column="COMMENTS" not-null="true" />
+
+		<set name="sources" table="OBJECT_SOURCE_CLASSIFICATION_OBJECT"
+			lazy="false">
+			<key column="OBJECT_ID" />
+			<many-to-many column="SOURCE_ID"
+				class="edu.upc.gessi.rptool.domain.Source" />
+		</set>
+
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.schema.ClassificationSchema"
+			table="CLASSIFICATION_SCHEMA">
+			<key column="ID" />
+			<property name="name" column="NAME" not-null="true"
+				unique="true" />
+			<set name="rootClassifiers" lazy="false"
+				cascade="all-delete-orphan">
+				<key column="CLASSIFICATION_CATALOGUE_ID" />
+				<one-to-many
+					class="edu.upc.gessi.rptool.domain.schema.Classifier" />
+			</set>
+		</joined-subclass>
+
+		<joined-subclass
+			name="edu.upc.gessi.rptool.domain.schema.Classifier"
+			table="GENERAL_CLASSIFIER">
+			<key column="ID" />
+
+			<property name="pos" type="integer" column="POS" />
+			<property name="type" type="integer" column="TYPE"
+				not-null="true" />
+			<set name="internalClassifiers" lazy="false"
+				cascade="all-delete-orphan" inverse="false">
+				<key column="CLASSIFIER_ID" />
+				<one-to-many
+					class="edu.upc.gessi.rptool.domain.schema.Classifier" />
+			</set>
+			<many-to-one name="parentClassifier"
+				class="edu.upc.gessi.rptool.domain.schema.Classifier">
+				<column name="CLASSIFIER_ID" />
+			</many-to-one>
+
+			<set name="patterns" table="CLASSIFIER_PATTERN" lazy="false">
+				<key>
+					<column name="CLASSIFIER_ID" not-null="true" />
+				</key>
+				<many-to-many column="PATTERN_ID"
+					class="edu.upc.gessi.rptool.domain.patternelements.RequirementPattern" />
+			</set>
+			<many-to-one name="parentSchema"
+				class="edu.upc.gessi.rptool.domain.schema.ClassificationSchema">
+				<column name="CLASSIFICATION_CATALOGUE_ID" />
+			</many-to-one>
+
+		</joined-subclass>
+
+	</class>
+
+
+</hibernate-mapping>
