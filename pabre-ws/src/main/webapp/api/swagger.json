@@ -1,0 +1,6002 @@
+{
+  "swagger" : "2.0",
+  "info" : { },
+  "basePath" : "/pabre-ws/api",
+  "tags" : [ {
+    "name" : "Schemas"
+  }, {
+    "name" : "Pattern parts"
+  }, {
+    "name" : "Patterns"
+  }, {
+    "name" : "Pattern versions"
+  }, {
+    "name" : "Dependencies"
+  }, {
+    "name" : "Catalogue"
+  }, {
+    "name" : "Sources"
+  }, {
+    "name" : "Metrics"
+  }, {
+    "name" : "Pattern forms"
+  }, {
+    "name" : "Cost function"
+  }, {
+    "name" : "Keywords"
+  }, {
+    "name" : "Parameters"
+  } ],
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/catalogue/export" : {
+      "get" : {
+        "tags" : [ "Catalogue" ],
+        "summary" : "Export catalogue",
+        "description" : "Export catalogue with all the Sources, Keywords, Metrics, RequirementsPattern and Schemas, in JSON format so can be imported again<ul><li><em>TimeMetric</em> can have null values inside the date, that are marked as 'X'</li><ul>",
+        "operationId" : "exportCatalogue",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: The export JSON has been created and returned.",
+            "schema" : {
+              "$ref" : "#/definitions/ExportDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/catalogue/ids" : {
+      "get" : {
+        "tags" : [ "Catalogue" ],
+        "summary" : "Check if the given ID is already used",
+        "description" : "Given a ID, check if this ID is already in use or not",
+        "operationId" : "checkID",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "description" : "ID to check",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "That ID is NOT beeing used",
+            "schema" : {
+              "type" : "boolean"
+            }
+          },
+          "400" : {
+            "description" : "That ID is already being used",
+            "schema" : {
+              "type" : "boolean"
+            }
+          }
+        }
+      }
+    },
+    "/catalogue/import" : {
+      "post" : {
+        "tags" : [ "Catalogue" ],
+        "summary" : "Import catalogue",
+        "description" : "Import a complete catalogue inside the system. <br/><strong>Important information</strong><ul> <li>If any ID is provided it will be assigned to that item</li><li>The <em>TimeMetric</em>, can have null values adding `XX` instead of any value, for example when you want to set null day possible can be: \"2018-06-XX 16:53:20\"</li><li> Order of creation of the imports:<ul><li> Creating a set of metric, first the simple metric should be indicated with the same id has idSimple</li><li>In case that a Set is composed of another set, then the inner set should be created before that it use it</li></ul></li><li><strong>Metrics</strong>: If the metric to import is a SetMetric, then the simple metric should have a ID and in the simpleId that ID should be indicated.</li><li><strong>Patterns</strong>: The sources, keywords and metrics are indicated by the name.</li><li><strong>Patterns</strong>: The cost function is indicated directly as costFunctions inside the versions.</li><li><strong>Schemas</strong>: The sources and patterns inside the classifiers are indicated by the name.</li></ul>",
+        "operationId" : "importCatalogue",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The JSON file to be imported",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ImportUnmarshaller"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: The request has succeeded and the catalogue element has been imported, the response will contain the IDs assigned.",
+            "schema" : {
+              "$ref" : "#/definitions/ImportDTO"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information to import, can be due to json malformed, missing mandatory field, unrecognized field, name already exists. For more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "422" : {
+            "description" : "Semantically Incorrect: The request has not been applied because the semantically incorrect information. check the body for more information",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/catalogue/search" : {
+      "get" : {
+        "tags" : [ "Catalogue" ],
+        "summary" : "Search in catalogue",
+        "description" : "Given a list of words, separated by spaces, returns the reduced pattern information. the system search in the following elements: <ul><li><strong>Pattern</strong>:  Search inside the <em>name</em> or <em>description</em></li><li><strong>Keywords</strong>:  Search inside the  last <em>version</em> keywords</li><li><strong>Forms</strong>:  Search inside the <em>name</em> of all the forms inside the last version</li><ul>",
+        "operationId" : "searchInCatalogue",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "words",
+          "in" : "query",
+          "description" : "Words to search, all the words should be separated by space or tabs",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Search completed, returned pattern accomplishing search criteria",
+            "schema" : {
+              "type" : "array",
+              "uniqueItems" : true,
+              "items" : {
+                "$ref" : "#/definitions/RequirementPatternDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: No pattern contains that words.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/keywords" : {
+      "get" : {
+        "tags" : [ "Keywords" ],
+        "summary" : "List all the keywords",
+        "description" : "Returns all the keywords in the catalogue",
+        "operationId" : "getKeywords",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: The request has succeeded.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KeywordDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Keywords" ],
+        "summary" : "Create a keyword",
+        "description" : "Creates a new keyowrd",
+        "operationId" : "createKeyword",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Keyword to be created",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/KeywordUnmarshaller"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Keyword created",
+            "schema" : {
+              "$ref" : "#/definitions/IdFormatter"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/keywords/{id}" : {
+      "get" : {
+        "tags" : [ "Keywords" ],
+        "summary" : "Retrieve a keyword",
+        "description" : "Get a keyword by ID",
+        "operationId" : "getKeyword",
+        "consumes" : [ "text/plain" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the keyword to obtain",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Keyword obtained",
+            "schema" : {
+              "$ref" : "#/definitions/KeywordDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested keyword is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Keywords" ],
+        "summary" : "Update a keyword",
+        "description" : "Update the given fields of the keyword",
+        "operationId" : "updateKeyword",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "new fields for keyword",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/KeywordUnmarshaller"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the keyword to obtain",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Keyword updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested keyword is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Keywords" ],
+        "summary" : "Delete a keyword",
+        "description" : "Deletes a keyowrd",
+        "operationId" : "deleteKeyword",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the keyword to delete",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Keyword deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/metrics" : {
+      "get" : {
+        "tags" : [ "Metrics" ],
+        "summary" : "List all the metrics",
+        "description" : "Returns all the metrics in the catalogue",
+        "operationId" : "getMetrics",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "complete",
+          "in" : "query",
+          "description" : "True if the metric should have all the values",
+          "required" : true,
+          "type" : "boolean",
+          "default" : "false"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: The request has succeeded.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/MetricDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Metrics" ],
+        "summary" : "Create a Metric",
+        "description" : "Creates a new metric.<br/><br/> <ul><li>Before creating a SetMetric, the simple metric should be created</li></ul>",
+        "operationId" : "createMetric",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The metric to be created should have this follow formats in JSON:<ul><li><h3><strong>Float</strong></h3>: The mandatory fields for a Float metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong>, <strong>COMMENTS</strong>, <strong>MINVALUE</strong> and <strong>MAXVALUE</strong>.<br/>Example: <br/>{\r\n  \"name\": \"float metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"minValue\": 0,\r\n  \"maxValue\": 0,\r\n  \"defaultValue\": 0\r\n} </li><li><h3><strong>Integer</strong></h3>: The mandatory fields for a Integer metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong>, <strong>COMMENTS</strong>, <strong>MINVALUE</strong> and <strong>MAXVALUE</strong>.<br/>Example: <br/>{\r\n  \"name\": \"integer metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"minValue\": 0,\r\n  \"maxValue\": 0,\r\n  \"defaultValue\": 0\r\n} </li><li><h3><strong>String</strong></h3>: The mandatory fields for a String metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong> and <strong>COMMENTS</strong>.<br/>Example: <br/>{\r\n  \"name\": \"string metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"defaultValue\": \"\"\r\n} </li><li><h3><strong>Time</strong></h3>: The mandatory fields for a Time metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong> and <strong>COMMENTS</strong>.<br/>Example: <br/>{\r\n  \"name\": \"time metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"date\": \"2014-12-25 22:56:44\"\r\n} </li><li><h3><strong>Set</strong></h3>: The mandatory fields for a Set metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong>, <strong>COMMENTS</strong> and <strong>IDSIMPLE</strong>.<br/>Example: <br/>{\r\n  \"name\": \"set metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"idSimple\": 0\r\n} </li><li><h3><strong>Domain</strong></h3>: The mandatory fields for a Domain metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong> and <strong>COMMENTS</strong>.<br/>Example: <br/>{\r\n  \"name\": \"domain metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"defaultValue\": \"\",\r\n  \"possibleValues\": [\"a\", \"b\", \"c\", \"d\"]\r\n} </li></ul>",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "type",
+          "in" : "query",
+          "description" : "Type of metric to be created",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Metric created",
+            "schema" : {
+              "$ref" : "#/definitions/IdFormatter"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/metrics/{id}" : {
+      "get" : {
+        "tags" : [ "Metrics" ],
+        "summary" : "Retrieve a metric",
+        "description" : "Get a metric by ID",
+        "operationId" : "getMetric",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the metric to obtain",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Metric obtained",
+            "schema" : {
+              "$ref" : "#/definitions/MetricDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested metric is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Metrics" ],
+        "summary" : "Update a metric",
+        "description" : "Update the given fields of the metric",
+        "operationId" : "updateMetric",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The metric to be created should have this follow formats in JSON:<ul><li><h3><strong>Float</strong></h3>: The mandatory fields for a Float metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong>, <strong>COMMENTS</strong>, <strong>MINVALUE</strong> and <strong>MAXVALUE</strong>.<br/>Example: <br/>{\r\n  \"name\": \"float metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"minValue\": 0,\r\n  \"maxValue\": 0,\r\n  \"defaultValue\": 0\r\n} </li><li><h3><strong>Integer</strong></h3>: The mandatory fields for a Integer metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong>, <strong>COMMENTS</strong>, <strong>MINVALUE</strong> and <strong>MAXVALUE</strong>.<br/>Example: <br/>{\r\n  \"name\": \"integer metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"minValue\": 0,\r\n  \"maxValue\": 0,\r\n  \"defaultValue\": 0\r\n} </li><li><h3><strong>String</strong></h3>: The mandatory fields for a String metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong> and <strong>COMMENTS</strong>.<br/>Example: <br/>{\r\n  \"name\": \"string metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"defaultValue\": \"\"\r\n} </li><li><h3><strong>Time</strong></h3>: The mandatory fields for a Time metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong> and <strong>COMMENTS</strong>.<br/>Example: <br/>{\r\n  \"name\": \"time metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"date\": \"2014-12-25 22:56:44\"\r\n} </li><li><h3><strong>Set</strong></h3>: The mandatory fields for a Set metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong>, <strong>COMMENTS</strong> and <strong>IDSIMPLE</strong>.<br/>Example: <br/>{\r\n  \"name\": \"set metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"idSimple\": 0\r\n} </li><li><h3><strong>Domain</strong></h3>: The mandatory fields for a Domain metric are: <strong>NAME</strong>, <strong>DESCRIPTION</strong> and <strong>COMMENTS</strong>.<br/>Example: <br/>{\r\n  \"name\": \"domain metric\",\r\n  \"description\": \"Metric desc.\",\r\n  \"comments\": \"Metric comments\",\r\n  \"sources\": [],\r\n  \"defaultValue\": \"\",\r\n  \"possibleValues\": [\"a\", \"b\", \"c\", \"d\"]\r\n} </li></ul>",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the metric to obtain",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Metric updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested metric is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Metrics" ],
+        "summary" : "Delete a Metric",
+        "description" : "Deletes a metric",
+        "operationId" : "deleteMetric",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the metric to delete",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Metric deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/pattern_elements/{id}/dependencies" : {
+      "get" : {
+        "tags" : [ "Dependencies" ],
+        "summary" : "Get all the dependencies",
+        "description" : "Get all the dependencies of the given element. DependencyClass can be:<ul><li>RequirementForm</li><li>RequirementPattern</li><li>RequirementPatternVersion</li><li>FixedPart</li><li>ExtendedPart</li><li>Parameter</li></ul>",
+        "operationId" : "getDependencies",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Object ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: dependencies obtained",
+            "schema" : {
+              "$ref" : "#/definitions/PatternObjectDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested element is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Dependencies" ],
+        "summary" : "Replace dependencies of the given PatternObject",
+        "description" : "Replace all the dependencies to the pattern object, substitute the new dependencies with the old one.<br/><br/><strong>Important</strong> Dependency type only can be: <li>IMPLIES</li><li>EXCLUDES</li><li>CONTRIBUTES</li><li>DAMAGES</li><ul></ul><br/><strong>Important</strong> Dependency direction only can be: <li>UNIDIRECTIONAL</li><li>BIDIRECTIONAL</li><ul></ul>",
+        "operationId" : "setNewDependencies",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Dependecies to add",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PatternObjectDependenciesUnmarshaller"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "PatternObject ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: dependecies created",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Dependencies" ],
+        "summary" : "Add all the dependecies to the pattern object",
+        "description" : "Add all the dependencies to the given pattern object<br/><br/><strong>Important</strong> Dependency type only can be: <li>IMPLIES</li><li>EXCLUDES</li><li>CONTRIBUTES</li><li>DAMAGES</li><ul></ul><br/><strong>Important</strong> Dependency direction only can be: <li>UNIDIRECTIONAL</li><li>BIDIRECTIONAL</li><ul></ul>",
+        "operationId" : "addDependencies",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Dependencies to add",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PatternObjectDependenciesUnmarshaller"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Pattern Element ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: dependencies substituted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested element is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Dependencies" ],
+        "summary" : "Delete all the delependencies of the given component",
+        "description" : "Delete all the delependencies of the given component",
+        "operationId" : "deleteDependencies",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Element ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: dependencies deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested element is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/pattern_elements/{id}/dependencies/{idDependency}" : {
+      "put" : {
+        "tags" : [ "Dependencies" ],
+        "summary" : "Update a dependency",
+        "description" : "Update fields of given dependency<br/><br/><strong>Important</strong> Dependency type only can be: <li>IMPLIES</li><li>EXCLUDES</li><li>CONTRIBUTES</li><li>DAMAGES</li><ul></ul><br/><strong>Important</strong> Dependency direction only can be: <li>UNIDIRECTIONAL</li><li>BIDIRECTIONAL</li><ul></ul>",
+        "operationId" : "updateDependency",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with the given fields",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PutPatternObjectDependencyUnmarshaller"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Element ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "idDependency",
+          "in" : "path",
+          "description" : "Dependency ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: dependency updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested element is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Dependencies" ],
+        "summary" : "Delete a dependency",
+        "description" : "Delete a dependency",
+        "operationId" : "deleteDependency",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Element ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "idDependency",
+          "in" : "path",
+          "description" : "Dependency ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: dependency deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested element is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns" : {
+      "get" : {
+        "tags" : [ "Patterns" ],
+        "summary" : "List all the pattern in the catalogue",
+        "description" : "List all the pattern in the catalogue",
+        "operationId" : "getPatterns",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "keyword",
+          "in" : "query",
+          "description" : "Keyword that must have inside the pattern",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "namesList",
+          "in" : "query",
+          "description" : "When is provided then the system will filter the patterns and will return only that ones who are inside the indicated internalClassifiers. The classifier is indicated as a path straight from the schema followed by RootClassifier and followed by N internalCLassifiers and the call will return the patterns inside the last internalClassifier.<strong>The list must have at least 3 names to search (SchemaClassifier/RootClassifier/InternalClassifier) and it must be <a href=\"https://www.w3schools.com/tags/ref_urlencode.asp\">encoded</a>.</strong><ul><li>EXAMPLE: Get patterns from the inernalclassifier: <strong>schemaname1/rootname1/internal1/internal2/internal3</strong>. we have to make the request: /patterns?namesList=<strong>schemaname1</strong>&namesList=<strong>rootname1</strong>&namesList=<strong>internal1</strong>&namesList=<strong>internal2</strong>&namesList=<strong>internal3</strong></li></ul><br/>In case that you just give one name in the list is considered that the name of the classifiers are unique in this catalogue, so the search will happen in that classifier given in the list, otherwise returns a Error",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "csv"
+        }, {
+          "name" : "complete",
+          "in" : "query",
+          "description" : "Boolean telling that if the pattern should have all the fields or not, In case we are searching with the classifier names, if this parameter is true, then returns not only the patterns of that classifier, returns also the inner classifiers patterns",
+          "required" : false,
+          "type" : "boolean",
+          "default" : "false"
+        }, {
+          "name" : "completeClassifiers",
+          "in" : "query",
+          "description" : "Usefull only if the search is by classifiers names, if this parameter is true, then returns not only the patterns of that classifier, returns also the inner classifiers patterns",
+          "required" : false,
+          "type" : "boolean",
+          "default" : "false"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: The request has succeeded.",
+            "schema" : {
+              "type" : "array",
+              "uniqueItems" : true,
+              "items" : {
+                "$ref" : "#/definitions/RequirementPatternDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern, version is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Patterns" ],
+        "summary" : "Create a new Pattern",
+        "description" : "Create a new pattern <br/><br/><strong>Important information</strong><ul> <li>All the <strong>keywords</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>All the <strong>sources</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>All the <strong>metrics</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>If the ID of the element is provided, that ID it will be assigned.</li></ul>",
+        "operationId" : "createPattern",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with the new pattern fields",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RequirementPatternUnmarshaller"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Pattern created correctly",
+            "schema" : {
+              "$ref" : "#/definitions/IdFormatter"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of something semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{id}" : {
+      "get" : {
+        "tags" : [ "Patterns" ],
+        "summary" : "Get a pattern by ID",
+        "description" : "Return the pattern request by ID",
+        "operationId" : "getPattern",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Pattern obtained",
+            "schema" : {
+              "$ref" : "#/definitions/RequirementFormDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Patterns" ],
+        "summary" : "Update a pattern",
+        "description" : "Update the given pattern, if the ID is provided that ID will try to use, if the ID is already used throw a code 400 <strong>Important information</strong><ul> <li>All the <strong>Versions</strong>, <strong>Forms</strong>, <strong>FixedPart</strong>, <strong>ExtendedPart</strong>, <strong>Parameters</strong> <strong>MUST</strong> have a ID field.</li><li>If you change any element ID it will be changed inside the pattern.</li><li>All the <strong>keywords</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>All the <strong>sources</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>All the <strong>metrics</strong> indicated <strong>must</strong> exists before creating the pattern.</li></ul>",
+        "operationId" : "updatePattern",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with the new pattern fields",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RequirementPatternImportUnmarshaller"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Pattern updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Patterns" ],
+        "summary" : "Delete a Pattern",
+        "description" : "Deletes a pattern given the ID",
+        "operationId" : "deletePattern",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Pattern deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{id}/dependencies" : {
+      "get" : {
+        "tags" : [ "Patterns" ],
+        "summary" : "Get all the dependencies of the pattern",
+        "description" : "Get all the dependencies of the given pattern and all the components inside of it (version, forms, parts, etc.)<br/>Given a ID of pattern, returns a list of all the dependencies of this patterns, includes the follow elements dependencies::<ul><li>RequirementPattern</li><li>PatternVersion</li><li>RequirementForm</li><li>FixedPart</li><li>ExtendedPart</li><li>Params</li></ul>",
+        "operationId" : "getPatternCompleteDependencies",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Request processed",
+            "schema" : {
+              "$ref" : "#/definitions/CompletePatternDependenciesDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternID}/versions/{versionID}/cost_function" : {
+      "get" : {
+        "tags" : [ "Cost function" ],
+        "summary" : "List all the Function cost of the given version",
+        "description" : "Returns all the function cost of the given pattern version",
+        "operationId" : "getAllFunctionCostFunctions",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternID",
+          "in" : "path",
+          "description" : "Pattern ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionID",
+          "in" : "path",
+          "description" : "Version ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: The request has succeeded.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CostFunctionDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Cost function" ],
+        "summary" : "Create cost functions to given version",
+        "description" : "Given a set of cost functions, add them in the given parttern version",
+        "operationId" : "addCostFunction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Cost functions to be created",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CostFunctionsUnmarshaller"
+          }
+        }, {
+          "name" : "patternID",
+          "in" : "path",
+          "description" : "Pattern ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionID",
+          "in" : "path",
+          "description" : "Version ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: functions created",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Cost function" ],
+        "summary" : "Substitute the cost functions of given pattern",
+        "description" : "Substitute the cost functions of given pattern",
+        "operationId" : "updateCostFunctions",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Functions to be substituted",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CostFunctionsUnmarshaller"
+          }
+        }, {
+          "name" : "patternID",
+          "in" : "path",
+          "description" : "Pattern ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionID",
+          "in" : "path",
+          "description" : "Version ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: functions substituted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Cost function" ],
+        "summary" : "Delete all the cost functions",
+        "description" : "Deletes all the functions",
+        "operationId" : "deleteAllCostFunctions",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternID",
+          "in" : "path",
+          "description" : "Pattern ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionID",
+          "in" : "path",
+          "description" : "Version ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Functions deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested Version is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternID}/versions/{versionID}/cost_function/{id}" : {
+      "get" : {
+        "tags" : [ "Cost function" ],
+        "summary" : "Retrieve a cost function",
+        "description" : "Get a cost function by ID",
+        "operationId" : "getCostFunction",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternID",
+          "in" : "path",
+          "description" : "Pattern ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionID",
+          "in" : "path",
+          "description" : "Version ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Function ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: function obtained",
+            "schema" : {
+              "$ref" : "#/definitions/CostFunctionDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested function is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Cost function" ],
+        "summary" : "Update a given cost function",
+        "description" : "Update the given fields of the cost function",
+        "operationId" : "updateCostFunction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "new fields to update",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CostFunctionUnmarshaller"
+          }
+        }, {
+          "name" : "patternID",
+          "in" : "path",
+          "description" : "Pattern ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionID",
+          "in" : "path",
+          "description" : "Version ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Cost function ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: cost functions updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested cost function is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Cost function" ],
+        "summary" : "Delete a cost functions",
+        "description" : "Deletes the cost function given by the ID",
+        "operationId" : "deleteCostFunction",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternID",
+          "in" : "path",
+          "description" : "Pattern ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionID",
+          "in" : "path",
+          "description" : "Version ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Functions ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Function deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested Version or functions not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternId}/versions" : {
+      "get" : {
+        "tags" : [ "Pattern versions" ],
+        "summary" : "List all the versions of the pattern",
+        "description" : "List all the versions of the given pattern, with reduced information",
+        "operationId" : "getPatternVersions",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: The request has succeeded.",
+            "schema" : {
+              "type" : "array",
+              "uniqueItems" : true,
+              "items" : {
+                "$ref" : "#/definitions/RequirementPatternVersionReducedDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Pattern versions" ],
+        "summary" : "Add a new version to the pattern",
+        "description" : "Add a new version to the pattern <br/><br/><strong>Important information</strong><ul> <li>All the <strong>keywords</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>All the <strong>sources</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>All the <strong>metrics</strong> indicated <strong>must</strong> exists before creating the pattern.</li></ul>",
+        "operationId" : "updatePatternVersions",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "unmarshaller with new version to add",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RequirementPatternVersionsUnmarshaller"
+          }
+        }, {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Version added correctly",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of something semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternId}/versions/{versionId}" : {
+      "get" : {
+        "tags" : [ "Pattern versions" ],
+        "summary" : "Get a version with the given a ID",
+        "description" : "Get a version with the given a ID",
+        "operationId" : "getPatternVersion",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Version obtained",
+            "schema" : {
+              "$ref" : "#/definitions/RequirementPatternVersionDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Pattern versions" ],
+        "summary" : "Update a version with the new fields",
+        "description" : "Update the given fields of the version. <br/><br/><strong>Important information</strong><ul> <li>All the <strong>keywords</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>All the <strong>sources</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li><strong>forms</strong> field cannot be updated.</li></ul>",
+        "operationId" : "updateVersion",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with the new fields to update",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RequirementPatternVersionPutUnmarshaller"
+          }
+        }, {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Form updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern, version is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Pattern versions" ],
+        "summary" : "Delete a Version",
+        "description" : "Deletes a version given the ID",
+        "operationId" : "deletePatternVersion",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Version deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern, version is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternId}/versions/{versionId}/forms" : {
+      "get" : {
+        "tags" : [ "Pattern forms" ],
+        "summary" : "List all the form of the given version",
+        "description" : "List all the form of the given version",
+        "operationId" : "getPatternVersionForms",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: The request has succeeded.",
+            "schema" : {
+              "type" : "array",
+              "uniqueItems" : true,
+              "items" : {
+                "$ref" : "#/definitions/RequirementFormDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern, version is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Pattern forms" ],
+        "summary" : "Create/Substitute the forms in a version",
+        "description" : "Create/Substitute the forms in forms.<br/><br/><strong>Important information</strong><ul> <li>All the <strong>metrics</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>Delete all the older forms.</li></ul>",
+        "operationId" : "substituteFormsOnVersion",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with the form field to create/replace",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RequirementFormsUnmarshaller"
+          }
+        }, {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Form created/replaced correctly",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of something semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternId}/versions/{versionId}/forms/{formId}" : {
+      "get" : {
+        "tags" : [ "Pattern forms" ],
+        "summary" : "Get a form with the given a ID",
+        "description" : "Get a form with the given a ID",
+        "operationId" : "getPatternVersionForm",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "ID of the form",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Form obtained",
+            "schema" : {
+              "$ref" : "#/definitions/RequirementFormDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Pattern forms" ],
+        "summary" : "Update a form",
+        "description" : "Update the given fields of the form.<br/><br/><strong>Important information</strong><ul> <li>To update fixed part or extended part call the corresponding part path</li></ul>",
+        "operationId" : "updateForm",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with all the fields to update",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/RequirementFormPutUnmarshaller"
+          }
+        }, {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "ID of the form",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Form updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern, version, form is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Pattern forms" ],
+        "summary" : "Delete a Form",
+        "description" : "Deletes a form given the ID",
+        "operationId" : "deleteForm",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "ID of the form",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Form deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern, version, form is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternId}/versions/{versionId}/forms/{formId}/parts" : {
+      "get" : {
+        "tags" : [ "Pattern parts" ],
+        "summary" : "Get all the parts of the given form",
+        "description" : "Get all the parts from the given form",
+        "operationId" : "getPatternVersionFormParts",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "ID of the form where the parts are located",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Parts obtained",
+            "schema" : {
+              "$ref" : "#/definitions/RequirementFormPartsDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Pattern parts" ],
+        "summary" : "Create/Substitute the parts in forms",
+        "description" : "Create/Substitute the parts in forms.<br/><br/><strong>Important information</strong><ul> <li>All the <strong>metrics</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>This call only substitute the extended parts.</li></ul>",
+        "operationId" : "updateExtendedPartsInForm",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with new extended parts",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ExtendedPartsUnmarshaller"
+          }
+        }, {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "Pattern ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "Version ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "Form ID",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Part created or replaced correctly",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of something semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternId}/versions/{versionId}/forms/{formId}/parts/{partId}" : {
+      "get" : {
+        "tags" : [ "Pattern parts" ],
+        "summary" : "Get a part given a ID",
+        "description" : "Get a part by the given ID",
+        "operationId" : "getPatternVersionFormPart",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the Pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the Version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "ID of the Form",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "partId",
+          "in" : "path",
+          "description" : "ID of the Part",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Part obtained",
+            "schema" : {
+              "$ref" : "#/definitions/PatternItemDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Pattern parts" ],
+        "summary" : "Update a part item",
+        "description" : "Update the given fields of the part, only the fields numInstaces, available and statsNumInstaces",
+        "operationId" : "updatePatternItemInForm",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with the fields to update",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PatternItemPutUnmarshaller"
+          }
+        }, {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the Pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the Version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "ID of the Form",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "partId",
+          "in" : "path",
+          "description" : "ID of the Part",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Part updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested pattern, version, form, part is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternId}/versions/{versionId}/forms/{formId}/parts/{partId}/parameters" : {
+      "put" : {
+        "tags" : [ "Parameters" ],
+        "summary" : "Add parameters to the given fixed or extended part",
+        "description" : "Update the part adding all the given parameters <br/><br/><strong>Important information</strong><ul> <li>All the <strong>metrics</strong> indicated <strong>must</strong> exists before creating the pattern.</li><li>If the ID of the element is provided, that ID it will be assigned.</li></ul>",
+        "operationId" : "addParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Parameters to add",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ParametersUnmarshaller"
+          }
+        }, {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "ID of the form",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "partId",
+          "in" : "path",
+          "description" : "ID of the part to update",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Parameter updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested parameter is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Parameters" ],
+        "summary" : "Delete all the paramters",
+        "description" : "Deletes all the parameters of the given fixed or extended part",
+        "operationId" : "deleteParameters",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "ID of the form",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "partId",
+          "in" : "path",
+          "description" : "ID of the part where to delete all the parameters",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Parameters deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/patterns/{patternId}/versions/{versionId}/forms/{formId}/parts/{partId}/parameters/{id}" : {
+      "delete" : {
+        "tags" : [ "Parameters" ],
+        "summary" : "Delete a parameter",
+        "description" : "Deletes a parameter from a fixed or extended part",
+        "operationId" : "deleteParameter",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "patternId",
+          "in" : "path",
+          "description" : "ID of the pattern",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "description" : "ID of the version",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "formId",
+          "in" : "path",
+          "description" : "ID of the form",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "partId",
+          "in" : "path",
+          "description" : "ID of the fixed or extended part",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the parameter to delete",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: parameter from a fixed or extended part deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/schemas" : {
+      "get" : {
+        "tags" : [ "Schemas" ],
+        "summary" : "Get all the Schemas",
+        "description" : "Get all the schemas from the catalogue. <br/> The field type of a classifier could be one of this:<ul> <li><strong>ROOT</strong>: <ul><li>Type: 0</li><li>This type of classifier is the only one allowed to be in the root position.</li> <li>ROOT can't have requirementPatterns</li></ul></li><li><strong>BASIC</strong>: <ul><li>Type: 1</li><li>Not allowed to have internalClassifiers</li><li>Mandatory to have requirementPatterns</li></ul></li><li><strong>DESCOMPOSED</strong>: <ul><li>Type: 2</li><li>Mandatory to have internalClassifiers</li><li>Not allowed to have requirementPatterns</li></ul></li><li><strong>GENERAL</strong>: <ul><li>Type: 3</li><li>Not allowed to have internalClassifiers</li><li>Not allowed to have requirementPatterns</li></ul></li></ul>",
+        "operationId" : "getSchemas",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "names",
+          "in" : "query",
+          "description" : "List of all the names of schema to show, if is empty no filter will be applied",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "csv"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: schemas obtained",
+            "schema" : {
+              "type" : "array",
+              "uniqueItems" : true,
+              "items" : {
+                "$ref" : "#/definitions/SchemaDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Schemas" ],
+        "summary" : "Create a Schema",
+        "description" : "Create a new Schema with all the classifiers. <br/><strong>Important information</strong><ul> <li>All the <strong>keywords</strong> indicated <strong>must</strong> exists before creating the schema.</li><li>All the <strong>sources</strong> indicated <strong>must</strong> exists before creating the schema.</li><li>All the <strong>metrics</strong> indicated <strong>must</strong> exists before creating the schema.</li><li>All the <strong>patterns</strong> indicated <strong>must</strong> exists before creating the schema.</li></ul>",
+        "operationId" : "createSchema",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with schema to create",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SchemaUnmarshaller"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Schema created",
+            "schema" : {
+              "$ref" : "#/definitions/IdFormatter"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of something semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/schemas/{schemaid}" : {
+      "get" : {
+        "tags" : [ "Schemas" ],
+        "summary" : "Retrieve a Schema",
+        "description" : "Get a schema by ID",
+        "operationId" : "getSchema",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "schemaid",
+          "in" : "path",
+          "description" : "ID of the schema to obtain",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "unbinded",
+          "in" : "query",
+          "description" : "When is true show all the pattern who are not contained inside any schema",
+          "required" : false,
+          "type" : "boolean",
+          "default" : "false"
+        }, {
+          "name" : "complete",
+          "in" : "query",
+          "description" : "When is true returns complete information of the schema otherwise just return the root classifiers",
+          "required" : false,
+          "type" : "boolean",
+          "default" : "true"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Schema obtained",
+            "schema" : {
+              "$ref" : "#/definitions/SchemaDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested schema is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Schemas" ],
+        "summary" : "Update a Schema",
+        "description" : "Update the given fields of the schema, all the componentes inside the schema should have a ID assigned, if the ID is already used throw a code 400.",
+        "operationId" : "updateSchemaFields",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with the fields to update",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SchemaUnmarshaller"
+          }
+        }, {
+          "name" : "schemaid",
+          "in" : "path",
+          "description" : "Schema ID to update",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Schema updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested schema is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Schemas" ],
+        "summary" : "Delete a Schema",
+        "description" : "Deletes a schema",
+        "operationId" : "deleteSchema",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "schemaid",
+          "in" : "path",
+          "description" : "Schema ID to be deleted",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Schema deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/schemas/{schemaid}/classifiers" : {
+      "get" : {
+        "tags" : [ "Schemas" ],
+        "summary" : "Get all the Classifiers",
+        "description" : "Get all the classifiers from the catalogue with the given schema. <br/>  The field type of a classifier could be one of this:<ul> <li><strong>ROOT</strong>: <ul><li>Type: 0</li><li>This type of classifier is the only one allowed to be in the root position.</li> <li>ROOT can't have requirementPatterns</li></ul></li><li><strong>BASIC</strong>: <ul><li>Type: 1</li><li>Not allowed to have internalClassifiers</li><li>Mandatory to have requirementPatterns</li></ul></li><li><strong>DESCOMPOSED</strong>: <ul><li>Type: 2</li><li>Mandatory to have internalClassifiers</li><li>Not allowed to have requirementPatterns</li></ul></li><li><strong>GENERAL</strong>: <ul><li>Type: 3</li><li>Not allowed to have internalClassifiers</li><li>Not allowed to have requirementPatterns</li></ul></li></ul>",
+        "operationId" : "getClassifiers",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "schemaid",
+          "in" : "path",
+          "description" : "Schema ID where the classifiers are contained",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "complete",
+          "in" : "query",
+          "description" : "When is true returns complete information of the schema otherwise just return the root classifiers",
+          "required" : false,
+          "type" : "boolean",
+          "default" : "true"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: schemas obtained",
+            "schema" : {
+              "type" : "array",
+              "uniqueItems" : true,
+              "items" : {
+                "$ref" : "#/definitions/ClassifierDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Schemas" ],
+        "summary" : "Substitute all the classifiers of the given schema",
+        "description" : "Substitute all the classifiers of the given schema.<br/><strong>Important information</strong><ul> <li>All the <strong>keywords</strong> indicated <strong>must</strong> exists before creating the schema.</li><li>All the <strong>sources</strong> indicated <strong>must</strong> exists before creating the schema.</li><li>All the <strong>metrics</strong> indicated <strong>must</strong> exists before creating the schema.</li><li>All the <strong>patterns</strong> indicated <strong>must</strong> exists before creating the schema.</li></ul>",
+        "operationId" : "substituteClassifiers",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with classifiers substitution fields",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SchemaSubstitutionUmarshaller"
+          }
+        }, {
+          "name" : "schemaid",
+          "in" : "path",
+          "description" : "Schema ID where to substitute the classifiers",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Schema created",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of something semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/schemas/{schemaid}/classifiers/{classifierid}" : {
+      "get" : {
+        "tags" : [ "Schemas" ],
+        "summary" : "Retrieve a Classifier",
+        "description" : "Get a classifier by ID. <br/> The field type of a classifier could be one of this:<ul> <li><strong>ROOT</strong>: <ul><li>Type: 0</li><li>This type of classifier is the only one allowed to be in the root position.</li> <li>ROOT can't have requirementPatterns</li></ul></li><li><strong>BASIC</strong>: <ul><li>Type: 1</li><li>Not allowed to have internalClassifiers</li><li>Mandatory to have requirementPatterns</li></ul></li><li><strong>DESCOMPOSED</strong>: <ul><li>Type: 2</li><li>Mandatory to have internalClassifiers</li><li>Not allowed to have requirementPatterns</li></ul></li><li><strong>GENERAL</strong>: <ul><li>Type: 3</li><li>Not allowed to have internalClassifiers</li><li>Not allowed to have requirementPatterns</li></ul></li></ul>",
+        "operationId" : "getClassifier",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "schemaid",
+          "in" : "path",
+          "description" : "ID of the schema where the classifier is found",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "classifierid",
+          "in" : "path",
+          "description" : "ID of the classifier to find",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "complete",
+          "in" : "query",
+          "description" : "When is true returns all the inner classifiers information, otherwise just the first level of classifiers",
+          "required" : false,
+          "type" : "boolean",
+          "default" : "true"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Classifier obtained",
+            "schema" : {
+              "$ref" : "#/definitions/ClassifierDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested schema is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Schemas" ],
+        "summary" : "Update a Classifier",
+        "description" : "Update the given fields of the classifier.<br/><strong>Important information</strong><ul> <li>All the <strong>keywords</strong> indicated <strong>must</strong> exists before creating the schema.</li><li>All the <strong>sources</strong> indicated <strong>must</strong> exists before creating the schema.</li><li>All the <strong>metrics</strong> indicated <strong>must</strong> exists before creating the schema.</li><li>All the <strong>patterns</strong> indicated <strong>must</strong> exists before creating the schema.</li></ul>",
+        "operationId" : "updateInternalSchemaFields",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with the fields to update",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ClassifierUnmarshaller"
+          }
+        }, {
+          "name" : "schemaid",
+          "in" : "path",
+          "description" : "ID of the schema to update",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "classifierid",
+          "in" : "path",
+          "description" : "ID of the classifier to update",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Classifier updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "422" : {
+            "description" : "Bad request: The request has not been applied because of somehing semantically incorrect.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested schema is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/sources" : {
+      "get" : {
+        "tags" : [ "Sources" ],
+        "summary" : "Get all the sources",
+        "description" : "Get all the sources in the catalogue.",
+        "operationId" : "getSources",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: sources obtained",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/SourceDTO"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Sources" ],
+        "summary" : "Create a Source",
+        "description" : "Creates a new source",
+        "operationId" : "createSource",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with fields to created the source",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SourceUnmarshaller"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Source created",
+            "schema" : {
+              "$ref" : "#/definitions/IdFormatter"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/sources/{id}" : {
+      "get" : {
+        "tags" : [ "Sources" ],
+        "summary" : "Retrieve a source",
+        "description" : "Get a source by ID",
+        "operationId" : "getSource",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the source to be obtained",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: source obtained",
+            "schema" : {
+              "$ref" : "#/definitions/SourceDTO"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested source is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Sources" ],
+        "summary" : "Update a source",
+        "description" : "Update the given fields of the source, if the identifier is null it will be ignored.",
+        "operationId" : "updateSource",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Unmarshaller with fields to update",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PutSourceUnmarshaller"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the source to be updated",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Source updated",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested source is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Sources" ],
+        "summary" : "Delete a Source",
+        "description" : "Deletes a source",
+        "operationId" : "deleteMetric",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the source to be deleted",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK: Source deleted",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request: The request has not been applied because of wrong information, for more information check the Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error. For more information see ‘message’ in the Response Body.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found: The requested source is not found.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Locale" : {
+      "type" : "object",
+      "properties" : {
+        "script" : {
+          "type" : "string"
+        },
+        "country" : {
+          "type" : "string"
+        },
+        "variant" : {
+          "type" : "string"
+        },
+        "extensionKeys" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "unicodeLocaleAttributes" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "unicodeLocaleKeys" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "iso3Language" : {
+          "type" : "string"
+        },
+        "iso3Country" : {
+          "type" : "string"
+        },
+        "displayLanguage" : {
+          "type" : "string"
+        },
+        "displayScript" : {
+          "type" : "string"
+        },
+        "displayCountry" : {
+          "type" : "string"
+        },
+        "displayVariant" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        },
+        "language" : {
+          "type" : "string"
+        }
+      }
+    },
+    "KeywordDTO" : {
+      "type" : "object",
+      "properties" : {
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ExtendedPartUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "available", "name", "numInstances", "patternText", "pos", "questionText", "statsNumInstances" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "patternText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ParameterUnmarshaller"
+          }
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "DependenciesExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "idDependant" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependencyExportDTO"
+          }
+        }
+      }
+    },
+    "RequirementPatternVersionsUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "versions" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementPatternVersionUnmarshaller"
+          }
+        }
+      }
+    },
+    "SchemaDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/SourceDTO"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "rootClassifiers" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ClassifierDTO"
+          }
+        },
+        "unbindedPatterns" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementPatternDTO"
+          }
+        }
+      }
+    },
+    "PatternObject" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true
+        },
+        "nameToShowOnDependencies" : {
+          "type" : "string"
+        },
+        "allDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        }
+      }
+    },
+    "ExtendedPartsUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "parts" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ExtendedPartUnmarshaller"
+          }
+        }
+      }
+    },
+    "GenericMetricExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "dat2" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "sourcesByIdentifier" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "date" : {
+          "type" : "string"
+        },
+        "idSimple" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "PatternObjectDependenciesUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "podu" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependencyUnmarshaller"
+          }
+        }
+      }
+    },
+    "SourceDTO" : {
+      "type" : "object",
+      "properties" : {
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "identifier" : {
+          "type" : "string"
+        },
+        "reference" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RequirementFormsUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "forms" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementFormUnmarshaller"
+          }
+        }
+      }
+    },
+    "RequirementPatternVersionReducedDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "versionDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
+    "RequirementPatternUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "comments", "description", "editable", "name", "versions" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "versions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RequirementPatternVersionUnmarshaller"
+          }
+        },
+        "editable" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "PatternObjectDependencyUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "idDependency" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "idDependency" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "stringType" : {
+          "type" : "string"
+        },
+        "stringDirection" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CostFunctionUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "function", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "function" : {
+          "type" : "string"
+        }
+      }
+    },
+    "MediaType" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "subtype" : {
+          "type" : "string"
+        },
+        "parameters" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "wildcardType" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "wildcardSubtype" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "FixedPart" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependency"
+          }
+        },
+        "patternText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Parameter"
+          }
+        },
+        "artifactRelation" : {
+          "type" : "string"
+        },
+        "used" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "allInnerDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        },
+        "nameToShowOnDependencies" : {
+          "type" : "string"
+        },
+        "allDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        }
+      }
+    },
+    "IdFormatter" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "UriBuilder" : {
+      "type" : "object"
+    },
+    "SourceUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "identifier" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "identifier" : {
+          "type" : "string"
+        },
+        "reference" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PatternItemDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "formText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ParameterDTO"
+          }
+        }
+      }
+    },
+    "RequirementPatternVersionPutUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "versionDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "goal" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "keywords" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "forms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RequirementFormUnmarshaller"
+          }
+        }
+      }
+    },
+    "SchemaSubstitutionUmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "rootClassifiers" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ClassifierUnmarshaller"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RequirementPatternDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/SourceDTO"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "editable" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "forms" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementFormDTO"
+          }
+        },
+        "costFunction" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/CostFunctionDTO"
+          }
+        },
+        "goal" : {
+          "type" : "string"
+        },
+        "keywords" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "versionDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "versions" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementPatternVersionDTO"
+          }
+        },
+        "versionUri" : {
+          "type" : "string",
+          "format" : "uri"
+        }
+      }
+    },
+    "RequirementFormPartsDTO" : {
+      "type" : "object",
+      "properties" : {
+        "fixedPart" : {
+          "$ref" : "#/definitions/FixedPartDTO"
+        },
+        "extendedParts" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ExtendedPartDTO"
+          }
+        }
+      }
+    },
+    "CompletePatternDependenciesDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/CompletePatternObjectDependencyDTO"
+          }
+        }
+      }
+    },
+    "RequirementFormDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/SourceDTO"
+          }
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "modificationDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "fixedPart" : {
+          "$ref" : "#/definitions/FixedPartDTO"
+        },
+        "extendedParts" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ExtendedPartDTO"
+          }
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "Dependency" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencyType" : {
+          "type" : "string",
+          "enum" : [ "IMPLIES", "EXCLUDES", "CONTRIBUTES", "DAMAGES" ]
+        }
+      }
+    },
+    "PatternObjectDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependencyDTO"
+          }
+        }
+      }
+    },
+    "ParameterDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "correctnessCondition" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "metric" : {
+          "$ref" : "#/definitions/MetricDTO"
+        }
+      }
+    },
+    "ParameterUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "description", "metricId", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "correctnessCondition" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "metricId" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "CostFunctionExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "function" : {
+          "type" : "string"
+        }
+      }
+    },
+    "KeywordUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CostFunction" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "function" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PatternItemPutUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "item" : {
+          "$ref" : "#/definitions/PatternItem"
+        }
+      }
+    },
+    "RequirementForm" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependency"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Source"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "fixedPart" : {
+          "$ref" : "#/definitions/FixedPart"
+        },
+        "extendedParts" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ExtendedPart"
+          }
+        },
+        "used" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "sourcesIdentifier" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "nameToShowOnDependencies" : {
+          "type" : "string"
+        },
+        "allDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        }
+      }
+    },
+    "ClassificationSchema" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Source"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "rootClassifiers" : {
+          "type" : "array",
+          "uniqueItems" : true
+        },
+        "sourcesIdentifier" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ParameterExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "correctnessCondition" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "metricName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PutPatternObjectDependencyUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "stringType" : {
+          "type" : "string"
+        },
+        "stringDirection" : {
+          "type" : "string"
+        },
+        "idDependency" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "ExtendedPartDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "formText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ParameterDTO"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "Link" : {
+      "type" : "object",
+      "properties" : {
+        "rel" : {
+          "type" : "string"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "uriBuilder" : {
+          "$ref" : "#/definitions/UriBuilder"
+        },
+        "rels" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "params" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "type" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CostFunctionsUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "setFunctions" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/CostFunctionUnmarshaller"
+          }
+        }
+      }
+    },
+    "ClassifierUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "pos" ],
+      "properties" : {
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "requirementPatterns" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "internalClassifiers" : {
+          "type" : "array",
+          "uniqueItems" : true
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "RequirementFormUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "author", "comments", "description", "fixedPart", "modificationDate", "name", "numInstances", "pos", "statsNumAssociates", "statsNumInstances" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "modificationDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "fixedPart" : {
+          "$ref" : "#/definitions/FixedPartUnmarshaller"
+        },
+        "extendedParts" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ExtendedPartUnmarshaller"
+          }
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "SourceExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "identifier" : {
+          "type" : "string"
+        },
+        "reference" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RequirementPattern" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependency"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Source"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "classifiers" : {
+          "type" : "array",
+          "uniqueItems" : true
+        },
+        "versions" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementPatternVersion"
+          }
+        },
+        "editable" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "allPatternDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        },
+        "allInnerDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        },
+        "sourcesIdentifier" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "nameToShowOnDependencies" : {
+          "type" : "string"
+        },
+        "allDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        }
+      }
+    },
+    "PatternItem" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependency"
+          }
+        },
+        "patternText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Parameter"
+          }
+        },
+        "artifactRelation" : {
+          "type" : "string"
+        },
+        "used" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "allInnerDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        },
+        "nameToShowOnDependencies" : {
+          "type" : "string"
+        },
+        "allDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        }
+      }
+    },
+    "SchemaExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "rootClassifiers" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ClassifierExportDTO"
+          }
+        },
+        "sourcesByIdentifier" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "FixedPartExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "patternText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ParameterExportDTO"
+          }
+        }
+      }
+    },
+    "RequirementFormExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "modificationDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "fixedPart" : {
+          "$ref" : "#/definitions/FixedPartExportDTO"
+        },
+        "extendedParts" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ExtendedPartExportDTO"
+          }
+        },
+        "sourcesByIdentifier" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Classifier" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Source"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "internalClassifiers" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Classifier"
+          }
+        },
+        "parentClassifier" : {
+          "$ref" : "#/definitions/Classifier"
+        },
+        "patterns" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementPattern"
+          }
+        },
+        "parentSchema" : {
+          "$ref" : "#/definitions/ClassificationSchema"
+        },
+        "sourcesIdentifier" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ParametersUnmarshaller" : {
+      "type" : "object"
+    },
+    "Source" : {
+      "type" : "object",
+      "required" : [ "identifier" ],
+      "properties" : {
+        "identifier" : {
+          "type" : "string"
+        },
+        "reference" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "FixedPartDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "formText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ParameterDTO"
+          }
+        }
+      }
+    },
+    "RequirementPatternVersionExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "versionDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "goal" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        },
+        "keywords" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "forms" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementFormExportDTO"
+          }
+        },
+        "costFunctions" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/CostFunctionExportDTO"
+          }
+        }
+      }
+    },
+    "MetricDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/SourceDTO"
+          }
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PatternObjectCompleteDependency" : {
+      "type" : "object"
+    },
+    "ImportUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "sourcesOBJ" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Source"
+          }
+        },
+        "keywordsOBJ" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Keyword"
+          }
+        },
+        "metricsOBJ" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Metric"
+          }
+        },
+        "patternsOBJ" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RequirementPattern"
+          }
+        },
+        "schemasOBJ" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ClassificationSchema"
+          }
+        },
+        "dependenciesOBJ" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        }
+      }
+    },
+    "MetricExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "metric" : {
+          "$ref" : "#/definitions/GenericMetricExportDTO"
+        }
+      }
+    },
+    "RequirementFormPutUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "modificationDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "fixedPart" : {
+          "$ref" : "#/definitions/FixedPartUnmarshaller"
+        },
+        "extendedParts" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ExtendedPartUnmarshaller"
+          }
+        }
+      }
+    },
+    "ImportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "sourceIDs" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "keywordsIDs" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "metricsIDs" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "patternsIDs" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "schemasIDs" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "dependenciesIDs" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      }
+    },
+    "EntityTag" : {
+      "type" : "object",
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "weak" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "CompletePatternObjectDependencyDTO" : {
+      "type" : "object",
+      "properties" : {
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "dependingObjectId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependingObjectClass" : {
+          "type" : "string"
+        },
+        "dependingObjectName" : {
+          "type" : "string"
+        },
+        "dependencyType" : {
+          "type" : "string"
+        },
+        "dependencyDirection" : {
+          "type" : "string",
+          "enum" : [ "UNIDIRECTIONAL", "BIDIRECTIONAL" ]
+        },
+        "dependentObjectId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependentObjectClass" : {
+          "type" : "string"
+        },
+        "dependentObjectName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RequirementPatternVersionDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependenciesUri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "versionDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "goal" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "forms" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementFormDTO"
+          }
+        },
+        "keywords" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        }
+      }
+    },
+    "NewCookie" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "path" : {
+          "type" : "string"
+        },
+        "domain" : {
+          "type" : "string"
+        },
+        "comment" : {
+          "type" : "string"
+        },
+        "maxAge" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "expiry" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "secure" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "httpOnly" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "PatternObjectDependency" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependency" : {
+          "$ref" : "#/definitions/PatternObject"
+        },
+        "dependencyType" : {
+          "type" : "string",
+          "enum" : [ "IMPLIES", "EXCLUDES", "CONTRIBUTES", "DAMAGES" ]
+        },
+        "dependencyDirection" : {
+          "type" : "string",
+          "enum" : [ "UNIDIRECTIONAL", "BIDIRECTIONAL" ]
+        }
+      }
+    },
+    "ExtendedPart" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependency"
+          }
+        },
+        "patternText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Parameter"
+          }
+        },
+        "artifactRelation" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "nameToShowOnDependencies" : {
+          "type" : "string"
+        },
+        "used" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "allInnerDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        },
+        "allDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        }
+      }
+    },
+    "Keyword" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ClassifierExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "internalClassifiers" : {
+          "type" : "array",
+          "uniqueItems" : true
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "requirementPatterns" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "sourcesByIdentifier" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "FixedPartUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "available", "numInstances", "patternText", "questionText", "statsNumInstances" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "patternText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ParameterUnmarshaller"
+          }
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RequirementPatternExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "editable" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "versions" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementPatternVersionExportDTO"
+          }
+        },
+        "sourcesByIdentifier" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ExternalObject" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "RequirementPatternImportUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "comments", "description", "editable", "name", "versions" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "versions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RequirementPatternVersionUnmarshaller"
+          }
+        },
+        "editable" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      }
+    },
+    "PatternObjectDependencyExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencyType" : {
+          "type" : "string"
+        },
+        "dependencyDirection" : {
+          "type" : "string"
+        },
+        "idDependency" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "CostFunctionDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "function" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Response" : {
+      "type" : "object",
+      "properties" : {
+        "statusInfo" : {
+          "$ref" : "#/definitions/StatusType"
+        },
+        "mediaType" : {
+          "$ref" : "#/definitions/MediaType"
+        },
+        "allowedMethods" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "entityTag" : {
+          "$ref" : "#/definitions/EntityTag"
+        },
+        "links" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Link"
+          }
+        },
+        "stringHeaders" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object"
+            }
+          }
+        },
+        "lastModified" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "date" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "headers" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object"
+            }
+          }
+        },
+        "entity" : {
+          "type" : "object"
+        },
+        "cookies" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/NewCookie"
+          }
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "length" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "language" : {
+          "$ref" : "#/definitions/Locale"
+        },
+        "location" : {
+          "type" : "string",
+          "format" : "uri"
+        }
+      }
+    },
+    "RequirementPatternVersionUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "author", "available", "forms", "goal", "numInstances", "statsNumAssociates", "statsNumInstances", "versionDate" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "versionDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "goal" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "keywords" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        },
+        "forms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RequirementFormUnmarshaller"
+          }
+        }
+      }
+    },
+    "PatternObjectDependencyDTO" : {
+      "type" : "object",
+      "properties" : {
+        "dependencyType" : {
+          "type" : "string"
+        },
+        "dependencyClass" : {
+          "type" : "string"
+        },
+        "dependencyDirection" : {
+          "type" : "string"
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        }
+      }
+    },
+    "ExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "sources" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SourceExportDTO"
+          }
+        },
+        "keywords" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/KeywordExportDTO"
+          }
+        },
+        "metrics" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MetricExportDTO"
+          }
+        },
+        "patterns" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RequirementPatternExportDTO"
+          }
+        },
+        "schemas" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SchemaExportDTO"
+          }
+        },
+        "dependencies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DependenciesExportDTO"
+          }
+        }
+      }
+    },
+    "KeywordExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "StatusType" : {
+      "type" : "object",
+      "properties" : {
+        "statusCode" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "reasonPhrase" : {
+          "type" : "string"
+        },
+        "family" : {
+          "type" : "string",
+          "enum" : [ "INFORMATIONAL", "SUCCESSFUL", "REDIRECTION", "CLIENT_ERROR", "SERVER_ERROR", "OTHER" ]
+        }
+      }
+    },
+    "PutSourceUnmarshaller" : {
+      "type" : "object",
+      "properties" : {
+        "identifier" : {
+          "type" : "string"
+        },
+        "reference" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "SchemaUnmarshaller" : {
+      "type" : "object",
+      "required" : [ "comments", "description", "name", "rootClassifiers" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "rootClassifiers" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ClassifierUnmarshaller"
+          }
+        }
+      }
+    },
+    "ClassifierDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/SourceDTO"
+          }
+        },
+        "uri" : {
+          "type" : "string",
+          "format" : "uri"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "internalClassifiers" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ClassifierDTO"
+          }
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "requirementPatterns" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RequirementPatternDTO"
+          }
+        }
+      }
+    },
+    "Parameter" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependency"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "correctnessCondition" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "metric" : {
+          "$ref" : "#/definitions/Metric"
+        },
+        "nameToShowOnDependencies" : {
+          "type" : "string"
+        },
+        "allInnerDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        },
+        "allDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        }
+      }
+    },
+    "Metric" : {
+      "type" : "object",
+      "required" : [ "comments", "description", "name" ],
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "sources" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Source"
+          }
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "DOMAIN", "FLOAT", "INTEGER", "STRING", "TIME", "SET" ]
+        }
+      }
+    },
+    "RequirementPatternVersion" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectDependency"
+          }
+        },
+        "versionDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "goal" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "statsNumAssociates" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "artifactRelation" : {
+          "type" : "string"
+        },
+        "lemmatizedVersion" : {
+          "type" : "string"
+        },
+        "forms" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/RequirementForm"
+          }
+        },
+        "keywords" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Keyword"
+          }
+        },
+        "versionDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Dependency"
+          }
+        },
+        "externalObjects" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ExternalObject"
+          }
+        },
+        "costFunction" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/CostFunction"
+          }
+        },
+        "used" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "nameToShowOnDependencies" : {
+          "type" : "string"
+        },
+        "allDependencies" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PatternObjectCompleteDependency"
+          }
+        }
+      }
+    },
+    "ExtendedPartExportDTO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "patternText" : {
+          "type" : "string"
+        },
+        "questionText" : {
+          "type" : "string"
+        },
+        "numInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "available" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "statsNumInstances" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "artifactsRelation" : {
+          "type" : "string"
+        },
+        "parameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ParameterExportDTO"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "pos" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    }
+  }
+}
