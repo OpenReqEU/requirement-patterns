@@ -2,7 +2,7 @@
 # **PABRE-WS**
 This service was created as a result of the OpenReq project funded by the European Union Horizon 2020 Research and Innovation programme under grant agreement No. 732463.
 
-Pabre Swagger file can be found at: [OpenReq Server](http://217.172.12.199:9408/pabre-ws/doc/)
+Pabre Swagger file can be found at: [OpenReq Server](https://api.openreq.eu/requirement-patterns/pabre-ws/doc/)
 
 The following technologies are used:
 
