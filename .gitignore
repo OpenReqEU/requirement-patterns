@@ -1,0 +1,5 @@
+### SonarQube ###
+.vscode/
+*.code-workspace
+venv/
+*.class
