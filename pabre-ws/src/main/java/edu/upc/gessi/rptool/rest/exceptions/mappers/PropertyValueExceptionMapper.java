@@ -20,7 +20,7 @@ public class PropertyValueExceptionMapper extends GenericUnsuccessfullExceptionM
 	} else {
 	    message += exception.getMessage();
 	}
-	System.err.println(message);
+	logger.error(message);
 	return Response.status(Status.BAD_REQUEST).entity(message).type("text/plain").build();
     }
 

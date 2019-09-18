@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import edu.upc.gessi.rptool.config.Control;
 import edu.upc.gessi.rptool.domain.metrics.Metric;
 import edu.upc.gessi.rptool.exceptions.IntegrityException;
 import edu.upc.gessi.rptool.exceptions.ValueException;
@@ -54,11 +55,10 @@ public class GenericMetricImportCreatorUnmarshaller {
 		throw new MissingCreatorPropertyException("Unsupported Type");
 	    }
 	} catch (IllegalArgumentException e) {
-	    e.printStackTrace();
+		Control.getInstance().showErrorMessage(e.getMessage());
 	    throw new JsonMappingException(null, e.getMessage());// Throw exception has Semmantically incorrect
 	}
-	Metric m = metric.build();
-	return m;
+		return metric.build();
     }
 
     public String getType() {

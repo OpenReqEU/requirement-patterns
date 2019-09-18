@@ -20,6 +20,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import edu.upc.gessi.rptool.exceptions.IntegrityException;
+import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 import org.apache.log4j.Logger;
 
 import edu.upc.gessi.rptool.data.GenericDataController;
@@ -44,6 +46,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.uima.UIMAException;
 
 @Path("/patterns")
 @Api(value = "Patterns", produces = MediaType.APPLICATION_JSON)
@@ -114,12 +117,12 @@ public class Patterns {
 	    throws ValueException {
 	logger.info("Getting all the patterns");
 
-	List<RequirementPattern> lrp = new ArrayList<>(); // List used to store pattern which are complete
+	List<RequirementPattern> lrp; // List used to store pattern which are complete
 
 	if (!keyword.equals("")) { // Case when some one indicate the keywords to filter
 	    lrp = PatternDataController.listPatternWithGivenKeyword(keyword); // get all the patterns with that keyword
 
-	} else if (namesList != null && namesList.size() != 0) {
+	} else if (namesList != null && !namesList.isEmpty()) {
 	    // Case when someone wants patterns from a specified InternalClassifier
 	    lrp = getPatternsInClassifiers(namesList, isRecursive);
 
@@ -128,7 +131,7 @@ public class Patterns {
 	}
 
 	// Create all the DTOs to return
-	Set<RequirementPatternDTO> rpDTOs = new TreeSet<RequirementPatternDTO>(); // Set use to return the pattern DTO
+	Set<RequirementPatternDTO> rpDTOs = new TreeSet<>(); // Set use to return the pattern DTO
 	// create all the DTO for the list with the complete pattern
 	for (int i = 0; i < lrp.size(); i++) {
 	    RequirementPattern rp = lrp.get(i);
@@ -165,7 +168,7 @@ public class Patterns {
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public IdFormatter createPattern(
 	    @ApiParam(value = "Unmarshaller with the new pattern fields", required = true) RequirementPatternUnmarshaller unmarshaller)
-	    throws Exception {
+	    throws UIMAException, SemanticallyIncorrectException, IntegrityException {
 	logger.info("Creating pattern");
 	RequirementPattern rp = null;
 	rp = unmarshaller.build(); // build the unmarshaller
@@ -216,7 +219,7 @@ public class Patterns {
     public Response updatePattern(
 	    // Using import unmarshaller to reuse the code
 	    @ApiParam(value = "Unmarshaller with the new pattern fields", required = true) RequirementPatternImportUnmarshaller unmarshaller,
-	    @ApiParam(value = "ID of the pattern", required = true) @PathParam("id") long patternId) throws Exception {
+	    @ApiParam(value = "ID of the pattern", required = true) @PathParam("id") long patternId) throws SemanticallyIncorrectException, NotFoundException, IntegrityException, UIMAException {
 	logger.info("Updating pattern");
 	RequirementPattern rp = retrieveRequirementPattern(patternId); // obtain the requirement pattern
 	PatternDataController.deletePattern(rp);// Delete older pattern
@@ -224,7 +227,7 @@ public class Patterns {
 	GenericDataController.flush();
 	boolean b = unmarshaller.checkAllItemsContainsID();
 	if (!b) {
-	    throw new Exception("Missing ID in one of the fields");
+	    throw new NotFoundException("Missing ID in one of the fields");
 	}
 
 	rp = unmarshaller.build(); // Build the new Pattern
@@ -249,7 +252,7 @@ public class Patterns {
 	    @ApiResponse(code = 404, message = "Not Found: The requested pattern is not found.", response = String.class),
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public Response deletePattern(
-	    @ApiParam(value = "ID of the pattern", required = true) @PathParam("id") long patternId) throws Exception {
+	    @ApiParam(value = "ID of the pattern", required = true) @PathParam("id") long patternId) throws SemanticallyIncorrectException {
 	logger.info("Deleting pattern");
 	RequirementPattern rp = retrieveRequirementPattern(patternId);
 	PatternDataController.deletePattern(rp);
@@ -284,8 +287,7 @@ public class Patterns {
 	// call the method to obtain all the dependencies
 	Set<PatternObjectCompleteDependency> l = rp.getAllPatternDependencies();
 	// Create all the DTOs with the dependencies
-	CompletePatternDependenciesDTO pcd = new CompletePatternDependenciesDTO(rp, l);
-	return pcd;
+		return new CompletePatternDependenciesDTO(rp, l);
     }
 
     // PRIVATE USAGE METHOD
@@ -353,8 +355,7 @@ public class Patterns {
     public static RequirementForm getFormAndCheckExceptions(long versionId, long patternId, long formId) {
 	RequirementPatternVersion rpv = retrieveRequirementPatternVersion(versionId, patternId);
 	logger.debug("RequirementForm, getFormAndCheckException, Checking: " + rpv.getRequirementPattern().getId());
-	RequirementForm rf = retrieveRequirementForm(versionId, formId, rpv);
-	return rf;
+		return retrieveRequirementForm(versionId, formId, rpv);
     }
 
     /**

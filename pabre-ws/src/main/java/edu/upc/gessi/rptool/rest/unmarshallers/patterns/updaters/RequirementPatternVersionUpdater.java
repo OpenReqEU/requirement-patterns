@@ -1,5 +1,6 @@
 package edu.upc.gessi.rptool.rest.unmarshallers.patterns.updaters;
 
+import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 import org.apache.uima.UIMAException;
 
 import edu.upc.gessi.rptool.data.GenericDataController;
@@ -57,7 +58,7 @@ public class RequirementPatternVersionUpdater {
 	}
     }
 
-    private void build() throws Exception {
+    private void build() throws IntegrityException, SemanticallyIncorrectException {
 	newFields = unmarshaller.build();
     }
 }

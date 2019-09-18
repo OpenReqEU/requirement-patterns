@@ -19,6 +19,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import edu.upc.gessi.rptool.exceptions.IntegrityException;
+import edu.upc.gessi.rptool.exceptions.ValueException;
 import org.apache.log4j.Logger;
 
 import edu.upc.gessi.rptool.data.MetricDataController;
@@ -118,14 +120,12 @@ public class Metrics {
     public List<MetricDTO> getMetrics(
 	    @ApiParam(value = "True if the metric should have all the values", required = true, defaultValue = "false") @DefaultValue("false") @QueryParam("complete") boolean complete) {
 	logger.info("Getting all the metrics...");
-	List<MetricDTO> listMetricsDTOs = new LinkedList<MetricDTO>();
+	List<MetricDTO> listMetricsDTOs = new LinkedList<>();
 	List<Metric> listMetrics = MetricDataController.listMetrics(); // Obtain the metrics with the controller
 	for (Metric m : listMetrics) {// for each metric obtained create the corresponding DTO
 	    MetricDTO metricDTO;
-	    if (complete && m.getType() == Type.SET)
-		metricDTO = new SetMetricDTO((SetMetric) m);
-	    else if (complete && m.getType() == Type.DOMAIN)
-		metricDTO = new DomainMetricDTO((DomainMetric) m);
+	    if (complete && m.getType() == Type.SET) metricDTO = new SetMetricDTO((SetMetric) m);
+	    else if (complete && m.getType() == Type.DOMAIN) metricDTO = new DomainMetricDTO((DomainMetric) m);
 	    else {
 		metricDTO = new MetricDTO(m);
 		if (m instanceof Metric) {
@@ -199,7 +199,7 @@ public class Metrics {
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public IdFormatter createMetric(@ApiParam(value = METRICCREATION, required = true) String metricJson,
 	    @ApiParam(value = "Type of metric to be created", required = true) @QueryParam("type") String type)
-	    throws Exception {
+	    throws MissingCreatorPropertyException, IntegrityException, SemanticallyIncorrectException, ValueException, IOException {
 	Metric m = null;
 	logger.debug("Creating Metric...");
 	logger.debug("Received type: " + type);
@@ -315,7 +315,7 @@ public class Metrics {
 	    }
 
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    logger.error(e.getMessage());
 	    throw e;
 	}
 

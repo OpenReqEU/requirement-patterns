@@ -21,7 +21,7 @@ public class MissingCreatorPropertyExceptionMapper
 	} else {
 	    message += exception.getMessage();
 	}
-	System.err.println(message);
+	logger.error(message);
 	return Response.status(400).entity(message).type("text/plain").build();
     }
 

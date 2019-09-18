@@ -27,7 +27,7 @@ public abstract class RequirementData {
     }
 
     public RequirementData() throws SemanticallyIncorrectException {
-	this(new String(), new ClassificationSchema(), new Classifier());
+	this("", new ClassificationSchema(), new Classifier());
     }
 
     /*

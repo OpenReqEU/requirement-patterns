@@ -12,7 +12,7 @@ import edu.upc.gessi.rptool.data.mediators.MediatorConnection;
 
 @Provider
 public class MyRequestFilter implements ContainerRequestFilter {
-    final static Logger logger = Logger.getLogger(MyRequestFilter.class);
+    static final Logger logger = Logger.getLogger(MyRequestFilter.class);
 
     @Override
     public void filter(ContainerRequestContext arg0) throws IOException {

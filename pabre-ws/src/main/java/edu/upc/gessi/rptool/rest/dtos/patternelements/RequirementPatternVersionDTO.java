@@ -27,8 +27,6 @@ public class RequirementPatternVersionDTO extends RequirementPatternVersionReduc
 
     private Set<RequirementFormDTO> forms;
     private Set<String> keywords;
-    // private Set<DependencyDTO> dependencies;
-    // private Set<VersionDTO> versions;
 
     private RequirementPatternDTO requirementPattern;
 
@@ -36,7 +34,6 @@ public class RequirementPatternVersionDTO extends RequirementPatternVersionReduc
 
     public RequirementPatternVersionDTO(RequirementPatternVersion rpv) {
 	super(rpv);
-	// this.author = rpv.getAuthor();
 	this.goal = rpv.getGoal();
 	this.reason = rpv.getReason();
 	this.numInstances = rpv.getNumInstances();
@@ -45,20 +42,14 @@ public class RequirementPatternVersionDTO extends RequirementPatternVersionReduc
 	this.statsNumAssociates = rpv.getStatsNumAssociates();
 	this.artifactRelation = rpv.getArtifactRelation();
 
-	this.keywords = new HashSet<String>();
+	this.keywords = new HashSet<>();
 	for (Keyword kw : rpv.getKeywords()) {
 	    this.keywords.add(kw.getName());
 	}
-	/*
-	 * this.dependencies = new HashSet<DependencyDTO>(); for (Dependency d :
-	 * rpv.getVersionDependencies()) { this.dependencies.add(new DependencyDTO(d));
-	 * }
-	 */
 	this.id = rpv.getId();
-	// this.versionDate = rpv.getVersionDate();
 	RequirementPattern rp = rpv.getRequirementPattern();
 
-	this.forms = new TreeSet<RequirementFormDTO>();
+	this.forms = new TreeSet<>();
 	for (RequirementForm rf : rpv.getForms()) {
 	    this.forms.add(new RequirementFormDTO(rf, rp.getId(), rpv.getId()));
 	}
@@ -170,12 +161,7 @@ public class RequirementPatternVersionDTO extends RequirementPatternVersionReduc
 	this.available = available;
     }
 
-    /*
-     * public Set<DependencyDTO> getDependencies() { return dependencies; }
-     * 
-     * public void setDependencies(Set<DependencyDTO> dependencies) {
-     * this.dependencies = dependencies; }
-     */
+
     public RequirementPatternDTO getRequirementPattern() {
 	return requirementPattern;
     }
@@ -194,8 +180,9 @@ public class RequirementPatternVersionDTO extends RequirementPatternVersionReduc
 	this.requirementPatternId = requirementPatternId;
     }
 
-    public int compareTo(RequirementPatternVersionDTO arg0) {
-	return this.versionDate.compareTo(arg0.getVersionDate());
+    public int compareTo(RequirementPatternVersionReducedDTO arg0) {
+        RequirementPatternVersionDTO aux = (RequirementPatternVersionDTO) arg0;
+	return this.versionDate.compareTo(aux.getVersionDate());
     }
 
     // Added lines

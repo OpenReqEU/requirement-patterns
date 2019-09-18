@@ -82,8 +82,7 @@ public class Keywords {
 	    @ApiParam(value = "ID of the keyword to obtain", required = true) @PathParam("id") long id) {
 	logger.info("Retriving keyword with ID: " + id);
 	Keyword k = retrieveKeyword(id);
-	KeywordDTO kDTO = new KeywordDTO(k);
-	return kDTO;
+        return new KeywordDTO(k);
     }
 
     /**
@@ -109,8 +108,7 @@ public class Keywords {
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public Response updateKeyword(
 	    @ApiParam(value = "new fields for keyword", required = true) KeywordUnmarshaller sourceJson,
-	    @ApiParam(value = "ID of the keyword to obtain", required = true) @PathParam("id") long id)
-	    throws JsonParseException, JsonMappingException, IOException {
+	    @ApiParam(value = "ID of the keyword to obtain", required = true) @PathParam("id") long id) {
 	logger.info("Updating keyword with ID: " + id);
 	Keyword k = retrieveKeyword(id);// Obtain the keyword
 	new KeywordUpdater(k, sourceJson).update();// Create a new instance of the updater and call to update
@@ -135,8 +133,7 @@ public class Keywords {
 	    @ApiResponse(code = 400, message = "Bad request: The request has not been applied because of wrong information, for more information check the Body.", response = String.class),
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public IdFormatter createKeyword(
-	    @ApiParam(value = "Keyword to be created", required = true) KeywordUnmarshaller sourceJson)
-	    throws JsonParseException, JsonMappingException, IOException {
+	    @ApiParam(value = "Keyword to be created", required = true) KeywordUnmarshaller sourceJson) {
 	logger.info("Creating Keyword...");
 	Keyword s = sourceJson.build();
 	GenericDataController.save(s);

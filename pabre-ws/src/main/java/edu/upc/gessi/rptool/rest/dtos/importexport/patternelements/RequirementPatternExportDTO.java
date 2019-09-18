@@ -21,8 +21,8 @@ public class RequirementPatternExportDTO extends PatternElementExportDTO {
     public RequirementPatternExportDTO(RequirementPattern rp) {
 	super(rp);
 	this.name = rp.getName();
-	this.editable = rp.getEditable() == 0 ? false : true;
-	this.versions = new TreeSet<RequirementPatternVersionExportDTO>();
+	this.editable = rp.getEditable() != 0;
+	this.versions = new TreeSet<>();
 	for (RequirementPatternVersion rpv : rp.getVersions()) {
 	    this.versions.add(new RequirementPatternVersionExportDTO(rpv));
 	}

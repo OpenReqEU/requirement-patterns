@@ -40,7 +40,7 @@ public class ClassifierDTO extends ClassificationObjectDTO implements Positionab
 	this.name = ic.getName();
 	this.type = ic.getType();
 	this.pos = ic.getPos();
-	this.requirementPatterns = new LinkedList<RequirementPatternDTO>();
+	this.requirementPatterns = new LinkedList<>();
 	this.schemaid = schemaid;
 	for (RequirementPattern rp : ic.getPatterns()) {
 	    // Create a reduced version of the pattern
@@ -54,10 +54,10 @@ public class ClassifierDTO extends ClassificationObjectDTO implements Positionab
     @JsonIgnore
     public Set<ClassifierDTO> getAllInternalClassifiers() {
 	if (this.internalClassifiers == null) {
-	    return new HashSet<ClassifierDTO>();
+	    return new HashSet<>();
 	}
 
-	Set<ClassifierDTO> listClassifiers = new HashSet<ClassifierDTO>();
+	Set<ClassifierDTO> listClassifiers = new HashSet<>();
 	for (ClassifierDTO icDTO : this.internalClassifiers) {
 	    listClassifiers.addAll(icDTO.getAllInternalClassifiers());
 	}
@@ -99,7 +99,7 @@ public class ClassifierDTO extends ClassificationObjectDTO implements Positionab
 
     public void setInternalClassifiersRecursive(Set<Classifier> internalClassifiers, long schemaid)
 	    throws SemanticallyIncorrectException {
-	this.internalClassifiers = new TreeSet<ClassifierDTO>(new PositionComparator());
+	this.internalClassifiers = new TreeSet<>(new PositionComparator());
 	for (Classifier ic : internalClassifiers) {
 	    ClassifierDTO icDTO = new ClassifierDTO(ic, schemaid);
 	    icDTO.setInternalClassifiersRecursive(ic.getInternalClassifiers(), schemaid);

@@ -26,7 +26,7 @@ public abstract class GenericObject {
 	name = null;
 	description = null;
 	comments = null;
-	sources = new HashSet<Source>();
+	sources = new HashSet<>();
     }
 
     /*

@@ -43,15 +43,15 @@ public class NLPController {
     public static final String SEPARATOR = ". ";
     public static final String LANGUAGE = "en";
 
-    public static String lemmatizePatternLastVersion(RequirementPattern rp) throws Exception {
+    public static String lemmatizePatternLastVersion(RequirementPattern rp) throws IntegrityException, UIMAException {
 	return lemmatizeVersion(rp.findLastVersion());
     }
 
     public static String lemmatizeVersion(RequirementPatternVersion rpv) throws IntegrityException, UIMAException {
-	return lemmatizeVersionGivenLanguage(rpv, LANGUAGE);
+	return lemmatizeVersionGivenLanguage(rpv);
     }
 
-    public static String lemmatizeVersionGivenLanguage(RequirementPatternVersion rpv, String language)
+    public static String lemmatizeVersionGivenLanguage(RequirementPatternVersion rpv)
 	    throws IntegrityException, UIMAException {
 	if (rpv == null) {
 	    throw new IntegrityException("Null Pattern version cannot be lemmatized");
@@ -68,14 +68,12 @@ public class NLPController {
 	// add keywords
 	if (rpv.getKeywords() != null && !rpv.getKeywords().isEmpty()) {
 	    for (Keyword key : rpv.getKeywords()) {
-		original += key.getName();
-		original += SEPARATOR;
+		original = original.concat(key.getName()+SEPARATOR);
 	    }
 	}
 	// add forms name
 	for (RequirementForm form : rpv.getForms()) {
-	    original += form.getName();
-	    original += SEPARATOR;
+	    original = original.concat(form.getName()+SEPARATOR);
 	}
 
 	logger.debug("Lemmatized string: " + original);
@@ -128,8 +126,7 @@ public class NLPController {
 	for (Sentence s : select(jcas, Sentence.class)) {
 	    List<Lemma> lemmas = selectCovered(Lemma.class, s);
 	    for (int i = 0; i < lemmas.size(); i++) {
-		ret += lemmas.get(i).getValue();
-		ret += " ";
+		ret = ret.concat(lemmas.get(i).getValue()+" ");
 	    }
 	}
 	return ret;
@@ -150,9 +147,9 @@ public class NLPController {
 
 	AnalysisEngineDescription tagger = createEngineDescription(ClearNlpPosTagger.class);
 	AnalysisEngineDescription lemma = createEngineDescription(ClearNlpLemmatizer.class);
-	AnalysisEngine LemmaEngine = createEngine(createEngineDescription(tagger, lemma));
+	AnalysisEngine lemmaEngine = createEngine(createEngineDescription(tagger, lemma));
 
-	JCas jcas = runParser(LemmaEngine, LANGUAGE, text);
+	JCas jcas = runParser(lemmaEngine, LANGUAGE, text);
 	Collection<Lemma> lemmas = JCasUtil.select(jcas, Lemma.class);
 	String ret = "";
 	String[] terms = text.split(" ");
@@ -160,15 +157,11 @@ public class NLPController {
 	if (!lemmas.isEmpty()) {
 	    for (Lemma l : lemmas) {
 		if (!l.getValue().matches("\\d+")) { // if is not a digit
-		    if (!ret.equals(""))
-			ret = ret + " " + l.getValue();
-		    else
-			ret = l.getValue();
+		    if (!ret.equals("")) ret = ret.concat(" " + l.getValue());
+		    else ret = l.getValue();
 		} else { // if is a digit
-		    if (!ret.equals(""))
-			ret = ret + " " + terms[i];
-		    else
-			ret = terms[i];
+		    if (!ret.equals("")) ret = ret.concat(" " + terms[i]);
+		    else ret = terms[i];
 		}
 		i++;
 	    }
@@ -194,7 +187,7 @@ public class NLPController {
 
 	jcas.setDocumentLanguage(aLanguage); // Set the language
 
-	TokenBuilder<Token, Sentence> tb = new TokenBuilder<Token, Sentence>(Token.class, Sentence.class);
+	TokenBuilder<Token, Sentence> tb = new TokenBuilder<>(Token.class, Sentence.class);
 
 	tb.buildTokens(jcas, aText); // build
 

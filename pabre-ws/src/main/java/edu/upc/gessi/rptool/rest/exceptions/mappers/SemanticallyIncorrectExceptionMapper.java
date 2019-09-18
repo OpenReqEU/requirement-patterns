@@ -21,7 +21,7 @@ public class SemanticallyIncorrectExceptionMapper
 	} else {
 	    message += exception.getMessage();
 	}
-	System.err.println(message);
+	logger.error(message);
 	return Response.status(422).entity(message).type("text/plain").build();
     }
 

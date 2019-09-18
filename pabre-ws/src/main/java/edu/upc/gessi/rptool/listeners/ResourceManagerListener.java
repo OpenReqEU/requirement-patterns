@@ -14,7 +14,7 @@ import org.hibernate.SessionFactory;
 import edu.upc.gessi.rptool.data.mediators.MediatorConnection;
 
 public class ResourceManagerListener implements ServletContextListener {
-    final static Logger logger = Logger.getLogger(ResourceManagerListener.class);
+    static final Logger logger = Logger.getLogger(ResourceManagerListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent event) {

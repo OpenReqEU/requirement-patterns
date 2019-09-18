@@ -15,8 +15,8 @@ public class DependenciesExportDTO {
 	this.idDependant = idDependant;
 	dependencies = new ArrayList<>();
 	for (PatternObjectDependency patternObjectDependency : pod) {
-	    PatternObjectDependencyExportDTO pode = new PatternObjectDependencyExportDTO(idDependant,
-		    patternObjectDependency);
+	    PatternObjectDependencyExportDTO pode = new PatternObjectDependencyExportDTO(
+                patternObjectDependency);
 	    dependencies.add(pode);
 	}
     }

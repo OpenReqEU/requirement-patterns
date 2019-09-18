@@ -40,20 +40,20 @@ public class FormAssociatedRequirementData extends NoInstancedRequirementData {
 	    Classifier generalClassifier, String name, String formText, String questionText, String state,
 	    RequirementPattern requirementPattern, RequirementForm requirementForm) {
 	this(projectName, classificationSchema, generalClassifier, name, formText, questionText, state,
-		requirementPattern, requirementForm, new String());
+		requirementPattern, requirementForm, "");
     }
 
     public FormAssociatedRequirementData(String projectName, ClassificationSchema classificationSchema,
 	    Classifier generalClassifier, String name, String formText, String questionText,
 	    RequirementPattern requirementPattern, RequirementForm requirementForm) {
-	this(projectName, classificationSchema, generalClassifier, name, formText, questionText, new String(),
+	this(projectName, classificationSchema, generalClassifier, name, formText, questionText, "",
 		requirementPattern, requirementForm);
     }
 
     public FormAssociatedRequirementData() throws SemanticallyIncorrectException {
 
-	this(new String(), new ClassificationSchema(), new Classifier(), new String(), new String(),
-		new String(), new RequirementPattern(), new RequirementForm());
+	this("", new ClassificationSchema(), new Classifier(), "", "",
+            "", new RequirementPattern(), new RequirementForm());
     }
 
     /*

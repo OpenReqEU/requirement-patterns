@@ -32,7 +32,7 @@ public class InstancedRequirementData extends RequirementData {
     }
 
     public InstancedRequirementData() throws SemanticallyIncorrectException {
-	this(new String(), new ClassificationSchema(), new Classifier());
+	this("", new ClassificationSchema(), new Classifier());
     }
 
     /*

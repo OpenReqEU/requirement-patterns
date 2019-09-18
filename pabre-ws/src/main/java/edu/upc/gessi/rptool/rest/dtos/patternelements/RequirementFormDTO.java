@@ -47,7 +47,7 @@ public class RequirementFormDTO extends PatternElementDTO implements Comparable<
 	this.statsNumAssociates = rf.getStatsNumAssociates();
 	this.fixedPart = new FixedPartDTO(rf.getFixedPart(), requirementPatternId, versionId, this.getId(),
 		rf.getFixedPart().getArtifactRelation());
-	this.extendedParts = new TreeSet<ExtendedPartDTO>();
+	this.extendedParts = new TreeSet<>();
 	for (ExtendedPart ep : rf.getExtendedParts()) {
 	    this.extendedParts.add(
 		    new ExtendedPartDTO(ep, requirementPatternId, versionId, this.getId(), ep.getArtifactRelation()));

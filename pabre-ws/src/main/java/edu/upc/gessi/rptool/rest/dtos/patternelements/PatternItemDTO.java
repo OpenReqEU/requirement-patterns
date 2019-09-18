@@ -43,14 +43,13 @@ public class PatternItemDTO extends ReducedPatternObjectDTO {
 	this.available = pi.getAvailable();
 	this.statsNumInstances = pi.getStatsNumInstances();
 	this.artifactsRelation = artifactsRelation;
-	this.parameters = new HashSet<ParameterDTO>();
+	this.parameters = new HashSet<>();
 	for (Parameter p : pi.getParameters()) {
 	    this.parameters.add(new ParameterDTO(p));
 	}
 	this.requirementPatternId = requirementPatternId;
 	this.versionId = versionId;
 	this.formId = formId;
-	this.artifactsRelation = artifactsRelation;
     }
 
     public String getArtifactsRelation() {

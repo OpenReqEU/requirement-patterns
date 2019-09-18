@@ -15,7 +15,7 @@ public class CompletePatternDependenciesDTO extends ReducedPatternObjectDTO {
 	super(rp.getId());
 	dependencies = new HashSet<>();
 	for (PatternObjectCompleteDependency d : l) {
-	    this.dependencies.add(new CompletePatternObjectDependencyDTO(rp, d));
+	    this.dependencies.add(new CompletePatternObjectDependencyDTO(d));
 	}
     }
 

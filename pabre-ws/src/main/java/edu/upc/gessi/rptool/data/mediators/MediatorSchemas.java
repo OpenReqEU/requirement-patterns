@@ -38,7 +38,7 @@ public final class MediatorSchemas extends MediatorGeneric {
      *            the root classifiers of the classification schema that m
      *            represents)
      */
-    public static void save(Object o, Set<Classifier> roots) {
+    public static void save(Set<Classifier> roots) {
 	for (Classifier classifier : roots) {
 	    save(classifier);
 	}
@@ -52,6 +52,7 @@ public final class MediatorSchemas extends MediatorGeneric {
     }
 
     /**
+     * @deprecated ()
      * Get the list of requirement patterns that there are in the classifier with
      * the id received as parameter.
      * 
@@ -98,7 +99,7 @@ public final class MediatorSchemas extends MediatorGeneric {
      * @throws SemanticallyIncorrectException
      */
     public static void deleteReferencedPatternOfTheSchema(ClassificationSchema schema)
-	    throws HibernateException, IntegrityException, SemanticallyIncorrectException {
+	    throws HibernateException, SemanticallyIncorrectException {
 	for (Classifier root : schema.getRootClassifiers()) {
 	    deletePatternsRecursive(root);
 	}

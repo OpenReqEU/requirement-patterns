@@ -138,7 +138,7 @@ public class Source implements Comparable<Source>, Identificable {
      */
     @Override
     public boolean equals(Object obj) {
-	if (obj == null || !(obj instanceof Source))
+	if (!(obj instanceof Source))
 	    return false;
 
 	Source src = (Source) obj;
@@ -150,7 +150,7 @@ public class Source implements Comparable<Source>, Identificable {
      */
     @Override
     public int hashCode() {
-	return new Long(this.getId()).hashCode();
+	return Long.valueOf(this.getId()).hashCode();
     }
 
     /**

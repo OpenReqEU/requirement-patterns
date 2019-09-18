@@ -13,14 +13,14 @@ public class PossibleValueException extends RPToolException {
      */
 
     private static final long serialVersionUID = 1L;
-    String message = null;
+    private String message = null;
 
     /*
      * CREATORS
      */
 
     public PossibleValueException(String msg) {
-	message = new String();
+	message = "";
 	message = msg;
     }
 

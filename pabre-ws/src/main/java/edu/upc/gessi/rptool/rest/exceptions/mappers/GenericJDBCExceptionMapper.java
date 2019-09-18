@@ -21,7 +21,7 @@ public class GenericJDBCExceptionMapper extends GenericUnsuccessfullExceptionMap
 	} else {
 	    message += exception.getMessage();
 	}
-	System.err.println("Message: " + message);
+	logger.error("Message: " + message);
 	return Response.status(Status.BAD_REQUEST).entity(message).type("text/plain").build();
     }
 

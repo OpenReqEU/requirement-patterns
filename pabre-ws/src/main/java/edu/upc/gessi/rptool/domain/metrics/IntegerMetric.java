@@ -41,7 +41,6 @@ public class IntegerMetric extends SimpleMetric {
     public IntegerMetric() {
 	minValue = Integer.MIN_VALUE;
 	maxValue = Integer.MAX_VALUE;
-	// defaultValue = Integer.MAX_VALUE;
     }
 
     /**
@@ -61,13 +60,12 @@ public class IntegerMetric extends SimpleMetric {
 	if (min <= max) {
 	    minValue = min;
 	    maxValue = max;
-	    // defaultValue = maxValue;
 	} else {
 	    throw new ValueException("Minimum must be smaller than maximum.");
 	}
     }
 
-    public IntegerMetric(int min, int max) throws Exception {
+    public IntegerMetric(int min, int max) throws ValueException {
 	setMinMax(min, max);
     }
 
@@ -86,7 +84,7 @@ public class IntegerMetric extends SimpleMetric {
      *             This exception is raised when minimum isn't <= default or default
      *             isn't <= maximum
      */
-    public IntegerMetric(int min, int max, int def) throws Exception {
+    public IntegerMetric(int min, int max, int def) throws ValueException {
 	if (min <= def && def <= max) {
 	    minValue = min;
 	    maxValue = max;
@@ -114,6 +112,8 @@ public class IntegerMetric extends SimpleMetric {
 
     }
 
+    private final String defaultValueErrorMessage = "If default value is defined, minimum must be smaller than default value and default value must be smaller than maximum. Otherwise, minimum must be smaller than maximum.";
+
     /*
      * GET'S AND SET'S METHODS
      */
@@ -136,8 +136,7 @@ public class IntegerMetric extends SimpleMetric {
      */
     public void setMinValue(int min) throws ValueException {
 	if ((hasDefault && min > defaultValue) || min > maxValue)
-	    throw new ValueException(
-		    "If default value is defined, minimum must be smaller than default value and default value must be smaller than maximum. Otherwise, minimum must be smaller than maximum.");
+	    throw new ValueException(defaultValueErrorMessage);
 	minValue = min;
     }
 
@@ -163,8 +162,7 @@ public class IntegerMetric extends SimpleMetric {
      */
     public void setMaxValue(int max) throws ValueException {
 	if ((hasDefault && max < defaultValue) || max < minValue)
-	    throw new ValueException(
-		    "If default value is defined, minimum must be smaller than default value and default value must be smaller than maximum. Otherwise, minimum must be smaller than maximum.");
+	    throw new ValueException(defaultValueErrorMessage);
 	maxValue = max;
     }
 
@@ -190,8 +188,7 @@ public class IntegerMetric extends SimpleMetric {
 	if (def == null) {
 	    hasDefault = false;
 	} else if ((def < minValue || def > maxValue)) {
-	    throw new ValueException(
-		    "If default value is defined, minimum must be smaller than default value and default value must be smaller than maximum. Otherwise, minimum must be smaller than maximum.");
+	    throw new ValueException(defaultValueErrorMessage);
 	} else {
 	    defaultValue = def;
 	    hasDefault = true;
@@ -256,8 +253,7 @@ public class IntegerMetric extends SimpleMetric {
     public void setValues(int minValue, int maxValue, boolean hasDefValue, int defValue) throws ValueException {
 
 	if ((hasDefValue && (minValue > defValue || maxValue < defValue)) || (maxValue < minValue)) {
-	    throw new ValueException(
-		    "If default value is defined, minimum must be smaller than default value and default value must be smaller than maximum. Otherwise, minimum must be smaller than maximum.");
+	    throw new ValueException(defaultValueErrorMessage);
 	}
 	// all values are correct
 	this.minValue = minValue;

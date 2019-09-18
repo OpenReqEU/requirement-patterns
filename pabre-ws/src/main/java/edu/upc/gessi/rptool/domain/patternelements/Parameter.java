@@ -124,7 +124,7 @@ public class Parameter extends PatternObject implements Comparable<Parameter> {
 
     @Override
     public Set<PatternObjectCompleteDependency> getAllInnerDependencies() {
-	return new HashSet<PatternObjectCompleteDependency>();
+	return new HashSet<>();
     }
 
     @Override
@@ -153,23 +153,19 @@ public class Parameter extends PatternObject implements Comparable<Parameter> {
 	    return false;
 	Parameter other = (Parameter) obj;
 	if (correctnessCondition == null) {
-	    if (other.correctnessCondition != null)
-		return false;
+	    if (other.correctnessCondition != null) return false;
 	} else if (!correctnessCondition.equals(other.correctnessCondition))
 	    return false;
 	if (description == null) {
-	    if (other.description != null)
-		return false;
+	    if (other.description != null) return false;
 	} else if (!description.equals(other.description))
 	    return false;
 	if (metric == null) {
-	    if (other.metric != null)
-		return false;
+	    if (other.metric != null) return false;
 	} else if (!metric.equals(other.metric))
 	    return false;
 	if (name == null) {
-	    if (other.name != null)
-		return false;
+	    if (other.name != null) return false;
 	} else if (!name.equals(other.name))
 	    return false;
 	return true;

@@ -17,9 +17,9 @@ import edu.upc.gessi.rptool.exceptions.IntegrityException;
 import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class RequirementFormImportUnmarshaller extends RequirementFormUnmarshaller {
-    protected Set<String> sources;
-    protected FixedPartImportUnmarshaller fixedPart;
-    protected Set<ExtendedPartImportUnmarshaller> extendedParts;
+    protected Set<String> sourcesAux;
+    protected FixedPartImportUnmarshaller fixedPartAux;
+    protected Set<ExtendedPartImportUnmarshaller> extendedPartsAux;
 
     @JsonCreator
     public RequirementFormImportUnmarshaller(@JsonProperty(value = "id", required = false) long id,
@@ -41,9 +41,9 @@ public class RequirementFormImportUnmarshaller extends RequirementFormUnmarshall
 	super(id, name, description, comments, author, modificationDate, numInstances, statsNumInstances,
 		statsNumAssociates, pos, available);
 
-	this.sources = sources;
-	this.fixedPart = fixedPart;
-	this.extendedParts = extendedParts;
+	this.sourcesAux = sources;
+	this.fixedPartAux = fixedPart;
+	this.extendedPartsAux = extendedParts;
 
     }
 
@@ -52,11 +52,11 @@ public class RequirementFormImportUnmarshaller extends RequirementFormUnmarshall
 
 	buildAndSetFixedPart();
 
-	if (extendedParts == null)
-	    extendedParts = new HashSet<>();
-	boolean positions[] = new boolean[extendedParts.size()];
+	if (extendedPartsAux == null)
+	    extendedPartsAux = new HashSet<>();
+	boolean[] positions = new boolean[extendedPartsAux.size()];
 
-	for (ExtendedPartImportUnmarshaller extendedPartImportUnmarshaller : extendedParts) {
+	for (ExtendedPartImportUnmarshaller extendedPartImportUnmarshaller : extendedPartsAux) {
 	    checkExtendedPartsBuildAndAdd(positions, extendedPartImportUnmarshaller);
 	}
 
@@ -65,15 +65,14 @@ public class RequirementFormImportUnmarshaller extends RequirementFormUnmarshall
 
     @Override
     protected void buildAndSetFixedPart() throws SemanticallyIncorrectException {
-	rf.setFixedPart((FixedPart) fixedPart.build());
+	rf.setFixedPart((FixedPart) fixedPartAux.build());
     }
 
     @Override
     protected void checkExtendedPartsBuildAndAdd(boolean[] positions, ExtendedPartUnmarshaller epu)
 	    throws SemanticallyIncorrectException {
 	try {
-	    if (positions[epu.getPos()])
-		throw new SemanticallyIncorrectException("Invalid pos value in form extended parts");
+	    if (positions[epu.getPos()]) throw new SemanticallyIncorrectException("Invalid pos value in form extended parts");
 	    positions[epu.getPos()] = true;
 	    rf.addExtendedPart((ExtendedPart) epu.build());
 	} catch (ArrayIndexOutOfBoundsException e) {
@@ -85,10 +84,10 @@ public class RequirementFormImportUnmarshaller extends RequirementFormUnmarshall
 
     @Override
     protected void setSources() throws SemanticallyIncorrectException {
-	if (sources == null)
-	    sources = new HashSet<>();
+	if (sourcesAux == null)
+	    sourcesAux = new HashSet<>();
 	try {
-	    rf.setSources(IdToDomainObject.getSourcesByIdentifiers(sources));
+	    rf.setSources(IdToDomainObject.getSourcesByIdentifiers(sourcesAux));
 	} catch (NotFoundException e) {
 	    throw new SemanticallyIncorrectException("Invalid source id in form");
 	}
@@ -97,11 +96,11 @@ public class RequirementFormImportUnmarshaller extends RequirementFormUnmarshall
 
     public boolean checkAllItemsContainsID() {
 	boolean b = id != 0;
-	if (!fixedPart.checkAllItemsContainsID()) {
+	if (!fixedPartAux.checkAllItemsContainsID()) {
 	    b = false;
 	}
-	if (extendedParts != null) {
-	    for (ExtendedPartImportUnmarshaller ext : extendedParts) {
+	if (extendedPartsAux != null) {
+	    for (ExtendedPartImportUnmarshaller ext : extendedPartsAux) {
 		if (!ext.checkAllItemsContainsID()) {
 		    b = false;
 		}

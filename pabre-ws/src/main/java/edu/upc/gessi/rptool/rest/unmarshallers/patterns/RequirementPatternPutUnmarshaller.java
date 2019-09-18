@@ -10,7 +10,7 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class RequirementPatternPutUnmarshaller extends RequirementPatternUnmarshaller {
 
-    private Boolean editable;
+    private Boolean editableAux;
 
     @JsonCreator
     public RequirementPatternPutUnmarshaller(@JsonProperty(value = "name", required = false) String name,
@@ -19,12 +19,12 @@ public class RequirementPatternPutUnmarshaller extends RequirementPatternUnmarsh
 	    @JsonProperty(value = "sources", required = false) Set<Long> sources,
 	    @JsonProperty(value = "editable", required = false) Boolean editable) throws IOException {
 	super(name, description, comments, sources, null, editable);
-	this.editable = editable;
+	this.editableAux = editable;
     }
 
     @Override
     protected void setVersions() throws SemanticallyIncorrectException {
-
+        //not implemented WHY?
     }
 
     @Override
@@ -33,7 +33,7 @@ public class RequirementPatternPutUnmarshaller extends RequirementPatternUnmarsh
     }
 
     public boolean getEditableIsPresent() {
-	return editable != null;
+	return editableAux != null;
     }
 
 }

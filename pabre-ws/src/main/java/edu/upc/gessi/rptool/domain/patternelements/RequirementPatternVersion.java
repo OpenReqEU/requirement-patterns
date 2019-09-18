@@ -1,5 +1,6 @@
 package edu.upc.gessi.rptool.domain.patternelements;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,7 +24,7 @@ import edu.upc.gessi.rptool.exceptions.IntegrityException;
 
 @Entity
 @Table(name = "REQUIREMENT_PATTERN_VERSION")
-public class RequirementPatternVersion extends PatternObject {
+public class RequirementPatternVersion extends PatternObject implements Serializable {
 
     /*
      * ATTRIBUTES
@@ -89,15 +90,15 @@ public class RequirementPatternVersion extends PatternObject {
 	versionDate = new Date();
 	goal = null;
 	author = null;
-	numInstances = new Integer(0);
-	available = new Boolean(false);
-	statsNumInstances = new Integer(0);
-	statsNumAssociates = new Integer(0);
+	numInstances = 0;
+	available = Boolean.FALSE;
+	statsNumInstances = 0;
+	statsNumAssociates = 0;
 	setRequirementPattern(p);
-	forms = new HashSet<RequirementForm>();
+	forms = new HashSet<>();
 	forms.add(form);
-	keywords = new HashSet<Keyword>();
-	versionDependencies = new HashSet<Dependency>();
+	keywords = new HashSet<>();
+	versionDependencies = new HashSet<>();
 	externalObjects = new HashSet<>();
 	artifactRelation = null;
 	lemmatizedVersion = "";
@@ -108,14 +109,14 @@ public class RequirementPatternVersion extends PatternObject {
 	versionDate = new Date();
 	goal = null;
 	author = null;
-	numInstances = new Integer(0);
-	available = new Boolean(false);
-	statsNumInstances = new Integer(0);
-	statsNumAssociates = new Integer(0);
-	forms = new HashSet<RequirementForm>();
+	numInstances = 0;
+	available = Boolean.FALSE;
+	statsNumInstances = 0;
+	statsNumAssociates = 0;
+	forms = new HashSet<>();
 	requirementPattern = new RequirementPattern();
-	keywords = new HashSet<Keyword>();
-	versionDependencies = new HashSet<Dependency>();
+	keywords = new HashSet<>();
+	versionDependencies = new HashSet<>();
 	externalObjects = new HashSet<>();
 	artifactRelation = null;
 	lemmatizedVersion = "";
@@ -181,8 +182,7 @@ public class RequirementPatternVersion extends PatternObject {
     public boolean testNameForm(String n) {
 	Iterator<RequirementForm> i = forms.iterator();
 	while (i.hasNext()) {
-	    if (i.next().getName().trim().compareTo(n.trim()) == 0)
-		return false;
+	    if (i.next().getName().trim().compareTo(n.trim()) == 0) return false;
 	}
 	return true;
     }
@@ -201,8 +201,7 @@ public class RequirementPatternVersion extends PatternObject {
 	Iterator<RequirementForm> i = this.getForms().iterator();
 	while (i.hasNext()) {
 	    RequirementForm f = i.next();
-	    if (f.getId() == id)
-		return f;
+	    if (f.getId() == id) return f;
 	}
 	return null;
     }
@@ -236,8 +235,7 @@ public class RequirementPatternVersion extends PatternObject {
 
 	Iterator<RequirementForm> i = getForms().iterator();
 	while (i.hasNext() && !someFormAvailable) {
-	    if (i.next().getAvailable())
-		someFormAvailable = true;
+	    if (i.next().getAvailable()) someFormAvailable = true;
 	}
 	setAvailable(someFormAvailable);
     }
@@ -343,12 +341,9 @@ public class RequirementPatternVersion extends PatternObject {
     }
 
     public boolean isUsed() {
-	Integer numInstances = getNumInstances();
+	Integer numInstancesAux = getNumInstances();
 
-	if (numInstances == null || numInstances < 1)
-	    return false;
-	else
-	    return true;
+		return numInstancesAux != null && numInstancesAux >= 1;
     }
 
     public Boolean getAvailable() {
@@ -436,58 +431,47 @@ public class RequirementPatternVersion extends PatternObject {
 	    return false;
 	RequirementPatternVersion other = (RequirementPatternVersion) obj;
 	if (artifactRelation == null) {
-	    if (other.artifactRelation != null)
-		return false;
+	    if (other.artifactRelation != null) return false;
 	} else if (!artifactRelation.equals(other.artifactRelation))
 	    return false;
 	if (author == null) {
-	    if (other.author != null)
-		return false;
+	    if (other.author != null) return false;
 	} else if (!author.equals(other.author))
 	    return false;
 	if (available == null) {
-	    if (other.available != null)
-		return false;
+	    if (other.available != null) return false;
 	} else if (!available.equals(other.available))
 	    return false;
 	if (externalObjects == null) {
-	    if (other.externalObjects != null)
-		return false;
+	    if (other.externalObjects != null) return false;
 	} else if (!externalObjects.equals(other.externalObjects))
 	    return false;
 	if (forms == null) {
-	    if (other.forms != null)
-		return false;
+	    if (other.forms != null) return false;
 	} else if (!forms.equals(other.forms))
 	    return false;
 	if (goal == null) {
-	    if (other.goal != null)
-		return false;
+	    if (other.goal != null) return false;
 	} else if (!goal.equals(other.goal))
 	    return false;
 	if (keywords == null) {
-	    if (other.keywords != null)
-		return false;
+	    if (other.keywords != null) return false;
 	} else if (!keywords.equals(other.keywords))
 	    return false;
 	if (requirementPattern == null) {
-	    if (other.requirementPattern != null)
-		return false;
+	    if (other.requirementPattern != null) return false;
 	} else if (!requirementPattern.equals(other.requirementPattern))
 	    return false;
 	if (numInstances == null) {
-	    if (other.numInstances != null)
-		return false;
+	    if (other.numInstances != null) return false;
 	} else if (!numInstances.equals(other.numInstances))
 	    return false;
 	if (reason == null) {
-	    if (other.reason != null)
-		return false;
+	    if (other.reason != null) return false;
 	} else if (!reason.equals(other.reason))
 	    return false;
 	if (statsNumAssociates == null) {
-	    if (other.statsNumAssociates != null)
-		return false;
+	    if (other.statsNumAssociates != null) return false;
 	} else if (!statsNumAssociates.equals(other.statsNumAssociates))
 	    return false;
 	if (statsNumInstances == null) {
@@ -496,13 +480,11 @@ public class RequirementPatternVersion extends PatternObject {
 	} else if (!statsNumInstances.equals(other.statsNumInstances))
 	    return false;
 	if (versionDate == null) {
-	    if (other.versionDate != null)
-		return false;
+	    if (other.versionDate != null) return false;
 	} else if (!versionDate.equals(other.versionDate))
 	    return false;
 	if (versionDependencies == null) {
-	    if (other.versionDependencies != null)
-		return false;
+	    if (other.versionDependencies != null) return false;
 	} else if (!versionDependencies.equals(other.versionDependencies))
 	    return false;
 	return true;

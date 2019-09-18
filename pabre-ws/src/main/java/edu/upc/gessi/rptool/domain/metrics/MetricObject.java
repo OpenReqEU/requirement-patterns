@@ -49,7 +49,7 @@ public abstract class MetricObject implements Identificable {
     public MetricObject() {
 	description = null;
 	comments = null;
-	sources = new HashSet<Source>();
+	sources = new HashSet<>();
     }
 
     public MetricObject(String description2, String comments2) {

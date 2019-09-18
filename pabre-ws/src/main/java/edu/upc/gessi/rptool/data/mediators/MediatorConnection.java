@@ -2,6 +2,8 @@ package edu.upc.gessi.rptool.data.mediators;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.apache.log4j.Logger;
 import org.hibernate.FlushMode;
@@ -50,6 +52,10 @@ import edu.upc.gessi.rptool.domain.schema.Classifier;
  *
  */
 public class MediatorConnection {
+
+	private MediatorConnection() {
+		//utility class
+	}
 
     /**
      * This attribute corresponds to the session used to connect with database
@@ -127,9 +133,6 @@ public class MediatorConnection {
 	MediatorConnection.addClasses(cfg);
 	sessionFactory = cfg.buildSessionFactory();
 	MediatorConnection.setupGenerator();
-	// Used to get statistics for optimization of the querys
-	// Statistics s = sessionFactory.getStatistics();
-	// s.setStatisticsEnabled(true);
     }
 
     /**
@@ -177,7 +180,7 @@ public class MediatorConnection {
 	    connectionURL = "jdbc:derby:" + f.getAbsolutePath() + File.separator + databaseName;
 	    String url = connectionURL + ";create=true";
 	    logger.debug("setting property: hibernate.connection.url= " + url);
-	    System.out.println("Connectiong to database: " + url);
+	    logger.debug("Connectiong to database: " + url);
 	    cfg.setProperty("hibernate.connection.url", url);
 	}
     }
@@ -190,10 +193,15 @@ public class MediatorConnection {
      * @return True if can be created otherwise, False
      */
     static boolean checkFileCanbeCreated(File f) {
-	File newFile = new File(f.getAbsolutePath() + File.separator + "tmpFile");
+    	String path = f.getAbsolutePath() + File.separator + "tmpFile";
+	File newFile = new File(path);
 	boolean created = newFile.mkdir();
 	if (created) {
-	    newFile.delete();
+		try {
+			Files.delete(Paths.get(path));
+		} catch (IOException e) {
+			created = false;
+		}
 	}
 	return created;
     }
@@ -204,7 +212,7 @@ public class MediatorConnection {
 	    File temp = File.createTempFile("temp-file-name", ".tmp");
 	    String absolutePath = temp.getAbsolutePath();
 	    tempFilePath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
-	    temp.delete();// Delete temporary file
+	    Files.delete(Paths.get(absolutePath));// Delete temporary file
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}

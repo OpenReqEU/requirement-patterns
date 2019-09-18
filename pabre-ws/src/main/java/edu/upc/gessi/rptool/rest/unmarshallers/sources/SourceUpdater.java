@@ -1,10 +1,5 @@
 package edu.upc.gessi.rptool.rest.unmarshallers.sources;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
 import edu.upc.gessi.rptool.data.GenericDataController;
 import edu.upc.gessi.rptool.domain.Source;
 import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
@@ -20,11 +15,11 @@ public class SourceUpdater {
     }
 
     private void unmarshall()
-	    throws JsonParseException, JsonMappingException, IOException, SemanticallyIncorrectException {
+	    throws SemanticallyIncorrectException {
 	aux = sourceUnma.build();
     }
 
-    public void update() throws Exception {
+    public void update() throws SemanticallyIncorrectException {
 	unmarshall();
 	updateFields();
 	save();
@@ -34,7 +29,7 @@ public class SourceUpdater {
 	GenericDataController.update(s);
     }
 
-    private void updateFields() throws SemanticallyIncorrectException {
+    private void updateFields() {
 	if (aux.getIdentifier() != null)
 	    s.setIdentifier(aux.getIdentifier());
 	if (aux.getComments() != null)

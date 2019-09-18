@@ -9,7 +9,7 @@ public class PatternObjectDependencyExportDTO {
     private String dependencyDirection;
     private long idDependency;
 
-    public PatternObjectDependencyExportDTO(long patternObjectId, PatternObjectDependency d) {
+    public PatternObjectDependencyExportDTO(PatternObjectDependency d) {
 	this.id = d.getId();
 	this.dependencyType = d.getDependencyType().toString().toUpperCase();
 	this.dependencyDirection = d.getDependencyDirection().toString().toUpperCase();

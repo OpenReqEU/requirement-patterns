@@ -16,7 +16,7 @@ import edu.upc.gessi.rptool.exceptions.IntegrityException;
 @Table(name = "SIMPLE_METRIC")
 public abstract class SimpleMetric extends Metric implements DefaultValueMetric {
     public SimpleMetric() {
-    };
+    }
 
     public SimpleMetric(String name, String description, String comments) throws IntegrityException {
 	super(name, description, comments);

@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 import org.apache.log4j.Logger;
 
 import edu.upc.gessi.rptool.data.GenericDataController;
@@ -52,7 +53,7 @@ public class Sources {
     public List<SourceDTO> getSources() {
 	logger.debug("Retreving all the sources...");
 	List<Source> sources = ObjectDataController.listSources();
-	List<SourceDTO> sourcesDTOs = new LinkedList<SourceDTO>();
+	List<SourceDTO> sourcesDTOs = new LinkedList<>();
 	for (Source s : sources) {
 	    sourcesDTOs.add(new SourceDTO(s, true));
 	}
@@ -77,8 +78,7 @@ public class Sources {
 	    @ApiParam(value = "ID of the source to be obtained", required = true) @PathParam("id") long id) {
 	logger.debug("Retreving source with ID: " + id);
 	Source source = retrieveSource(id);
-	SourceDTO sourceDTO = new SourceDTO(source);
-	return sourceDTO;
+		return new SourceDTO(source);
     }
 
     /**
@@ -101,7 +101,7 @@ public class Sources {
     public Response updateSource(
 	    @ApiParam(value = "Unmarshaller with fields to update", required = true) PutSourceUnmarshaller sourceUnmarshaller,
 	    @ApiParam(value = "ID of the source to be updated", required = true) @PathParam("id") long id)
-	    throws Exception {
+	    throws SemanticallyIncorrectException {
 	logger.debug("Updating source with ID: " + id);
 	Source s = retrieveSource(id);
 	new SourceUpdater(s, sourceUnmarshaller).update();
@@ -125,7 +125,7 @@ public class Sources {
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public IdFormatter createSource(
 	    @ApiParam(value = "Unmarshaller with fields to created the source", required = true) SourceUnmarshaller sourcesUnmarshaller)
-	    throws Exception {
+	    throws SemanticallyIncorrectException {
 	logger.debug("Creating source...");
 	Source s = sourcesUnmarshaller.build();
 	GenericDataController.save(s);

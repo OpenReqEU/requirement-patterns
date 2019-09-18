@@ -52,10 +52,10 @@ public class GenericMetricExportDTO {
 	if (this.comments == null)
 	    this.comments = "";
 
-	if (m.getSources() != null && m.getSources().size() != 0) { // Create sources only if the metric has any
+	if (m.getSources() != null && !m.getSources().isEmpty()) { // Create sources only if the metric has any
 	    this.sources = new ArrayList<>(); // Create a new List of sources with only they identifier
-	    Set<Source> sources = m.getSources();
-	    for (Source source : sources) {
+	    Set<Source> sourcesAux = m.getSources();
+	    for (Source source : sourcesAux) {
 		this.sources.add(source.getIdentifier());
 	    }
 	}

@@ -65,8 +65,7 @@ public abstract class PatternObject implements Identificable {
 
     public PatternObjectDependency getDependency(long idDependency) {
 	for (PatternObjectDependency pod : dependencies) {
-	    if (pod.getDependency().getId() == idDependency)
-		return pod;
+	    if (pod.getDependency().getId() == idDependency) return pod;
 	}
 	return null;
     }
@@ -119,9 +118,7 @@ public abstract class PatternObject implements Identificable {
 	if (getClass() != obj.getClass())
 	    return false;
 	PatternObject other = (PatternObject) obj;
-	if (id != other.id)
-	    return false;
-	return true;
-    }
+		return id == other.id;
+	}
 
 }

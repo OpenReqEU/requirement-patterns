@@ -48,22 +48,22 @@ public class RequirementPattern extends PatternElement implements Comparable<Req
 
     public RequirementPattern(RequirementForm form) {
 	RequirementPatternVersion v = new RequirementPatternVersion(form, this);
-	classifiers = new HashSet<Classifier>();
-	versions = new HashSet<RequirementPatternVersion>();
+	classifiers = new HashSet<>();
+	versions = new HashSet<>();
 	versions.add(v);
     }
 
     public RequirementPattern() {
 
-	classifiers = new HashSet<Classifier>();
-	versions = new HashSet<RequirementPatternVersion>();
+	classifiers = new HashSet<>();
+	versions = new HashSet<>();
 
     }
 
     public RequirementPattern(Boolean noversions) {
 	if (noversions) {
-	    classifiers = new HashSet<Classifier>();
-	    versions = new HashSet<RequirementPatternVersion>();
+	    classifiers = new HashSet<>();
+	    versions = new HashSet<>();
 	} else {
 	    new RequirementPattern();
 	}
@@ -96,12 +96,12 @@ public class RequirementPattern extends PatternElement implements Comparable<Req
 	if (versions == null) {
 	    return null;
 	}
-	Object[] versions = this.versions.toArray();
-	Date iniDate = ((RequirementPatternVersion) versions[0]).getVersionDate();
-	RequirementPatternVersion last = ((RequirementPatternVersion) versions[0]);
-	for (int i = 0; i < versions.length; i++) {
-	    if (((RequirementPatternVersion) versions[i]).getVersionDate().compareTo(iniDate) > 0) {
-		last = ((RequirementPatternVersion) versions[i]);
+	Object[] versionsAux = this.versions.toArray();
+	Date iniDate = ((RequirementPatternVersion) versionsAux[0]).getVersionDate();
+	RequirementPatternVersion last = ((RequirementPatternVersion) versionsAux[0]);
+	for (int i = 0; i < versionsAux.length; i++) {
+	    if (((RequirementPatternVersion) versionsAux[i]).getVersionDate().compareTo(iniDate) > 0) {
+		last = ((RequirementPatternVersion) versionsAux[i]);
 		iniDate = last.getVersionDate();
 	    }
 	}
@@ -117,11 +117,11 @@ public class RequirementPattern extends PatternElement implements Comparable<Req
 	if (versions == null) {
 	    return null;
 	}
-	Object[] versions = this.versions.toArray();
-	RequirementPatternVersion last = ((RequirementPatternVersion) versions[0]);
-	for (int i = 0; i < versions.length; i++) {
-	    if (((RequirementPatternVersion) versions[i]).getId() == id) {
-		last = ((RequirementPatternVersion) versions[i]);
+	Object[] versionsAux = this.versions.toArray();
+	RequirementPatternVersion last = ((RequirementPatternVersion) versionsAux[0]);
+	for (int i = 0; i < versionsAux.length; i++) {
+	    if (((RequirementPatternVersion) versionsAux[i]).getId() == id) {
+		last = ((RequirementPatternVersion) versionsAux[i]);
 	    }
 	}
 	return last;
@@ -223,7 +223,7 @@ public class RequirementPattern extends PatternElement implements Comparable<Req
 	editable = a;
     }
 
-    public void ClearAndSetBasicClassifiers(Set<Classifier> s) {
+    public void clearAndSetBasicClassifiers(Set<Classifier> s) {
 	classifiers.clear();
 	if (s != null)
 	    classifiers.addAll(s);
@@ -276,8 +276,7 @@ public class RequirementPattern extends PatternElement implements Comparable<Req
 	    return false;
 	RequirementPattern other = (RequirementPattern) obj;
 	if (name == null) {
-	    if (other.name != null)
-		return false;
+	    if (other.name != null) return false;
 	} else if (!name.equals(other.name))
 	    return false;
 	return true;

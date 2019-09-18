@@ -21,20 +21,15 @@ public class FloatMetricExportDTO extends GenericMetricExportDTO {
 
     public FloatMetricExportDTO(Metric m) {
 	super(m);
-	switch (m.getType()) {
-	case FLOAT:
-	    type = Type.FLOAT;
-	    FloatMetric fm = (FloatMetric) m;
-	    this.minValue = fm.getMinValue();
-	    this.maxValue = fm.getMaxValue();
-	    if (fm.hasDefaultValue()) {
-		this.defaultValueFloat = fm.getDefaultValue();
-	    }
-
-	    break;
-	default:
-	    break;
-	}
+		if (m.getType() == Type.FLOAT) {
+			type = Type.FLOAT;
+			FloatMetric fm = (FloatMetric) m;
+			this.minValue = fm.getMinValue();
+			this.maxValue = fm.getMaxValue();
+			if (fm.hasDefaultValue()) {
+				this.defaultValueFloat = fm.getDefaultValue();
+			}
+		}
     }
 
 }

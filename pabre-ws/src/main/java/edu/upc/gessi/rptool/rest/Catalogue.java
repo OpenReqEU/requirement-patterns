@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import edu.upc.gessi.rptool.exceptions.IntegrityException;
 import org.apache.log4j.Logger;
 import org.apache.uima.UIMAException;
 
@@ -77,9 +78,7 @@ public class Catalogue {
 
     /**
      * Import all the items of the catalog
-     * 
-     * @param metricJson
-     *            Import unmarshaller
+     *
      * @return HTTP response, with all the ID of the items imported
      * @throws Exception
      */
@@ -94,7 +93,7 @@ public class Catalogue {
 	    @ApiResponse(code = 422, message = "Semantically Incorrect: The request has not been applied because the semantically incorrect information. check the body for more information", response = String.class),
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public Response importCatalogue(
-	    @ApiParam(value = "The JSON file to be imported", required = true) ImportUnmarshaller iu) throws Exception {
+	    @ApiParam(value = "The JSON file to be imported", required = true) ImportUnmarshaller iu) throws IntegrityException, SemanticallyIncorrectException, InternalError {
 	logger.info("Importing catalogue...");
 
 	logger.debug("Deleteing database");
@@ -107,7 +106,7 @@ public class Catalogue {
 	    return Response.status(Status.CREATED).entity(i).build();
 
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    logger.error(e.getMessage());
 
 	    // When Jackson library throws a exception while deserializing a object is
 	    // always JsonMapping or something related to that library, so when we make our
@@ -115,9 +114,9 @@ public class Catalogue {
 	    // Exception so Jersey don't use JsonMappingExceptionMapper instead of
 	    // SemanticallyIncorrectExceptionMapper
 	    if (e.getCause() instanceof SemanticallyIncorrectException) {
-		throw (Exception) e.getCause();
+			throw (InternalError) e.getCause();
 	    }
-	    throw e;
+	    throw new InternalError(e.getMessage());
 	}
 
     }

@@ -41,8 +41,7 @@ public final class StatisticsDataController extends GenericDataController {
      *         database having as RequirementPattern the one received as parameter
      */
     public static List<PatternAssociatedRequirementData> listPatternAssociatedRequirements(RequirementPattern p) {
-	if (p == null)
-	    return null;
+	if (p == null) return null;
 
 	return MediatorStatistics.listPatternAssociatedRequirements(p.getId());
     }
@@ -58,8 +57,7 @@ public final class StatisticsDataController extends GenericDataController {
      *         having as RequirementForm the one received as parameter
      */
     public static List<FormAssociatedRequirementData> listFormAssociatedRequirements(RequirementForm f) {
-	if (f == null)
-	    return null;
+	if (f == null) return null;
 
 	return MediatorStatistics.listFormAssociatedRequirements(f.getId());
     }
@@ -82,7 +80,7 @@ public final class StatisticsDataController extends GenericDataController {
      */
     public static void updatePatternAssociatedRequirements(List<PatternAssociatedRequirementData> requirements) {
 
-	if (requirements != null && requirements.size() > 0) {
+	if (requirements != null && !requirements.isEmpty()) {
 	    Session session = null;
 
 	    try {
@@ -111,7 +109,7 @@ public final class StatisticsDataController extends GenericDataController {
      */
     public static void updateFormAssociatedRequirements(List<FormAssociatedRequirementData> requirements) {
 
-	if (requirements != null && requirements.size() > 0) {
+	if (requirements != null && !requirements.isEmpty()) {
 	    Session session = null;
 
 	    try {
@@ -139,7 +137,7 @@ public final class StatisticsDataController extends GenericDataController {
      */
     public static void updateNewRequirements(List<NewRequirementData> requirements) {
 
-	if (requirements != null && requirements.size() > 0) {
+	if (requirements != null && !requirements.isEmpty()) {
 	    Session session = null;
 
 	    try {
@@ -234,8 +232,7 @@ public final class StatisticsDataController extends GenericDataController {
 	    MediatorConnection.endTransaction(session);
 	} catch (HibernateException e) {
 	    e.printStackTrace();
-	    if (session != null && session.isOpen() && session.getTransaction() != null)
-		session.getTransaction().rollback();
+	    if (session != null && session.isOpen() && session.getTransaction() != null) session.getTransaction().rollback();
 	    throw e;
 	}
     }
@@ -265,8 +262,7 @@ public final class StatisticsDataController extends GenericDataController {
 	    MediatorConnection.endTransaction(session);
 	} catch (HibernateException e) {
 	    e.printStackTrace();
-	    if (session != null && session.isOpen() && session.getTransaction() != null)
-		session.getTransaction().rollback();
+	    if (session != null && session.isOpen() && session.getTransaction() != null) session.getTransaction().rollback();
 	    throw e;
 	}
     }
@@ -311,8 +307,7 @@ public final class StatisticsDataController extends GenericDataController {
 
 	long patternId = MediatorPatterns.getRequirementPatternFromRequirementForm(form.getId());
 
-	String patternName = MediatorPatterns.getPatternName(patternId, RequirementPattern.class);
-	return patternName;
+		return MediatorPatterns.getPatternName(patternId, RequirementPattern.class);
     }
 
 }

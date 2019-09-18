@@ -87,7 +87,7 @@ public class Keyword implements Comparable<Keyword>, Identificable {
      */
     @Override
     public boolean equals(Object obj) {
-	if (obj == null || !(obj instanceof Keyword))
+	if (!(obj instanceof Keyword))
 	    return false;
 
 	Keyword key = (Keyword) obj;
@@ -96,7 +96,7 @@ public class Keyword implements Comparable<Keyword>, Identificable {
 
     @Override
     public int hashCode() {
-	return new Long(this.getId()).hashCode();
+	return Long.valueOf(this.getId()).hashCode();
     }
 
     /**

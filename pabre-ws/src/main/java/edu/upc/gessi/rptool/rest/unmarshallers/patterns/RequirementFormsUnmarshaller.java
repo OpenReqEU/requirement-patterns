@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.upc.gessi.rptool.domain.patternelements.RequirementForm;
+import edu.upc.gessi.rptool.exceptions.IntegrityException;
+import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class RequirementFormsUnmarshaller {
     private Set<RequirementFormUnmarshaller> forms;
@@ -16,7 +18,7 @@ public class RequirementFormsUnmarshaller {
 	this.forms = forms;
     }
 
-    public Set<RequirementForm> build() throws Exception {
+    public Set<RequirementForm> build() throws SemanticallyIncorrectException, IntegrityException {
 	Set<RequirementForm> ret = new HashSet<>();
 	if (forms != null) {
 	    for (RequirementFormUnmarshaller aux : forms) {

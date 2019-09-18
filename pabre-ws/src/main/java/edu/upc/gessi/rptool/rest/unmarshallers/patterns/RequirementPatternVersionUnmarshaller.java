@@ -2,6 +2,7 @@ package edu.upc.gessi.rptool.rest.unmarshallers.patterns;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.NotFoundException;
@@ -30,7 +31,7 @@ public class RequirementPatternVersionUnmarshaller {
     protected Boolean available;
     protected Integer statsNumInstances;
     protected Integer statsNumAssociates;
-    protected ArrayList<RequirementFormUnmarshaller> forms;
+    protected List<RequirementFormUnmarshaller> forms;
     protected Set<String> keywords;
     protected String artifactsRelation;
 
@@ -46,7 +47,7 @@ public class RequirementPatternVersionUnmarshaller {
 	    @JsonProperty(value = "statsNumAssociates", required = true) int statsNumAssociates,
 	    @JsonProperty(value = "keywords", required = false) Set<String> keywords,
 	    @JsonProperty(value = "artifactsRelation", required = false) String artifactsRelation,
-	    @JsonProperty(value = "forms", required = true) ArrayList<RequirementFormUnmarshaller> forms) {
+	    @JsonProperty(value = "forms", required = true) List<RequirementFormUnmarshaller> forms) {
 	this.id = id;
 	this.versionDate = versionDate;
 	this.author = author;
@@ -63,7 +64,7 @@ public class RequirementPatternVersionUnmarshaller {
 
     public RequirementPatternVersionUnmarshaller(Date versionDate, String author, String goal, String reason,
 	    int numInstances, boolean available, int statsNumInstances, int statsNumAssociates, Set<String> keywords,
-	    String artifactsRelation, ArrayList<RequirementFormUnmarshaller> forms) {
+	    String artifactsRelation, List<RequirementFormUnmarshaller> forms) {
 	this.versionDate = versionDate;
 	this.author = author;
 	this.goal = goal;
@@ -109,7 +110,7 @@ public class RequirementPatternVersionUnmarshaller {
     }
 
     protected void buildForms() throws IntegrityException, SemanticallyIncorrectException {
-	boolean positions[] = new boolean[forms.size()]; // inicializado a falso
+	boolean[] positions = new boolean[forms.size()]; // inicializado a falso
 
 	for (RequirementFormUnmarshaller rfu : forms) {
 	    checkPositionsAndBuildForms(positions, rfu);
@@ -152,8 +153,7 @@ public class RequirementPatternVersionUnmarshaller {
     protected void checkPositionsAndBuildForms(boolean[] positions, RequirementFormUnmarshaller rfu)
 	    throws SemanticallyIncorrectException, IntegrityException {
 	try {
-	    if (positions[rfu.getPos()])
-		throw new SemanticallyIncorrectException("invalid form pos value in version");
+	    if (positions[rfu.getPos()]) throw new SemanticallyIncorrectException("invalid form pos value in version");
 	    positions[rfu.getPos()] = true;
 	    rpv.addForm(rfu.build());
 	} catch (ArrayIndexOutOfBoundsException e) {
@@ -175,7 +175,7 @@ public class RequirementPatternVersionUnmarshaller {
     }
 
     protected void checkFormsSize() throws SemanticallyIncorrectException {
-	if (forms.size() == 0)
+	if (forms.isEmpty())
 	    throw new SemanticallyIncorrectException("no forms provided in version");
     }
 
@@ -193,6 +193,7 @@ public class RequirementPatternVersionUnmarshaller {
      * Method used to build custom fields of the childs
      */
     protected void buildOwnFields() {
+		//not implemented WHY?
     }
 
     public RequirementPatternVersion build() throws SemanticallyIncorrectException, IntegrityException {
@@ -293,11 +294,11 @@ public class RequirementPatternVersionUnmarshaller {
 	this.statsNumAssociates = statsNumAssociates;
     }
 
-    public ArrayList<RequirementFormUnmarshaller> getForms() {
+    public List<RequirementFormUnmarshaller> getForms() {
 	return forms;
     }
 
-    public void setForms(ArrayList<RequirementFormUnmarshaller> forms) {
+    public void setForms(List<RequirementFormUnmarshaller> forms) {
 	this.forms = forms;
     }
 

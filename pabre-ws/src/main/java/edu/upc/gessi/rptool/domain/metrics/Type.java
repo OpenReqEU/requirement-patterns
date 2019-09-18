@@ -4,7 +4,7 @@ public enum Type {
     DOMAIN("domain"), FLOAT("float"), INTEGER("integer"), STRING("string"), TIME("time"), SET("set");
 
     private final String name;
-    private final static Type[] enumValues = Type.values();
+    private static final Type[] enumValues = Type.values();
 
     private Type(String s) {
 	name = s;
@@ -21,8 +21,7 @@ public enum Type {
 
     public static Type fromString(String code) {
 	for (Type e : enumValues)
-	    if (e.equalsName(code))
-		return e;
+	    if (e.equalsName(code)) return e;
 	return null;
     }
 

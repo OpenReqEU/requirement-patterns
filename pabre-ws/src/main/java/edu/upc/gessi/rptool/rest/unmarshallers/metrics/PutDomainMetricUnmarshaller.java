@@ -30,7 +30,7 @@ public class PutDomainMetricUnmarshaller extends DomainMetricUnmarshaller {
     @Override
     protected void checkPossibleValues() throws SemanticallyIncorrectException {
 
-	if (possibleValues != null && defaultValueString != null && possibleValues.size() > 0
+	if (possibleValues != null && defaultValueString != null && !possibleValues.isEmpty()
 		&& !possibleValues.contains(defaultValueString))
 	    throw new SemanticallyIncorrectException("defaultValue not in possibleValues");
 

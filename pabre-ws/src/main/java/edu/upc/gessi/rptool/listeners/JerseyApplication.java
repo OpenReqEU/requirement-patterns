@@ -16,7 +16,6 @@ public class JerseyApplication extends ResourceConfig {
 	register(MyResponseFilter.class);
 	
 	//Register Jackson
-	//register(JacksonFeature.class);
 	register(MyObjectMapperProvider.class);
 	
 	//Register the Linking to use the @InjectLink feature

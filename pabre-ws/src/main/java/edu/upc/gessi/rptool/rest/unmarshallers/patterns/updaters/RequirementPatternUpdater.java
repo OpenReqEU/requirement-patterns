@@ -1,5 +1,6 @@
 package edu.upc.gessi.rptool.rest.unmarshallers.patterns.updaters;
 
+import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 import org.apache.uima.UIMAException;
 
 import edu.upc.gessi.rptool.data.GenericDataController;
@@ -10,6 +11,9 @@ import edu.upc.gessi.rptool.domain.patternelements.RequirementPatternVersion;
 import edu.upc.gessi.rptool.exceptions.IntegrityException;
 import edu.upc.gessi.rptool.rest.unmarshallers.patterns.RequirementPatternPutUnmarshaller;
 
+/**
+ * @deprecated ()
+ */
 @Deprecated
 public class RequirementPatternUpdater {
     private RequirementPattern p;
@@ -61,7 +65,7 @@ public class RequirementPatternUpdater {
 	    p.setEditable(newFields.getEditable());
     }
 
-    private void build() throws Exception {
+    private void build() throws IntegrityException, SemanticallyIncorrectException {
 	newFields = unmarshaller.build();
 	editableIsPresent = unmarshaller.getEditableIsPresent();
     }

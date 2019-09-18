@@ -19,7 +19,7 @@ import edu.upc.gessi.rptool.exceptions.IntegrityException;
 @Table(name = "CLASSIFICATION_SCHEMA")
 public class ClassificationSchema extends ClassificationObject {
 
-    final static Logger logger = Logger.getLogger(ClassificationSchema.class);
+    static final Logger logger = Logger.getLogger(ClassificationSchema.class);
 
     /*
      * ATTRIBUTES
@@ -36,7 +36,7 @@ public class ClassificationSchema extends ClassificationObject {
      */
 
     public ClassificationSchema() {
-	rootClassifiers = new HashSet<Classifier>();
+	rootClassifiers = new HashSet<>();
     }
 
     /*
@@ -172,8 +172,7 @@ public class ClassificationSchema extends ClassificationObject {
 	    return false;
 	ClassificationSchema other = (ClassificationSchema) obj;
 	if (name == null) {
-	    if (other.name != null)
-		return false;
+	    if (other.name != null) return false;
 	} else if (!name.equals(other.name))
 	    return false;
 	return true;

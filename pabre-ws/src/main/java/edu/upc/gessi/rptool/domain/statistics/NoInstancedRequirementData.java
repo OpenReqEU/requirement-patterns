@@ -6,9 +6,9 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public abstract class NoInstancedRequirementData extends RequirementData {
 
-    private final static String NOT_PROCESSED_STATE = "Not processed";
-    private final static String REJECTED_STATE = "Rejected";
-    private final static String ADDED_STATE = "Added";
+    private static final String NOT_PROCESSED_STATE = "Not processed";
+    private static final String REJECTED_STATE = "Rejected";
+    private static final String ADDED_STATE = "Added";
 
     /*
      * ATTRIBUTES
@@ -39,8 +39,8 @@ public abstract class NoInstancedRequirementData extends RequirementData {
     }
 
     public NoInstancedRequirementData() throws SemanticallyIncorrectException {
-	this(new String(), new ClassificationSchema(), new Classifier(), new String(), new String(),
-		new String());
+	this("", new ClassificationSchema(), new Classifier(), "", "",
+            "");
     }
 
     /*

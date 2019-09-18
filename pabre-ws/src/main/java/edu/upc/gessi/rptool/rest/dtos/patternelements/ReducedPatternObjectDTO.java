@@ -19,11 +19,6 @@ public class ReducedPatternObjectDTO {
 	this.id = id;
     }
 
-    /*
-     * public String getHola() {return hola;} public void setHola(String h){hola =
-     * h;}
-     */
-
     public URI getDependenciesUri() {
 	return dependenciesUri;
     }

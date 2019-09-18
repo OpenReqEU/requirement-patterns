@@ -80,7 +80,7 @@ public final class CatalogueDataController {
      */
     public static ImportDTO importCatalogue(ImportUnmarshaller iu)
 	    throws SemanticallyIncorrectException, MissingCreatorPropertyException, IntegrityException, ValueException,
-	    HibernateException, RedundancyException, JsonParseException, IOException, UIMAException {
+	    RedundancyException, JsonParseException, IOException, UIMAException {
 
 	iu.buildAndSaveSources();
 	saveSources(iu.getSourcesOBJ());
@@ -196,7 +196,7 @@ public final class CatalogueDataController {
 	List<DependenciesExportDTO> listDependenciesDTO = new ArrayList<>();
 	for (int i = 0; i < listPatternObjects.size(); i++) {
 	    PatternObject po = listPatternObjects.get(i);
-	    if (po.getDependencies().size() != 0) {
+	    if (!po.getDependencies().isEmpty()) {
 		DependenciesExportDTO deDTO = new DependenciesExportDTO(po.getId(), po.getDependencies());
 		listDependenciesDTO.add(deDTO);
 	    }
@@ -247,26 +247,26 @@ public final class CatalogueDataController {
 	String from2 = " left join p.versions as v "; // Table of versions
 	String from3 = " left join v.forms as f "; // Table of forms
 	String cond1 = "  v.versionDate = (select max(v2.versionDate) from p.versions v2) "; // Last version
-	String patternConditions = "";
-	String keywordSubquery = "select k from v.keywords k where ";
-	String formSubquery = "";
+	StringBuilder patternConditions = new StringBuilder();
+	StringBuilder keywordSubquery = new StringBuilder("select k from v.keywords k where ");
+	StringBuilder formSubquery = new StringBuilder();
 
 	for (int i = 0; i < list.size(); i++) {
 	    // Add pattern conditions
-	    patternConditions += " lower(p.name) LIKE concat('%',:param" + i + ",'%') ";
-	    patternConditions += " or lower(p.description) LIKE concat('%',:param" + i + ",'%') ";
+	    patternConditions.append(" lower(p.name) LIKE concat('%',:param").append(i).append(",'%') ");
+	    patternConditions.append(" or lower(p.description) LIKE concat('%',:param").append(i).append(",'%') ");
 
 	    // Add keyword conditions
-	    keywordSubquery += " lower(k.name) LIKE concat('%',:param" + i + ",'%') ";
+	    keywordSubquery.append(" lower(k.name) LIKE concat('%',:param").append(i).append(",'%') ");
 
 	    // Add form conditions
-	    formSubquery += " lower(f.name) LIKE concat('%',:param" + i + ",'%') ";
+	    formSubquery.append(" lower(f.name) LIKE concat('%',:param").append(i).append(",'%') ");
 
 	    // Add OR if there are more conditions
 	    if (i != list.size() - 1) { // Add OR while is not the last
-		patternConditions += " or ";
-		keywordSubquery += " or ";
-		formSubquery += " or ";
+		patternConditions.append(" or ");
+		keywordSubquery.append(" or ");
+		formSubquery.append(" or ");
 	    }
 	}
 
@@ -301,14 +301,14 @@ public final class CatalogueDataController {
 	String from2 = " left join p.versions as v "; // Table of versions
 	// String cond1 = " v.versionDate = (select max(v2.versionDate) from p.versions
 	// v2) "; // Last version
-	String patternConditions = "";
+	StringBuilder patternConditions = new StringBuilder();
 
 	for (int i = 0; i < list.size(); i++) {
 	    // Add pattern conditions
-	    patternConditions += " lower(v.lemmatizedVersion) LIKE concat('%',:param" + i + ",'%') ";
+	    patternConditions.append(" lower(v.lemmatizedVersion) LIKE concat('%',:param").append(i).append(",'%') ");
 	    // Add OR if there are more conditions
 	    if (i != list.size() - 1) { // Add OR while is not the last
-		patternConditions += " or ";
+		patternConditions.append(" or ");
 	    }
 	}
 

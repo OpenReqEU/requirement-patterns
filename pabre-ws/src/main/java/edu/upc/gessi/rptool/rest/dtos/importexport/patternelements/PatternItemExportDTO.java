@@ -30,11 +30,10 @@ public class PatternItemExportDTO {
 	this.available = pi.getAvailable();
 	this.statsNumInstances = pi.getStatsNumInstances();
 	this.artifactsRelation = artifactsRelation;
-	this.parameters = new HashSet<ParameterExportDTO>();
+	this.parameters = new HashSet<>();
 	for (Parameter p : pi.getParameters()) {
 	    this.parameters.add(new ParameterExportDTO(p));
 	}
-	this.artifactsRelation = artifactsRelation;
     }
 
     public String getPatternText() {

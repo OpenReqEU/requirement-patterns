@@ -35,11 +35,6 @@ public class SwaggerServlet extends HttpServlet {
 	    + "<li>TransactionException</li>" + "<li>UnknownExpcetion</li>" + "<li>UnrecognizedPropertyException</li>"
 	    + "<li>ValueException</li>" + "</ul></li>" + "</ul>";
 
-    // Testing connection
-    // Comented to allow multiply port support, now it will get the port used by the
-    // Server
-    // private static final String HOST = "localhost:8080";
-
     private static final String BASEPATH = "pabre-ws/api";
 
     // Package to search for resources
@@ -77,7 +72,6 @@ public class SwaggerServlet extends HttpServlet {
 
 	BeanConfig beanConfig = new BeanConfig();
 	beanConfig.setSchemes(new String[] { "http" });
-	// beanConfig.setHost(HOST);
 	beanConfig.setBasePath(BASEPATH);
 	beanConfig.setResourcePackage(RESOURCE_PACKAGE);
 	beanConfig.setScan(false);

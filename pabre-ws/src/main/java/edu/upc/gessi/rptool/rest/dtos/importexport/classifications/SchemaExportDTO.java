@@ -26,7 +26,7 @@ public class SchemaExportDTO extends ClassificationObjectExportDTO {
 
     public void setRootClassifiersExport(Set<Classifier> rootClassifiers) throws SemanticallyIncorrectException {
 	if (rootClassifiers != null) {
-	    this.rootClassifiers = new TreeSet<ClassifierExportDTO>(new PositionComparator());
+	    this.rootClassifiers = new TreeSet<>(new PositionComparator());
 	    for (Classifier rc : rootClassifiers) {
 		this.rootClassifiers.add(new ClassifierExportDTO(rc));
 	    }
@@ -35,7 +35,7 @@ public class SchemaExportDTO extends ClassificationObjectExportDTO {
 
     @JsonIgnore
     public Set<ClassifierExportDTO> getAllInternalClassifiers() {
-	Set<ClassifierExportDTO> listClassifiers = new HashSet<ClassifierExportDTO>();
+	Set<ClassifierExportDTO> listClassifiers = new HashSet<>();
 	for (ClassifierExportDTO icDTO : this.rootClassifiers) {
 	    listClassifiers.addAll(icDTO.getAllInternalClassifiers());
 	}

@@ -10,7 +10,9 @@ import edu.upc.gessi.rptool.exceptions.ValueException;
 
 public class FloatMetricUnmarshaller extends UnmarshallerGenericMetric {
 
-    protected Float minValue, maxValue, defaultValue;
+    protected Float minValue;
+    protected Float maxValue;
+    protected Float defaultValue;
 
     @JsonCreator
     public FloatMetricUnmarshaller(@JsonProperty(value = "id", required = false) Long id,

@@ -64,29 +64,29 @@ public class TimePointMetric extends SimpleMetric {
     }
 
     public void setTimeAttrib(String date) {
-	String year = date.substring(0, 4);
-	String month = date.substring(5, 7);
-	String day = date.substring(8, 10);
-	String hour = date.substring(11, 13);
-	String min = date.substring(14, 16);
-	String sec = date.substring(17, 19);
-	if (!year.equals("XXXX")) {
-	    this.year = Integer.valueOf(year);
+	String yearAux = date.substring(0, 4);
+	String monthAux = date.substring(5, 7);
+	String dayAux = date.substring(8, 10);
+	String hourAux = date.substring(11, 13);
+	String minAux = date.substring(14, 16);
+	String secAux = date.substring(17, 19);
+	if (!yearAux.equals("XXXX")) {
+	    this.year = Integer.valueOf(yearAux);
 	}
-	if (!month.equals("XX")) {
-	    this.month = Integer.valueOf(month);
+	if (!monthAux.equals("XX")) {
+	    this.month = Integer.valueOf(monthAux);
 	}
-	if (!day.equals("XX")) {
-	    this.day = Integer.valueOf(day);
+	if (!dayAux.equals("XX")) {
+	    this.day = Integer.valueOf(dayAux);
 	}
-	if (!hour.equals("XX")) {
-	    this.hour = Integer.valueOf(hour);
+	if (!hourAux.equals("XX")) {
+	    this.hour = Integer.valueOf(hourAux);
 	}
-	if (!min.equals("XX")) {
-	    this.minute = Integer.valueOf(min);
+	if (!minAux.equals("XX")) {
+	    this.minute = Integer.valueOf(minAux);
 	}
-	if (!sec.equals("XX")) {
-	    this.second = Integer.valueOf(sec);
+	if (!secAux.equals("XX")) {
+	    this.second = Integer.valueOf(secAux);
 	}
     }
 
@@ -109,13 +109,13 @@ public class TimePointMetric extends SimpleMetric {
 
     @JsonIgnore
     public String getDateInString() {
-	String year = this.year == null ? "XXXX" : String.format("%04d", this.year);
-	String month = this.month == null ? "XX" : String.format("%02d", this.month);
-	String day = this.day == null ? "XX" : String.format("%02d", this.day);
-	String hour = this.hour == null ? "XX" : String.format("%02d", this.hour);
-	String minute = this.minute == null ? "XX" : String.format("%02d", this.minute);
-	String second = this.second == null ? "XX" : String.format("%02d", this.second);
-	return "" + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+	String yearAux = this.year == null ? "XXXX" : String.format("%04d", this.year);
+	String monthAux = this.month == null ? "XX" : String.format("%02d", this.month);
+	String dayAux = this.day == null ? "XX" : String.format("%02d", this.day);
+	String hourAux = this.hour == null ? "XX" : String.format("%02d", this.hour);
+	String minuteAux = this.minute == null ? "XX" : String.format("%02d", this.minute);
+	String secondAux = this.second == null ? "XX" : String.format("%02d", this.second);
+	return "" + yearAux + "-" + monthAux + "-" + dayAux + " " + hourAux + ":" + minuteAux + ":" + secondAux;
 
     }
 

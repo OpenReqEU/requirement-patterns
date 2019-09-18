@@ -41,7 +41,6 @@ public class ClassifierDecomposedState extends AbstractClassifierState {
     @Override
     public void removeClassifier(Classifier child) throws SemanticallyIncorrectException {
 	child.setParentClassifier(null);
-	//classifier.getInternalClassifiers().remove(child);
     }
 
     @Override

@@ -9,22 +9,22 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 public class CostFunctionUnmarshaller {
 
     private long id;
-    private String name, function;
-    private CostFunction cf;
+    private String name;
+    private String function;
 
     @JsonCreator
     public CostFunctionUnmarshaller(@JsonProperty(value = "id", required = false) Long id,
 	    @JsonProperty(value = "name", required = true) String name,
-	    @JsonProperty(value = "function", required = true) String function) throws SemanticallyIncorrectException {
+	    @JsonProperty(value = "function", required = true) String function) {
 	this.id = id == null ? 0 : id;
 	this.name = name;
 	this.function = function;
 
     }
 
-    public CostFunction build() throws SemanticallyIncorrectException {
+    public CostFunction build() {
 
-	cf = new CostFunction();
+        CostFunction cf = new CostFunction();
 	cf.setId(id);
 	cf.setName(name);
 	cf.setFunction(function);

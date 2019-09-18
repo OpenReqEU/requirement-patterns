@@ -31,8 +31,7 @@ public final class MediatorStatistics extends MediatorGeneric {
 	Session session = MediatorConnection.getCurrentSession();
 	String query = new StringBuilder("select pard").append(" from PatternAssociatedRequirementData as pard")
 		.append(" inner join pard.requirementPattern as rp").append(" where rp.id=").append(id).toString();
-	List requirements = session.createQuery(query).list();
-	return requirements;
+		return session.createQuery(query).list();
     }
 
     /**
@@ -45,8 +44,7 @@ public final class MediatorStatistics extends MediatorGeneric {
 	Session session = MediatorConnection.getCurrentSession();
 	String query = new StringBuilder("select fard").append(" from FormAssociatedRequirementData as fard")
 		.append(" inner join fard.requirementForm as rf").append(" where rf.id=").append(id).toString();
-	List requirements = session.createQuery(query).list();
-	return requirements;
+		return session.createQuery(query).list();
     }
 
     /**
@@ -57,8 +55,7 @@ public final class MediatorStatistics extends MediatorGeneric {
     public static List listNewRequirements() {
 	Session session = MediatorConnection.getCurrentSession();
 	String query = new StringBuilder("select nrd").append(" from NewRequirementData as nrd").toString();
-	List requirements = session.createQuery(query).list();
-	return requirements;
+		return session.createQuery(query).list();
     }
 
     /**
@@ -69,8 +66,7 @@ public final class MediatorStatistics extends MediatorGeneric {
     public static List listInstancedRequirements() {
 	Session session = MediatorConnection.getCurrentSession();
 	String query = new StringBuilder("select ird").append(" from InstancedRequirementData as ird").toString();
-	List requirements = session.createQuery(query).list();
-	return requirements;
+		return session.createQuery(query).list();
     }
 
     /**
@@ -81,8 +77,7 @@ public final class MediatorStatistics extends MediatorGeneric {
     public static List listNoInstancedRequirements() {
 	Session session = MediatorConnection.getCurrentSession();
 	String query = new StringBuilder("select nird").append(" from NoInstancedRequirementData as nird").toString();
-	List requirements = session.createQuery(query).list();
-	return requirements;
+		return session.createQuery(query).list();
     }
 
     /**

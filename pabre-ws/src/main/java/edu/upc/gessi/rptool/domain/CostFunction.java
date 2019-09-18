@@ -62,10 +62,12 @@ public class CostFunction extends ExternalObject {
 	this.function = function;
     }
 
+    @Override
     public long getId() {
 	return id;
     }
 
+    @Override
     public void setId(long id) {
 	this.id = id;
     }
@@ -89,13 +91,11 @@ public class CostFunction extends ExternalObject {
 	    return false;
 	CostFunction other = (CostFunction) obj;
 	if (function == null) {
-	    if (other.function != null)
-		return false;
+	    if (other.function != null) return false;
 	} else if (!function.equals(other.function))
 	    return false;
 	if (name == null) {
-	    if (other.name != null)
-		return false;
+	    if (other.name != null) return false;
 	} else if (!name.equals(other.name))
 	    return false;
 	return true;

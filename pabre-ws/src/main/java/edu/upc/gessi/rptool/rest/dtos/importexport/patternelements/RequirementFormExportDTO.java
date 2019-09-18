@@ -26,7 +26,7 @@ public class RequirementFormExportDTO extends PatternElementExportDTO implements
     private FixedPartExportDTO fixedPart;
     private Set<ExtendedPartExportDTO> extendedParts;
 
-    public RequirementFormExportDTO(RequirementForm rf, Long requirementPatternId, Long versionId) {
+    public RequirementFormExportDTO(RequirementForm rf) {
 	super(rf);
 	this.name = rf.getName();
 	this.author = rf.getAuthor();
@@ -37,7 +37,7 @@ public class RequirementFormExportDTO extends PatternElementExportDTO implements
 	this.pos = rf.getPos();
 	this.available = rf.getAvailable();
 	this.fixedPart = new FixedPartExportDTO(rf.getFixedPart(), rf.getFixedPart().getArtifactRelation());
-	this.extendedParts = new TreeSet<ExtendedPartExportDTO>();
+	this.extendedParts = new TreeSet<>();
 	for (ExtendedPart ep : rf.getExtendedParts()) {
 	    this.extendedParts.add(new ExtendedPartExportDTO(ep, ep.getArtifactRelation()));
 	}

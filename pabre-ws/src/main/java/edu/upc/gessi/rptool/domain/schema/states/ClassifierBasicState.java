@@ -23,7 +23,8 @@ public class ClassifierBasicState extends AbstractClassifierState {
     }
 
     @Override
-    public void clearClassifiers() throws SemanticallyIncorrectException {
+    public void clearClassifiers() {
+        //not implemented WHY?
     }
 
     @Override

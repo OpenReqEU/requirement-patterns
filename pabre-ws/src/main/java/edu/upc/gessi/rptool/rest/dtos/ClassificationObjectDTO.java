@@ -20,10 +20,10 @@ public abstract class ClassificationObjectDTO {
 	this.id = s.getId();
 	this.description = s.getDescription();
 	this.comments = s.getComments();
-	this.sources = new HashSet<SourceDTO>();
+	this.sources = new HashSet<>();
 
-	Set<Source> sources = s.getSources();
-	for (Source source : sources) {
+	Set<Source> sourcesAux = s.getSources();
+	for (Source source : sourcesAux) {
 	    this.sources.add(new SourceDTO(source, true));
 	}
     }

@@ -7,7 +7,6 @@ import org.glassfish.jersey.linking.InjectLink.Style;
 
 import edu.upc.gessi.rptool.domain.DependencyDirectionDomain;
 import edu.upc.gessi.rptool.domain.PatternObjectCompleteDependency;
-import edu.upc.gessi.rptool.domain.patternelements.RequirementPattern;
 
 public class CompletePatternObjectDependencyDTO {
 
@@ -30,7 +29,7 @@ public class CompletePatternObjectDependencyDTO {
 
     private String dependentObjectName;
 
-    public CompletePatternObjectDependencyDTO(RequirementPattern rp, PatternObjectCompleteDependency d) {
+    public CompletePatternObjectDependencyDTO(PatternObjectCompleteDependency d) {
 
 	this.dependingObjectId = d.getPatternObject().getId();
 

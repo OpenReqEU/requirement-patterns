@@ -48,12 +48,12 @@ public abstract class PatternItem extends PatternObject {
      */
 
     public PatternItem() {
-	patternText = new String();
-	parameters = new HashSet<Parameter>();
-	questionText = new String();
-	numInstances = new Integer(0);
-	available = new Boolean(false);
-	statsNumInstances = new Integer(0);
+	patternText = "";
+	parameters = new HashSet<>();
+	questionText = "";
+	numInstances = 0;
+	available = Boolean.FALSE;
+	statsNumInstances = 0;
 	artifactRelation = null;
     }
 
@@ -94,12 +94,9 @@ public abstract class PatternItem extends PatternObject {
     }
 
     public boolean isUsed() {
-	Integer numInstances = getNumInstances();
+	Integer numInstancesAux = getNumInstances();
 
-	if (numInstances == null || numInstances < 1)
-	    return false;
-	else
-	    return true;
+        return numInstancesAux != null && numInstancesAux >= 1;
     }
 
     public Boolean getAvailable() {
@@ -152,8 +149,7 @@ public abstract class PatternItem extends PatternObject {
 	Iterator<Parameter> iter = parameters.iterator();
 	while (iter.hasNext()) {
 	    Parameter p = iter.next();
-	    if (p.getId() == idParameter)
-		return p;
+	    if (p.getId() == idParameter) return p;
 	}
 	return null;
     }
@@ -185,7 +181,7 @@ public abstract class PatternItem extends PatternObject {
      * setting the set to a new empty hash set.
      */
     public void unsetParameters() {
-	parameters = new HashSet<Parameter>();
+	parameters = new HashSet<>();
     }
 
     /**
@@ -202,8 +198,7 @@ public abstract class PatternItem extends PatternObject {
 	Iterator<Parameter> iter = parameters.iterator();
 	while (iter.hasNext()) {
 	    Parameter param = iter.next();
-	    if (n.compareTo(param.getName()) == 0)
-		return false;
+	    if (n.compareTo(param.getName()) == 0) return false;
 	}
 	return true;
     }

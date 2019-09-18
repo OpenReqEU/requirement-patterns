@@ -18,6 +18,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import edu.upc.gessi.rptool.exceptions.IntegrityException;
+import edu.upc.gessi.rptool.exceptions.RedundancyException;
 import org.apache.commons.lang3.ObjectUtils.Null;
 import org.apache.log4j.Logger;
 
@@ -115,7 +117,7 @@ public class Classifiers {
     public Response substituteClassifiers(
 	    @ApiParam(value = "Unmarshaller with classifiers substitution fields", required = true) SchemaSubstitutionUmarshaller schemaSubstitutionUnmarshaller,
 	    @ApiParam(value = "Schema ID where to substitute the classifiers", required = true) @PathParam("schemaid") long schemaid)
-	    throws Exception {
+	    throws SemanticallyIncorrectException, IntegrityException, RedundancyException {
 	ClassificationSchema old = Schemas.retrieveClassificationSchema(schemaid);
 	SchemaDataController.deleteReferencedPatternOfTheSchema(old); // Delete all the pattern referenced pattern
 	old.getRootClassifiers().clear(); // clear the list of root classifier
@@ -157,7 +159,7 @@ public class Classifiers {
 	if (complete) {// if the request is complete set the classifiers recursively
 	    icDTO.setInternalClassifiersRecursive(ic.getInternalClassifiers(), schemaid);
 	} else { // otherwise just get the first level of classifiers
-	    Set<ClassifierDTO> setICDTOs = new HashSet<ClassifierDTO>();
+	    Set<ClassifierDTO> setICDTOs = new HashSet<>();
 	    for (Classifier innerIc : ic.getInternalClassifiers()) {
 		setICDTOs.add(new ClassifierDTO(innerIc, schemaid));
 	    }
@@ -171,8 +173,6 @@ public class Classifiers {
 
     /**
      * Update a classifier
-     * 
-     * @param internalUpdateUnmarshaller
      *            Unmarshaller with the fields to update
      * @param schemaid
      *            ID of the schema to update
@@ -194,7 +194,7 @@ public class Classifiers {
 	    @ApiParam(value = "Unmarshaller with the fields to update", required = true) ClassifierUnmarshaller unm,
 	    @ApiParam(value = "ID of the schema to update", required = true) @PathParam("schemaid") long schemaid,
 	    @ApiParam(value = "ID of the classifier to update", required = true) @PathParam("classifierid") long internalId)
-	    throws Exception {
+	    throws InternalError {
 	logger.debug("Updating classifier");
 
 	// Get the internal classifier
@@ -205,8 +205,8 @@ public class Classifiers {
 	    // Update Classifier with the given patterns
 	    SchemaDataController.updateInternalClassifier(old, newInternal);
 	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw e;
+	    logger.error(e.getMessage());
+	    throw new InternalError(e.getMessage());
 	}
 	return Response.status(Status.OK).build();
     }

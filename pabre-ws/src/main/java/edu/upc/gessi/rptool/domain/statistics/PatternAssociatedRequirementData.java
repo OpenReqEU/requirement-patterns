@@ -37,19 +37,19 @@ public class PatternAssociatedRequirementData extends NoInstancedRequirementData
 	    Classifier generalClassifier, String name, String formText, String questionText, String state,
 	    RequirementPattern requirementPattern) {
 	this(projectName, classificationSchema, generalClassifier, name, formText, questionText, state,
-		requirementPattern, new String());
+		requirementPattern, "");
     }
 
     public PatternAssociatedRequirementData(String projectName, ClassificationSchema classificationSchema,
 	    Classifier generalClassifier, String name, String formText, String questionText,
 	    RequirementPattern requirementPattern) {
-	this(projectName, classificationSchema, generalClassifier, name, formText, questionText, new String(),
-		requirementPattern, new String());
+	this(projectName, classificationSchema, generalClassifier, name, formText, questionText, "",
+		requirementPattern, "");
     }
 
     public PatternAssociatedRequirementData() throws SemanticallyIncorrectException {
-	this(new String(), new ClassificationSchema(), new Classifier(), new String(), new String(),
-		new String(), new RequirementPattern());
+	this("", new ClassificationSchema(), new Classifier(), "", "",
+			"", new RequirementPattern());
     }
 
     /*

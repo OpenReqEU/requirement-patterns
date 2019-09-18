@@ -20,7 +20,7 @@ public class ValueExceptionMapper extends GenericUnsuccessfullExceptionMapper<Va
 	} else {
 	    message += exception.getMessage();
 	}
-	System.err.println(message);
+	logger.error(message);
 	return Response.status(422).entity(exception.getMessage()).type("text/plain").build();
     }
 

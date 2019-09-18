@@ -41,7 +41,7 @@ public class DomainMetric extends SimpleMetric {
      */
 
     public DomainMetric() {
-	possibleValues = new TreeSet<DomainMetricValue>(new DomainMetricValueComparator());
+	possibleValues = new TreeSet<>(new DomainMetricValueComparator());
 	defaultValue = null;
     }
 
@@ -74,11 +74,10 @@ public class DomainMetric extends SimpleMetric {
 
     public void setPossibleValues(Set<DomainMetricValue> v) {
 	if (v == null)
-	    possibleValues = new TreeSet<DomainMetricValue>(new DomainMetricValueComparator());
+	    possibleValues = new TreeSet<>(new DomainMetricValueComparator());
 	else {
-	    possibleValues = new TreeSet<DomainMetricValue>(new DomainMetricValueComparator());
-	    for (DomainMetricValue dmv : v)
-		possibleValues.add(dmv);
+	    possibleValues = new TreeSet<>(new DomainMetricValueComparator());
+	    for (DomainMetricValue dmv : v) possibleValues.add(dmv);
 	}
     }
 
@@ -219,8 +218,7 @@ public class DomainMetric extends SimpleMetric {
 	Iterator<DomainMetricValue> i = possibleValues.iterator();
 	while (i.hasNext()) {
 	    DomainMetricValue mv = i.next();
-	    if (mv.sameValue(v))
-		throw new ValueException("Domain metric can't have two or more equals possible values.");
+	    if (mv.sameValue(v)) throw new ValueException("Domain metric can't have two or more equals possible values.");
 	}
 	possibleValues.add(v);
     }
@@ -306,13 +304,10 @@ public class DomainMetric extends SimpleMetric {
     public static class DomainMetricValueComparator implements Comparator<DomainMetricValue> {
 	@Override
 	public int compare(DomainMetricValue obj1, DomainMetricValue obj2) {
-	    if (obj1 == null || obj2 == null)
-		throw new NullPointerException("Comparison between null objects is not allowed");
+	    if (obj1 == null || obj2 == null) throw new NullPointerException("Comparison between null objects is not allowed");
 
-	    if (obj1.getOrder() < obj2.getOrder())
-		return -1;
-	    else if (obj1.getOrder() > obj2.getOrder())
-		return 1;
+	    if (obj1.getOrder() < obj2.getOrder()) return -1;
+	    else if (obj1.getOrder() > obj2.getOrder()) return 1;
 	    return 0;
 	}
     }

@@ -10,7 +10,9 @@ import edu.upc.gessi.rptool.exceptions.ValueException;
 
 public class IntegerMetricUnmarshaller extends UnmarshallerGenericMetric {
 
-    protected Integer minValue, maxValue, defaultValue;
+    protected Integer minValue;
+    protected Integer maxValue;
+    protected Integer defaultValue;
 
     @JsonCreator
     public IntegerMetricUnmarshaller(@JsonProperty(value = "id", required = false) Long id,

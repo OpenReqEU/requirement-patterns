@@ -54,7 +54,7 @@ public class Classifier extends ClassificationObject {
      * ATTRIBUTES
      */
 
-    final static Logger logger = Logger.getLogger(Classifier.class);
+    static final Logger logger = Logger.getLogger(Classifier.class);
 
     // Constants of every type of classifier
     public static final int ROOT = 0;
@@ -128,8 +128,8 @@ public class Classifier extends ClassificationObject {
      * @throws SemanticallyIncorrectException
      */
     public Classifier() throws SemanticallyIncorrectException {
-	this.internalClassifiers = new HashSet<Classifier>();
-	this.patterns = new HashSet<RequirementPattern>();
+	this.internalClassifiers = new HashSet<>();
+	this.patterns = new HashSet<>();
 	setType(GENERAL);// Default type is General
     }
 
@@ -369,7 +369,7 @@ public class Classifier extends ClassificationObject {
      *         the this classifier
      * @throws Exception
      */
-    public Classifier copy() throws Exception {
+    public Classifier copy() throws IntegrityException, SemanticallyIncorrectException {
 	return currentState.copy();
     }
 
@@ -424,7 +424,7 @@ public class Classifier extends ClassificationObject {
 	    this.currentState = new ClassifierDecomposedState(this);
 	    break;
 	default:
-	    System.err.println("Incorrect type");
+	    logger.error("Incorrect type");
 	    break;
 	}
     }
@@ -494,18 +494,14 @@ public class Classifier extends ClassificationObject {
 	    return false;
 	Classifier other = (Classifier) obj;
 	if (name == null) {
-	    if (other.name != null)
-		return false;
+	    if (other.name != null) return false;
 	} else if (!name.equals(other.name))
 	    return false;
 	if (parentClassifier == null) {
-	    if (other.parentClassifier != null)
-		return false;
+	    if (other.parentClassifier != null) return false;
 	} else if (!parentClassifier.equals(other.parentClassifier))
 	    return false;
-	if (type != other.type)
-	    return false;
-	return true;
+        return type == other.type;
     }
 
 }

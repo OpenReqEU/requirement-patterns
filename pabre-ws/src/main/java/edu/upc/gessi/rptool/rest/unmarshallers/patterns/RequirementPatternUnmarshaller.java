@@ -33,8 +33,8 @@ public class RequirementPatternUnmarshaller {
 	    @JsonProperty(value = "description", required = true) String description,
 	    @JsonProperty(value = "comments", required = true) String comments,
 	    @JsonProperty(value = "sources", required = false) Set<Long> sources,
-	    @JsonProperty(value = "versions", required = true) ArrayList<RequirementPatternVersionUnmarshaller> versions,
-	    @JsonProperty(value = "editable", required = true) boolean editable) throws IOException {
+	    @JsonProperty(value = "versions", required = true) List<RequirementPatternVersionUnmarshaller> versions,
+	    @JsonProperty(value = "editable", required = true) boolean editable) {
 	this.id = id;
 	this.name = name;
 	this.comments = comments;
@@ -45,7 +45,7 @@ public class RequirementPatternUnmarshaller {
     }
 
     public RequirementPatternUnmarshaller(String name, String description, String comments, Set<Long> sources,
-	    ArrayList<RequirementPatternVersionUnmarshaller> versions, Boolean editable) {
+	    List<RequirementPatternVersionUnmarshaller> versions, Boolean editable) {
 	super();
 	this.sources = sources;
 	this.versions = versions;
@@ -77,7 +77,7 @@ public class RequirementPatternUnmarshaller {
     }
 
     protected void checkNumberOfVersions() throws SemanticallyIncorrectException {
-	if (versions != null && versions.size() == 0)
+	if (versions != null && versions.isEmpty())
 	    throw new SemanticallyIncorrectException("no requirement pattern versions provided in pattern");
     }
 

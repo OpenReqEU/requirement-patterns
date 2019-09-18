@@ -14,6 +14,10 @@ import edu.upc.gessi.rptool.domain.patternelements.RequirementPattern;
 
 public class IdToDomainObject {
 
+	private IdToDomainObject() {
+		//utility class
+	}
+
     public static RequirementPattern getReqPattern(Long id) throws NotFoundException {
 	RequirementPattern ret = PatternDataController.getPattern(id);
 	if (ret == null)
@@ -61,8 +65,7 @@ public class IdToDomainObject {
 	Set<Source> ret = new HashSet<>();
 	for (String id : ids) {
 	    Source s = getSourceByIdentifier(id);
-	    if (s == null)
-		throw new NotFoundException("Source [" + id + "] not found");
+	    if (s == null) throw new NotFoundException("Source [" + id + "] not found");
 	    ret.add(s);
 	}
 	return ret;
@@ -72,8 +75,7 @@ public class IdToDomainObject {
 	Set<Source> ret = new HashSet<>();
 	for (String id : sources) {
 	    Source s = getSourceByIdentifier(id, session);
-	    if (s == null)
-		throw new NotFoundException("Source [" + id + "] not found");
+	    if (s == null) throw new NotFoundException("Source [" + id + "] not found");
 	    ret.add(s);
 	}
 	return ret;
@@ -93,22 +95,19 @@ public class IdToDomainObject {
 
     public static Keyword getKeyword(long id) throws NotFoundException {
 	Keyword ret = ObjectDataController.getKeyword(id);
-	if (ret == null)
-	    throw new NotFoundException("Keyword [" + id + "] not found");
+	if (ret == null) throw new NotFoundException("Keyword [" + id + "] not found");
 	return ret;
     }
 
     public static Keyword getKeywordByName(String id) throws NotFoundException {
 	Keyword ret = ObjectDataController.getKeyword(id);
-	if (ret == null)
-	    throw new NotFoundException("Keyword [" + id + "] not found");
+	if (ret == null) throw new NotFoundException("Keyword [" + id + "] not found");
 	return ret;
     }
 
     public static Keyword getKeywordByName(String id, Session session) throws NotFoundException {
 	Keyword ret = ObjectDataController.getKeyword(id, session);
-	if (ret == null)
-	    throw new NotFoundException("Keyword [" + id + "] not found");
+	if (ret == null) throw new NotFoundException("Keyword [" + id + "] not found");
 	return ret;
     }
 

@@ -2,17 +2,13 @@ package edu.upc.gessi.rptool.rest;
 
 import java.util.Set;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 import org.apache.log4j.Logger;
 
 import edu.upc.gessi.rptool.data.PatternDataController;
@@ -133,7 +129,7 @@ public class PatternsParts {
 	    @ApiParam(value = "ID of the Pattern", required = true) @PathParam("patternId") long patternId,
 	    @ApiParam(value = "ID of the Version", required = true) @PathParam("versionId") long versionId,
 	    @ApiParam(value = "ID of the Form", required = true) @PathParam("formId") long formId,
-	    @ApiParam(value = "ID of the Part", required = true) @PathParam("partId") long partId) throws Exception {
+	    @ApiParam(value = "ID of the Part", required = true) @PathParam("partId") long partId) throws BadRequestException {
 	PatternItem pi = Patterns.retreivePatternItem(patternId, versionId, formId, partId);
 	// Depending on the pattern item type create corresponding DTO
 	if (pi instanceof FixedPart) {
@@ -141,7 +137,7 @@ public class PatternsParts {
 	} else if (pi instanceof ExtendedPart) {
 	    return new ExtendedPartDTO((ExtendedPart) pi, patternId, versionId, formId, pi.getArtifactRelation());
 	} else {
-	    throw new Exception("Requested Part cannot be serialized, dosen't have a DTO");
+	    throw new BadRequestException("Requested Part cannot be serialized, dosen't have a DTO");
 	}
     }
 
@@ -175,7 +171,7 @@ public class PatternsParts {
 	    @ApiParam(value = "ID of the Pattern", required = true) @PathParam("patternId") long patternId,
 	    @ApiParam(value = "ID of the Version", required = true) @PathParam("versionId") long versionId,
 	    @ApiParam(value = "ID of the Form", required = true) @PathParam("formId") long formId,
-	    @ApiParam(value = "ID of the Part", required = true) @PathParam("partId") long partId) throws Exception {
+	    @ApiParam(value = "ID of the Part", required = true) @PathParam("partId") long partId) throws SemanticallyIncorrectException, UnrecognizedPropertyException {
 
 	PatternItem pi = Patterns.retreivePatternItem(patternId, versionId, formId, partId); // obtain pattern Item
 	new RequirementPatternItemUpdater(pi, partUpdaterUnmarshaller).update(); // create a updater and update the

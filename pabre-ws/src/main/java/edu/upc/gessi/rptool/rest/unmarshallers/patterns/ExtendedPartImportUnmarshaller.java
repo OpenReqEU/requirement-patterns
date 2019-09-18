@@ -10,7 +10,7 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class ExtendedPartImportUnmarshaller extends ExtendedPartUnmarshaller {
 
-    protected Set<ParameterImportUnmarshaller> parameters;
+    protected Set<ParameterImportUnmarshaller> parametersAux;
 
     @JsonCreator
     public ExtendedPartImportUnmarshaller(@JsonProperty(value = "id", required = false) long id,
@@ -25,14 +25,14 @@ public class ExtendedPartImportUnmarshaller extends ExtendedPartUnmarshaller {
 	    @JsonProperty(value = "pos", required = true) short pos) throws SemanticallyIncorrectException {
 
 	super(id, name, patternText, questionText, numInstances, available, statsNumInstances, artifacts, pos);
-	this.parameters = parameters;
+	this.parametersAux = parameters;
     }
 
     @Override
     protected void assignParameters() throws SemanticallyIncorrectException {
-	if (parameters != null) {
+	if (parametersAux != null) {
 	    params = new HashSet<>();
-	    for (ParameterImportUnmarshaller pm : parameters) {
+	    for (ParameterImportUnmarshaller pm : parametersAux) {
 		params.add(pm.build());
 	    }
 	}
@@ -41,7 +41,7 @@ public class ExtendedPartImportUnmarshaller extends ExtendedPartUnmarshaller {
     public boolean checkAllItemsContainsID() {
 	boolean b = id != 0;
 
-	for (ParameterImportUnmarshaller par : parameters) {
+	for (ParameterImportUnmarshaller par : parametersAux) {
 	    if (!par.checkAllItemsContainsID()) {
 		b = false;
 	    }

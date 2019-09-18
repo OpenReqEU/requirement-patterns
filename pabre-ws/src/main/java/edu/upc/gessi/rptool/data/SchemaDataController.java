@@ -154,7 +154,6 @@ public final class SchemaDataController extends GenericDataController {
      *            The Classification Schema that we want to save
      */
     public static void saveSchema(ClassificationSchema cs) {
-	// MediatorGeneric.persist(cs);
 	MediatorSchemas.save(cs);
     }
 
@@ -251,8 +250,6 @@ public final class SchemaDataController extends GenericDataController {
 		old.addClassifier(c);
 	    }
 	    GenericDataController.flush();
-	    // MediatorGeneric.save(old.getInternalClassifiers());
-	    // old.clearAndSetClassifiers(newInternal.getInternalClassifiers());
 	}
 	// Check patterns to update
 	if (newInternal.getPatterns() != null)
@@ -279,12 +276,12 @@ public final class SchemaDataController extends GenericDataController {
      * @param oldC
      *            The InternalClassifier that the method has to remove from the
      *            RequirementPattern identified by name.
-     * @throws Exception
+     * @throws SemanticallyIncorrectException
      *             if parameter name or newC is null or any problem occurs during
      *             database update process. Parameter oldC can be null to cover the
      *             case of pattern being classified in non-binded patterns.
      */
-    public static void movePatternFromClassifiers(String name, Classifier newC, Classifier oldC) throws Exception {
+    public static void movePatternFromClassifiers(String name, Classifier newC, Classifier oldC) throws SemanticallyIncorrectException {
 	if (name == null || newC == null)
 	    throw new NullPointerException("Move operation over null objects is not allowed");
 

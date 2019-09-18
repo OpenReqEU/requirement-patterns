@@ -115,8 +115,7 @@ public abstract class MediatorGeneric {
      */
     public static Object get(String attribute, String value, Class c) {
 	Session session = MediatorConnection.getCurrentSession();
-	Object o = get(attribute, value, c, session);
-	return o;
+	return get(attribute, value, c, session);
     }
 
     /**
@@ -138,8 +137,7 @@ public abstract class MediatorGeneric {
      *         object in class with the name received as parameter
      */
     public static Object get(String attribute, String value, Class c, Session session) {
-	Object o = session.createCriteria(c).add(Restrictions.eq(attribute, value)).uniqueResult();
-	return o;
+	return session.createCriteria(c).add(Restrictions.eq(attribute, value)).uniqueResult();
     }
 
     /**
@@ -172,8 +170,7 @@ public abstract class MediatorGeneric {
      */
     public static List listNames(Class c) {
 	Session session = MediatorConnection.getCurrentSession();
-	List names = session.createCriteria(c).setProjection(Projections.property("name")).list();
-	return names;
+	return session.createCriteria(c).setProjection(Projections.property("name")).list();
     }
 
     /**
@@ -188,10 +185,10 @@ public abstract class MediatorGeneric {
      */
     public static int count(Class obj) {
 	Session session = MediatorConnection.getCurrentSession();
-	Integer result = ((Long) session.createCriteria(obj).setProjection(Projections.rowCount()).uniqueResult())
+	int result = ((Long) session.createCriteria(obj).setProjection(Projections.rowCount()).uniqueResult())
 		.intValue();
 	session.flush();
-	return result.intValue();
+	return result;
     }
 
     /**
@@ -274,7 +271,6 @@ public abstract class MediatorGeneric {
 	    session.save(obj);
 	    session.flush();
 	} catch (HibernateException e) {
-	    // e.printStackTrace();
 	    if (!(e instanceof TransientObjectException)) { // Avoid throwing Transient object exception to the user
 		if (e.getMessage().contains(IdGenerator.IDEXCEPTIONSTRING)) {// Rollback when is ID generation fail
 		    MediatorConnection.checkSessionAndRollback(e, session);

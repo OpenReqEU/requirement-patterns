@@ -23,7 +23,8 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class ClassifierUnmarshaller {
 
-    protected Set<Long> sources, requirementPatterns;
+    protected Set<Long> sources;
+    protected Set<Long> requirementPatterns;
     protected long id;
     protected Set<ClassifierUnmarshaller> internalClassifiers;
     protected Classifier classifierInstance;
@@ -38,7 +39,7 @@ public class ClassifierUnmarshaller {
 	    @JsonProperty(value = "sources", required = false) Set<Long> sources,
 	    @JsonProperty(value = "requirementPatterns", required = false) Set<Long> reqPatterns,
 	    @JsonProperty(value = "internalClassifiers", required = false) Set<ClassifierUnmarshaller> internalClassifiers)
-	    throws IntegrityException, IOException, SemanticallyIncorrectException {
+	    throws IntegrityException, SemanticallyIncorrectException {
 	setBasicValues(name, description, comments, pos);
 	setSourcesPatternsClassifiersAndInit(sources, reqPatterns, internalClassifiers);
     }
@@ -168,19 +169,18 @@ public class ClassifierUnmarshaller {
 	int internalsSize = s.size();
 	boolean[] positions = new boolean[internalsSize]; // initialized a false
 	for (ClassifierUnmarshaller tmp : s) {
-	    int pos = tmp.getPos();
-	    if (pos < 0 || pos >= internalsSize) {
+	    int posAux = tmp.getPos();
+	    if (posAux < 0 || posAux >= internalsSize) {
 		throw new SemanticallyIncorrectException("Incorrect pos value");
 	    } else {
-		positions[pos] = true;
+		positions[posAux] = true;
 	    }
 	    Classifier c = tmp.build(false);
 	    c.setParentClassifier(classifierInstance);
 	    classifierInstance.addClassifier(c);
 	}
 	for (boolean b : positions) {
-	    if (!b)
-		throw new SemanticallyIncorrectException("Incorrect pos value");
+	    if (!b) throw new SemanticallyIncorrectException("Incorrect pos value");
 	}
     }
 

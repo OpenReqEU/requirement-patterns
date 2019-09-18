@@ -15,7 +15,7 @@ public enum DependencyDirectionDomain {
     UNIDIRECTIONAL("unidirectional"), BIDIRECTIONAL("bidirectional");
 
     private final String name;
-    private final static DependencyDirectionDomain[] enumValues = DependencyDirectionDomain.values();
+    private static final DependencyDirectionDomain[] enumValues = DependencyDirectionDomain.values();
 
     private DependencyDirectionDomain(String s) {
 	name = s;
@@ -30,14 +30,13 @@ public enum DependencyDirectionDomain {
 	return name.equals(otherName);
     }
 
-    public static DependencyDirectionDomain fromInteger(int value) throws IndexOutOfBoundsException {
+    public static DependencyDirectionDomain fromInteger(int value) {
 	return enumValues[value];
     }
 
     public static DependencyDirectionDomain fromString(String code) {
 	for (DependencyDirectionDomain e : enumValues)
-	    if (e.equalsName(code))
-		return e;
+	    if (e.equalsName(code)) return e;
 	return null;
     }
 }

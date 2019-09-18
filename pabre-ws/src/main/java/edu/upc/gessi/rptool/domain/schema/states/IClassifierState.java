@@ -34,7 +34,7 @@ public interface IClassifierState {
 	throw new SemanticallyIncorrectException(getStateTypeName() + " could not have patterns");
     }
 
-    default public boolean alreadyHas(long id) {
+    default boolean alreadyHas(long id) {
 	return false;
     }
 

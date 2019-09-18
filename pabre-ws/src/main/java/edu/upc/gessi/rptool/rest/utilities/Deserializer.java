@@ -9,6 +9,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Deserializer {
 
+	private Deserializer() {
+		//utility class
+	}
+
     private static ObjectMapper mapper;
 
     private static void initMapper() {
@@ -16,12 +20,12 @@ public class Deserializer {
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
     }
 
-    public static <T> T deserialize(String json, Class<T> Unmarshall)
-	    throws JsonParseException, JsonMappingException, IOException {
+    public static <T> T deserialize(String json, Class<T> unmarshall)
+	    throws IOException {
 	if (mapper == null) {
 	    initMapper();
 	}
-	return mapper.readValue(json, Unmarshall);
+	return mapper.readValue(json, unmarshall);
     }
 
     public static <T> T convertObject(Object obj, Class<T> unmarshall) {

@@ -8,6 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonUtilities {
 
+	private JsonUtilities() {
+		//utility class
+	}
+
     /**
      * This method is used to know if a String in JSON format constains a given
      * field

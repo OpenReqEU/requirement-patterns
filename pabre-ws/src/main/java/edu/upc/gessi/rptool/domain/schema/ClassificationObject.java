@@ -51,7 +51,7 @@ public abstract class ClassificationObject implements Identificable {
     public ClassificationObject() {
 	this.description = null;
 	this.comments = null;
-	this.sources = new HashSet<Source>();
+	this.sources = new HashSet<>();
     }
 
     public ClassificationObject(String description, String comments) {
@@ -105,7 +105,7 @@ public abstract class ClassificationObject implements Identificable {
 	for (Source source : sources) {
 	    s.add(source.getIdentifier());
 	}
-	return new ArrayList<String>(s);
+	return new ArrayList<>(s);
     }
 
     /*
@@ -149,9 +149,7 @@ public abstract class ClassificationObject implements Identificable {
 	if (getClass() != obj.getClass())
 	    return false;
 	ClassificationObject other = (ClassificationObject) obj;
-	if (id != other.id)
-	    return false;
-	return true;
+        return id == other.id;
     }
 
 }

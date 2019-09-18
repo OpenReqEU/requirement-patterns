@@ -64,23 +64,23 @@ public class RequirementForm extends PatternElement implements Comparable<Requir
     public RequirementForm(FixedPart fixed) {
 	author = null;
 	version = null;
-	numInstances = new Integer(0);
-	available = new Boolean(false);
-	statsNumInstances = new Integer(0);
-	statsNumAssociates = new Integer(0);
+	numInstances = 0;
+	available = Boolean.FALSE;
+	statsNumInstances = 0;
+	statsNumAssociates = 0;
 	fixedPart = fixed;
-	extendedParts = new HashSet<ExtendedPart>();
+	extendedParts = new HashSet<>();
     }
 
     public RequirementForm() {
 	author = null;
 	version = null;
-	numInstances = new Integer(0);
-	available = new Boolean(false);
-	statsNumInstances = new Integer(0);
-	statsNumAssociates = new Integer(0);
+	numInstances = 0;
+	available = Boolean.FALSE;
+	statsNumInstances = 0;
+	statsNumAssociates = 0;
 	fixedPart = null;
-	extendedParts = new HashSet<ExtendedPart>();
+	extendedParts = new HashSet<>();
 	pos = null;
     }
 
@@ -138,12 +138,9 @@ public class RequirementForm extends PatternElement implements Comparable<Requir
     }
 
     public boolean isUsed() {
-	Integer numInstances = getNumInstances();
+	Integer numInstancesAux = getNumInstances();
 
-	if (numInstances == null || numInstances < 1)
-	    return false;
-	else
-	    return true;
+		return numInstancesAux != null && numInstancesAux >= 1;
     }
 
     public Boolean getAvailable() {
@@ -211,7 +208,7 @@ public class RequirementForm extends PatternElement implements Comparable<Requir
 	}
     }
 
-    public void addExtendedPartNoValidation(ExtendedPart extended) throws IntegrityException {
+    public void addExtendedPartNoValidation(ExtendedPart extended) {
 	extendedParts.add(extended);
     }
 
@@ -239,8 +236,7 @@ public class RequirementForm extends PatternElement implements Comparable<Requir
 	Iterator<ExtendedPart> iter = extendedParts.iterator();
 	while (iter.hasNext()) {
 	    String aux = iter.next().getName();
-	    if (n.equals(aux))
-		return false;
+	    if (n.equals(aux)) return false;
 	}
 	return true;
     }
@@ -323,48 +319,39 @@ public class RequirementForm extends PatternElement implements Comparable<Requir
 	    return false;
 	RequirementForm other = (RequirementForm) obj;
 	if (author == null) {
-	    if (other.author != null)
-		return false;
+	    if (other.author != null) return false;
 	} else if (!author.equals(other.author))
 	    return false;
 	if (available == null) {
-	    if (other.available != null)
-		return false;
+	    if (other.available != null) return false;
 	} else if (!available.equals(other.available))
 	    return false;
 	if (extendedParts == null) {
-	    if (other.extendedParts != null)
-		return false;
+	    if (other.extendedParts != null) return false;
 	} else if (!extendedParts.equals(other.extendedParts))
 	    return false;
 	if (fixedPart == null) {
-	    if (other.fixedPart != null)
-		return false;
+	    if (other.fixedPart != null) return false;
 	} else if (!fixedPart.equals(other.fixedPart))
 	    return false;
 	if (numInstances == null) {
-	    if (other.numInstances != null)
-		return false;
+	    if (other.numInstances != null) return false;
 	} else if (!numInstances.equals(other.numInstances))
 	    return false;
 	if (pos == null) {
-	    if (other.pos != null)
-		return false;
+	    if (other.pos != null) return false;
 	} else if (!pos.equals(other.pos))
 	    return false;
 	if (statsNumAssociates == null) {
-	    if (other.statsNumAssociates != null)
-		return false;
+	    if (other.statsNumAssociates != null) return false;
 	} else if (!statsNumAssociates.equals(other.statsNumAssociates))
 	    return false;
 	if (statsNumInstances == null) {
-	    if (other.statsNumInstances != null)
-		return false;
+	    if (other.statsNumInstances != null) return false;
 	} else if (!statsNumInstances.equals(other.statsNumInstances))
 	    return false;
 	if (version == null) {
-	    if (other.version != null)
-		return false;
+	    if (other.version != null) return false;
 	} else if (!version.equals(other.version))
 	    return false;
 	return true;

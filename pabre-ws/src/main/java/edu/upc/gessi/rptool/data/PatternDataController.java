@@ -176,9 +176,8 @@ public final class PatternDataController extends GenericDataController {
 	List<RequirementPattern> listPatterns = PatternDataController.getPatternRecursiveClassifier(ic);
 
 	// generate unique results
-	List<RequirementPattern> l = new ArrayList<>(new TreeSet<>(listPatterns));
 
-	return l;
+		return new ArrayList<>(new TreeSet<>(listPatterns));
     }
 
     /**
@@ -386,10 +385,8 @@ public final class PatternDataController extends GenericDataController {
      * @throws NullPointerException
      * @throws SemanticallyIncorrectException
      */
-    public static void deletePattern(RequirementPattern p) throws NullPointerException, SemanticallyIncorrectException {
+    public static void deletePattern(RequirementPattern p) throws SemanticallyIncorrectException {
 	deletePatternClassifiers(p);
-
-	// deletePatternVersions(p);
 	MediatorGeneric.delete(p);
     }
 
@@ -397,27 +394,10 @@ public final class PatternDataController extends GenericDataController {
 
 	for (Classifier c : p.getClassifiers()) {
 	    c.removePattern(p);
-	    // p.removeClassifier(c);
 	}
 	p.getClassifiers().clear();
 	PatternDataController.update(p);
 
-    }
-
-    /**
-     * Delete all the versions of the given pattern
-     * 
-     * @param p
-     *            Pattern
-     * @throws NullPointerException
-     */
-    private static void deletePatternVersions(RequirementPattern p) throws NullPointerException {
-	if (p == null)
-	    throw new NullPointerException("Delete operation over null objects is not allowed");
-	for (RequirementPatternVersion rpv : p.getVersions()) {
-	    deletePatternVersion(rpv);
-	}
-	p.getVersions().clear();
     }
 
     /**
@@ -453,21 +433,6 @@ public final class PatternDataController extends GenericDataController {
      */
     public static void deleteForm(RequirementForm f) {
 	MediatorGeneric.delete(f);
-    }
-
-    /**
-     * Delete a collection of extended parts.
-     * 
-     * @param eParts
-     *            Extended parts to be deleted
-     */
-    private static void deleteExtendedParts(Collection<ExtendedPart> extendedParts) {
-	for (ExtendedPart k : extendedParts) {
-	    for (Parameter param : k.getParameters()) {
-		MediatorGeneric.delete(param);
-	    }
-	    MediatorGeneric.delete(k);
-	}
     }
 
 }

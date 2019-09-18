@@ -109,16 +109,15 @@ public class Dependency implements Serializable, Comparable<Dependency>, Identif
 	if (o == null)
 	    throw new NullPointerException("Comparison between null objects is not allowed");
 
-	int compareTypes = new Integer(this.getDependencyType().ordinal()).compareTo(o.getDependencyType().ordinal());
+	int compareTypes = Integer.compare(this.getDependencyType().ordinal(), o.getDependencyType().ordinal());
 	if (compareTypes != 0) {
 	    return compareTypes;
 	} else {
-	    int compareFirst = new Long(this.getFrom().getId()).compareTo(o.getFrom().getId());
+	    int compareFirst = Long.compare(this.getFrom().getId(), o.getFrom().getId());
 	    if (compareFirst != 0) {
 		return compareFirst;
 	    } else {
-		int compareSecond = new Long(this.getTo().getId()).compareTo(o.getTo().getId());
-		return compareSecond;
+            return Long.compare(this.getTo().getId(), o.getTo().getId());
 	    }
 	}
     }

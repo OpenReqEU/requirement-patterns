@@ -20,7 +20,7 @@ public class SetMetricUpdater extends GenericMetricUpdater {
     }
 
     @Override
-    protected void unmarshall() throws JsonParseException, JsonMappingException, IOException, IntegrityException,
+    protected void unmarshall() throws IOException, IntegrityException,
 	    ValueException, SemanticallyIncorrectException {
 	PutSetMetricUnmarshaller unm;
 	unm = Deserializer.deserialize(metricJson, PutSetMetricUnmarshaller.class);

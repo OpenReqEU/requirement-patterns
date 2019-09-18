@@ -102,7 +102,7 @@ public class FloatMetric extends SimpleMetric {
      *             This exception is raised when minimum isn't <= default or default
      *             isn't <= maximum
      */
-    public FloatMetric(float min, float max, float def) throws Exception {
+    public FloatMetric(float min, float max, float def) throws ValueException {
 	if (min <= def && def <= max) {
 	    minValue = min;
 	    maxValue = max;
@@ -191,7 +191,6 @@ public class FloatMetric extends SimpleMetric {
 		    "If default value is defined, minimum must be smaller than default value and default value must be smaller than maximum. Otherwise, minimum must be smaller than maximum.");
 	} else {
 	    defaultValue = def;
-	    hasDefault = true;
 
 	}
 

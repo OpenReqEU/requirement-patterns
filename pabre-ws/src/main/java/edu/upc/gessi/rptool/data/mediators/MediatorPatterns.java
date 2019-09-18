@@ -39,9 +39,8 @@ public final class MediatorPatterns extends MediatorGeneric {
      */
     public static String getPatternName(long id, Class c) {
 	Session session = MediatorConnection.getCurrentSession();
-	String n = (String) session.createCriteria(c).add(Restrictions.idEq(new Long(id)))
-		.setProjection(Projections.property("name")).uniqueResult();
-	return n;
+	Criteria aux = session.createCriteria(c).add(Restrictions.idEq(id));
+	return (String) aux.setProjection(Projections.property("name")).uniqueResult();
     }
 
     /**
@@ -77,7 +76,7 @@ public final class MediatorPatterns extends MediatorGeneric {
 	if (c == null)
 	    throw new NullPointerException("Load operation over null objects is not allowed");
 	Session session = MediatorConnection.getCurrentSession();
-	return session.load(c, new Long(id));
+	return session.load(c, id);
     }
 
     /**
@@ -110,10 +109,9 @@ public final class MediatorPatterns extends MediatorGeneric {
 
     public static List listPatternWithGivenKeyword(String keyword) {
 	Session session = MediatorConnection.getCurrentSession();
-	List names = session.createQuery("select p from RequirementPattern as p " + "left join p.versions as v "
-		+ "left join v.keywords as k " + "where (lower(k.name) like :keyword or lower(p.name) like :keyword) ")
-		.setParameter("keyword", "%" + keyword.toLowerCase() + "%").list();
-	return names;
+		return session.createQuery("select p from RequirementPattern as p " + "left join p.versions as v "
+			+ "left join v.keywords as k " + "where (lower(k.name) like :keyword or lower(p.name) like :keyword) ")
+			.setParameter("keyword", "%" + keyword.toLowerCase() + "%").list();
     }
 
     /**
@@ -123,10 +121,9 @@ public final class MediatorPatterns extends MediatorGeneric {
      */
     public static List listPatternIdWithNameEditableAvailable() {
 	Session session = MediatorConnection.getCurrentSession();
-	List names = session.createQuery("select p.id, p.name, p.editable, v.available "
-		+ "from RequirementPattern as p left join p.versions as v "
-		+ "where v.versionDate = (select max(v2.versionDate) from p.versions v2)").list();
-	return names;
+		return session.createQuery("select p.id, p.name, p.editable, v.available "
+			+ "from RequirementPattern as p left join p.versions as v "
+			+ "where v.versionDate = (select max(v2.versionDate) from p.versions v2)").list();
     }
 
     /**
@@ -146,6 +143,7 @@ public final class MediatorPatterns extends MediatorGeneric {
     }
 
     /**
+	 * @deprecated ()
      * Get the Requirement Patterns with a specific internal classifier
      * 
      * @param id
@@ -181,6 +179,7 @@ public final class MediatorPatterns extends MediatorGeneric {
     }
 
     /**
+	 * @deprecated ()
      * List all the versions of the RequirementPattern whose identifier is received
      * as parameter.
      * 
@@ -201,6 +200,7 @@ public final class MediatorPatterns extends MediatorGeneric {
     }
 
     /**
+	 * @deprecated ()
      * Loads from database the RequirementForm associated with the FixedPart whose
      * id is received as parameter.
      * 
@@ -215,11 +215,11 @@ public final class MediatorPatterns extends MediatorGeneric {
 	Session session = MediatorConnection.getCurrentSession();
 	String query = new StringBuilder("select rf").append(" from RequirementForm as rf")
 		.append(" where rf.fixedPart.id = ").append(fixedPartId).toString();
-	Object o = session.createQuery(query).uniqueResult();
-	return o;
+		return session.createQuery(query).uniqueResult();
     }
 
     /**
+	 * @deprecated ()
      * Loads from database the RequirementForm id associated with the ExtendedPart
      * whose id is received as parameter.
      * 

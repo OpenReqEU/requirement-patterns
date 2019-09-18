@@ -28,9 +28,9 @@ import edu.upc.gessi.rptool.domain.metrics.Type;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public final class MetricDataController extends GenericDataController {
 
-    // There are the lists that contains all metrics;
-    // when a metric is created, modified or removed,
-    // the correspond list has to be updated properly.
+    /* There are the lists that contains all metrics
+     when a metric is created, modified or removed
+     the correspond list has to be updated properly*/
     private static List<StringMetric> stringMetrics = null;
     private static List<IntegerMetric> integerMetrics = null;
     private static List<FloatMetric> floatMetrics = null;
@@ -53,8 +53,7 @@ public final class MetricDataController extends GenericDataController {
 
 	@Override
 	public int compare(Metric a, Metric b) {
-	    if (a == null || b == null)
-		throw new NullPointerException("Comparison between null objects is not allowed");
+	    if (a == null || b == null) throw new NullPointerException("Comparison between null objects is not allowed");
 
 	    return collator.compare(a.getName(), b.getName());
 	}

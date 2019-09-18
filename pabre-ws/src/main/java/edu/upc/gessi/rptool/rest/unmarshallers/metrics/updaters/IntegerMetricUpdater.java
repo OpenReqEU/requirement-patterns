@@ -19,7 +19,7 @@ public class IntegerMetricUpdater extends GenericMetricUpdater {
     }
 
     @Override
-    protected void unmarshall() throws JsonParseException, JsonMappingException, IOException, IntegrityException,
+    protected void unmarshall() throws IOException, IntegrityException,
 	    ValueException, SemanticallyIncorrectException {
 	PutIntegerMetricUnmarshaller unm;
 	unm = Deserializer.deserialize(metricJson, PutIntegerMetricUnmarshaller.class);
@@ -42,12 +42,9 @@ public class IntegerMetricUpdater extends GenericMetricUpdater {
 		mIM.setValues(auxIM.getMinValue(), auxIM.getMaxValue(), true, auxIM.getDefaultValue());
 	    }
 	} else {
-	    if (auxIM.getMinValue() != null)
-		mIM.setMinValue(auxIM.getMinValue());
-	    if (auxIM.getDefaultValue() != null)
-		mIM.setDefaultValue(auxIM.getDefaultValue());
-	    if (auxIM.getMaxValue() != null)
-		mIM.setMaxValue(((IntegerMetric) aux).getMaxValue());
+	    if (auxIM.getMinValue() != null) mIM.setMinValue(auxIM.getMinValue());
+	    if (auxIM.getDefaultValue() != null) mIM.setDefaultValue(auxIM.getDefaultValue());
+	    if (auxIM.getMaxValue() != null) mIM.setMaxValue(((IntegerMetric) aux).getMaxValue());
 	}
 
     }

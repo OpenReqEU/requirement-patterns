@@ -31,13 +31,13 @@ public class NewRequirementData extends NoInstancedRequirementData {
 
     public NewRequirementData(String projectName, ClassificationSchema classificationSchema,
 	    Classifier generalClassifier, String name, String formText, String questionText) {
-	this(projectName, classificationSchema, generalClassifier, name, formText, questionText, new String(),
-		new String());
+	this(projectName, classificationSchema, generalClassifier, name, formText, questionText, "",
+            "");
     }
 
     public NewRequirementData() throws SemanticallyIncorrectException {
-	this(new String(), new ClassificationSchema(), new Classifier(), new String(), new String(),
-		new String());
+	this("", new ClassificationSchema(), new Classifier(), "", "",
+            "");
     }
 
     /*

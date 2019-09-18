@@ -42,7 +42,7 @@ public abstract class PatternElement extends PatternObject {
     public PatternElement() {
 	description = null;
 	comments = null;
-	sources = new HashSet<Source>();
+	sources = new HashSet<>();
     }
 
     @JsonCreator
@@ -64,14 +64,6 @@ public abstract class PatternElement extends PatternObject {
     public void setId(long l) {
 	id = l;
     }
-
-    /*
-     * public void setName(String newname) throws IntegrityException { // The name
-     * of the PatternObject can't be an empty value // If new name is null or it has
-     * a length equal to 0 (an empty string), // we launch an integrity exception if
-     * (newname == null || newname.trim().length() == 0 || newname.equals("")) throw
-     * new IntegrityException("Name cannot be empty"); name = newname; }
-     */
 
     public String getDescription() {
 	return description;
@@ -98,7 +90,7 @@ public abstract class PatternElement extends PatternObject {
 	for (Source source : sources) {
 	    s.add(source.getIdentifier());
 	}
-	return new ArrayList<String>(s);
+	return new ArrayList<>(s);
     }
 
     public void setSources(Set<Source> s) {

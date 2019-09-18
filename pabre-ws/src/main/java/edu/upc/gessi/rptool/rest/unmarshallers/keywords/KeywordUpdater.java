@@ -18,11 +18,11 @@ public class KeywordUpdater {
 	this.metricJson = sourceJson;
     }
 
-    private void unmarshall() throws JsonParseException, JsonMappingException, IOException {
+    private void unmarshall() {
 	aux = metricJson.build();
     }
 
-    public void update() throws JsonParseException, JsonMappingException, IOException {
+    public void update() {
 	unmarshall();
 	updateFields();
 	save();

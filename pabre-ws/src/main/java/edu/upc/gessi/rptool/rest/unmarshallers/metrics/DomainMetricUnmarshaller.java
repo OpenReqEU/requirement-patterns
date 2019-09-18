@@ -25,7 +25,7 @@ public class DomainMetricUnmarshaller extends UnmarshallerGenericMetric {
 	    @JsonProperty(value = "description", required = true) String description,
 	    @JsonProperty(value = "comments", required = true) String comments,
 	    @JsonProperty(value = "defaultValue", required = false) String defaultValueString,
-	    @JsonProperty(value = "possibleValues", required = true) ArrayList<String> possibleValues,
+	    @JsonProperty(value = "possibleValues", required = true) List<String> possibleValues,
 	    @JsonProperty(value = "sources", required = false) Set<Long> sources,
 	    @JsonProperty(value = "sourcesByIdentifier", required = false) Set<String> sourcesByIdentifier) {
 	this.id = id == null ? 0 : id;
@@ -40,8 +40,7 @@ public class DomainMetricUnmarshaller extends UnmarshallerGenericMetric {
     }
 
     public DomainMetricUnmarshaller(String name, String description, String comments, String defaultValueString,
-	    ArrayList<String> possibleValues, Set<Long> sources, Set<String> sourcesByIdentifier)
-	    throws SemanticallyIncorrectException {
+	    List<String> possibleValues, Set<Long> sources, Set<String> sourcesByIdentifier){
 	this.possibleValues = possibleValues;
 	this.name = name;
 	this.description = description;
@@ -53,7 +52,7 @@ public class DomainMetricUnmarshaller extends UnmarshallerGenericMetric {
     }
 
     public DomainMetricUnmarshaller(String name, String description, String comments, String defaultValueString,
-	    ArrayList<String> possibleValues) {
+	    List<String> possibleValues) {
 	this.possibleValues = possibleValues;
 	this.name = name;
 	this.description = description;
@@ -62,7 +61,7 @@ public class DomainMetricUnmarshaller extends UnmarshallerGenericMetric {
     }
 
     protected void checkPossibleValues() throws SemanticallyIncorrectException {
-	if (possibleValues.size() == 0)
+	if (possibleValues.isEmpty())
 	    throw new SemanticallyIncorrectException("possibleValues is empty");
     }
 
@@ -75,14 +74,11 @@ public class DomainMetricUnmarshaller extends UnmarshallerGenericMetric {
 	    possibleValues = new ArrayList<>();
 	for (String pvu : possibleValues) {
 
-	    // DomainMetricValue aux = pvu.build();
-
 	    DomainMetricValue aux = new DomainMetricValue(pvu);
 	    aux.setOrder(counter);
 	    ret.add(aux);
 	    ++counter;
-	    if (pvu.equals(defaultValueString))
-		defaultValue = aux;
+	    if (pvu.equals(defaultValueString)) defaultValue = aux;
 	}
 	return ret;
     }
@@ -94,8 +90,7 @@ public class DomainMetricUnmarshaller extends UnmarshallerGenericMetric {
 
     protected void setDefaultValues() throws SemanticallyIncorrectException {
 	if (defaultValueString != null) {
-	    if (defaultValue == null)
-		throw new SemanticallyIncorrectException("defaultValue not in possibleValues");
+	    if (defaultValue == null) throw new SemanticallyIncorrectException("defaultValue not in possibleValues");
 	    try {
 		((DomainMetric) metric).safeSetDefaultValue(defaultValue);
 	    } catch (PossibleValueException pve) {

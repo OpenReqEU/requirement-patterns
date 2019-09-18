@@ -26,10 +26,12 @@ public class ClassifierGeneralState extends AbstractClassifierState {
 
     @Override
     public void removePattern(RequirementPattern rp) throws SemanticallyIncorrectException {
+        //not implemented WHY?
     }
 
     @Override
     public void clearClassifiers() throws SemanticallyIncorrectException {
+        //not implemented WHY?
     }
 
     @Override
@@ -39,6 +41,7 @@ public class ClassifierGeneralState extends AbstractClassifierState {
 
     @Override
     public void deleteClassifier() {
+        //not implemented WHY?
     }
 
 }

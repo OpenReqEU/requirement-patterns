@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 
@@ -62,25 +63,21 @@ public class ImportUnmarshaller {
 	    @JsonProperty(value = "metrics", required = false) List<GenericMetricImportCreatorUnmarshaller> metrics,
 	    @JsonProperty(value = "patterns", required = false) List<RequirementPatternImportUnmarshaller> patterns,
 	    @JsonProperty(value = "schemas", required = false) List<SchemaImportUnmarshaller> schemas,
-	    @JsonProperty(value = "dependencies", required = false) List<DependenciesImportUnmarshaller> dependencies)
-	    throws IOException {
+	    @JsonProperty(value = "dependencies", required = false) List<DependenciesImportUnmarshaller> dependencies) {
 	this.sources = sources;
 	this.keywords = keywords;
 	this.metrics = metrics;
 	// Sort the List to have simpleMetric before the SetMetrics
-	Comparator<GenericMetricImportCreatorUnmarshaller> cmpMetrics = new Comparator<GenericMetricImportCreatorUnmarshaller>() {
-	    @Override
-	    public int compare(GenericMetricImportCreatorUnmarshaller o1, GenericMetricImportCreatorUnmarshaller o2) {
-		int res = 0;
-		String o1Type = o1.getType().toString();
-		String o2Type = o2.getType().toString();
-		String setMetricName = Type.SET.toString();
-		if (!o1Type.equals(setMetricName) && o2Type.equals(setMetricName)) // o1 is simple and o2 is not
-		    res = -1;
-		else if (o1Type.equals(setMetricName) && !o2Type.equals(setMetricName)) // o1 is set and o2 is not
-		    res = 1;
-		return res;
-	    }
+	Comparator<GenericMetricImportCreatorUnmarshaller> cmpMetrics = (o1, o2) -> {
+	int res = 0;
+	String o1Type = o1.getType();
+	String o2Type = o2.getType();
+	String setMetricName = Type.SET.toString();
+	if (!o1Type.equals(setMetricName) && o2Type.equals(setMetricName)) // o1 is simple and o2 is not
+		res = -1;
+	else if (o1Type.equals(setMetricName) && !o2Type.equals(setMetricName)) // o1 is set and o2 is not
+		res = 1;
+	return res;
 	};
 	sortMetrics(metrics, cmpMetrics);
 	this.patterns = patterns;
@@ -114,7 +111,7 @@ public class ImportUnmarshaller {
     }
 
     public void buildAndSaveMetrics() throws MissingCreatorPropertyException, IntegrityException, ValueException,
-	    SemanticallyIncorrectException, JsonParseException, IOException {
+	    SemanticallyIncorrectException, JsonMappingException {
 	if (metrics != null) { // check if we have metrics to import
 	    for (int i = 0; i < metrics.size(); i++) {
 		Metric m = metrics.get(i).build();

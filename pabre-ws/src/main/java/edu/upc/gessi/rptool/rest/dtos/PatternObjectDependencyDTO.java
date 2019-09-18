@@ -13,7 +13,7 @@ import edu.upc.gessi.rptool.domain.PatternObjectDependency;
 
 public class PatternObjectDependencyDTO {
 
-    final static Logger logger = Logger.getLogger(PatternObjectDependencyDTO.class);
+    static final Logger logger = Logger.getLogger(PatternObjectDependencyDTO.class);
     private String dependencyType;
     private String dependencyClass;
     private String dependencyDirection;
@@ -39,7 +39,7 @@ public class PatternObjectDependencyDTO {
 
 	dependencyType = d.getDependencyType().toString().toUpperCase();
 
-	String dClass = d.getDependency().getClass().getSimpleName();// getCanonicalName();
+	String dClass = d.getDependency().getClass().getSimpleName();
 	setDependencyClass(dClass);
 	this.patternObjectId = patternObjectId;
 	this.dependencyId = d.getDependency().getId();

@@ -20,7 +20,7 @@ public class FloatMetricUpdater extends GenericMetricUpdater {
 
     @Override
     protected void unmarshall() throws IntegrityException, ValueException, SemanticallyIncorrectException,
-	    JsonParseException, JsonMappingException, IOException {
+	    IOException {
 	PutFloatMetricUnmarshaller unm;
 	unm = Deserializer.deserialize(metricJson, PutFloatMetricUnmarshaller.class);
 	aux = unm.build();
@@ -42,12 +42,9 @@ public class FloatMetricUpdater extends GenericMetricUpdater {
 		mFM.setValues(auxFM.getMinValue(), auxFM.getMaxValue(), true, auxFM.getDefaultValue());
 	    }
 	} else {
-	    if (auxFM.getMinValue() != null)
-		mFM.setMinValue(auxFM.getMinValue());
-	    if (auxFM.getDefaultValue() != null)
-		mFM.setDefaultValue(auxFM.getDefaultValue());
-	    if (auxFM.getMaxValue() != null)
-		mFM.setMaxValue(auxFM.getMaxValue());
+	    if (auxFM.getMinValue() != null) mFM.setMinValue(auxFM.getMinValue());
+	    if (auxFM.getDefaultValue() != null) mFM.setDefaultValue(auxFM.getDefaultValue());
+	    if (auxFM.getMaxValue() != null) mFM.setMaxValue(auxFM.getMaxValue());
 	}
 
     }

@@ -33,14 +33,13 @@ public enum DependencyTypeDomain {
 	return name.equals(otherName);
     }
 
-    public static DependencyTypeDomain fromInteger(int value) throws IndexOutOfBoundsException {
+    public static DependencyTypeDomain fromInteger(int value) {
 	return enumValues[value];
     }
 
     public static DependencyTypeDomain fromString(String code) {
 	for (DependencyTypeDomain e : enumValues) {
-	    if (e.equalsName(code))
-		return e;
+	    if (e.equalsName(code)) return e;
 	}
 	return null;
     }

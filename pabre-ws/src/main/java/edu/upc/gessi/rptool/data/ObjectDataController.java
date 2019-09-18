@@ -68,8 +68,7 @@ public final class ObjectDataController extends GenericDataController {
 
     public static Keyword getKeyword(Long id) {
 	try {
-	    if (id == null)
-		return null;
+	    if (id == null) return null;
 	    return (Keyword) MediatorGeneric.get(id, Keyword.class);
 	} catch (HibernateException e) {
 	    return null;
@@ -78,8 +77,7 @@ public final class ObjectDataController extends GenericDataController {
 
     public static Parameter getParameter(Long id) {
 	try {
-	    if (id == null)
-		return null;
+	    if (id == null) return null;
 	    return (Parameter) MediatorGeneric.get(id, Parameter.class);
 	} catch (HibernateException e) {
 	    return null;
@@ -91,13 +89,11 @@ public final class ObjectDataController extends GenericDataController {
     }
 
     public static PatternObject getPatternObject(long id) {
-	PatternObject po = (PatternObject) MediatorGeneric.get(id, PatternObject.class);
-	return po;
+		return (PatternObject) MediatorGeneric.get(id, PatternObject.class);
     }
 
     public static PatternObject getPatternObject(long id, Session session) {
-	PatternObject po = (PatternObject) MediatorGeneric.get(id, PatternObject.class, session);
-	return po;
+		return (PatternObject) MediatorGeneric.get(id, PatternObject.class, session);
     }
 
     /**
@@ -215,7 +211,7 @@ public final class ObjectDataController extends GenericDataController {
 	GenericDataController.update(po, session);
     }
 
-    public static void removeAllCostFunctions(RequirementPatternVersion rpv) throws IntegrityException {
+    public static void removeAllCostFunctions(RequirementPatternVersion rpv) {
 	rpv.getExternalObjects().clear();
 	MediatorGeneric.update(rpv);
     }

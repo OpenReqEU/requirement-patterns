@@ -27,7 +27,7 @@ public abstract class Metric extends MetricObject {
      */
     public Metric() {
 	name = null;
-    };
+    }
 
     public Metric(@JsonProperty(value = "name", required = true) String name,
 	    @JsonProperty(value = "description", required = true) String description,
@@ -47,7 +47,7 @@ public abstract class Metric extends MetricObject {
      */
     @Override
     public boolean equals(Object obj) {
-	if (obj == null || !(obj instanceof Metric))
+	if (!(obj instanceof Metric))
 	    return false;
 
 	Metric mtc = (Metric) obj;
@@ -58,7 +58,7 @@ public abstract class Metric extends MetricObject {
 	return name;
     }
 
-    public void setName(String name) throws IntegrityException {
+    public void setName(String name) {
 	this.name = name;
     }
 
@@ -72,7 +72,7 @@ public abstract class Metric extends MetricObject {
      */
     @Override
     public int hashCode() {
-	return new Long(this.getId()).hashCode();
+	return Long.valueOf(this.getId()).hashCode();
     }
 
 }

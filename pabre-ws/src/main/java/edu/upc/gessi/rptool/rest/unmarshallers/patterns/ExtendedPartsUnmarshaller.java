@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.upc.gessi.rptool.domain.patternelements.ExtendedPart;
+import edu.upc.gessi.rptool.exceptions.IntegrityException;
+import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class ExtendedPartsUnmarshaller {
     private Set<ExtendedPartUnmarshaller> parts;
@@ -16,7 +18,7 @@ public class ExtendedPartsUnmarshaller {
 	this.parts = parts;
     }
 
-    public Set<ExtendedPart> build() throws Exception {
+    public Set<ExtendedPart> build() throws SemanticallyIncorrectException, IntegrityException {
 	Set<ExtendedPart> ret = new HashSet<>();
 	if (parts != null) {
 	    for (ExtendedPartUnmarshaller aux : parts) {

@@ -21,7 +21,7 @@ public class JSONParseExceptionMapper extends GenericUnsuccessfullExceptionMappe
 	} else {
 	    message += exception.getMessage();
 	}
-	System.err.println(message);
+	logger.error(message);
 	return Response.status(Status.BAD_REQUEST).entity(message).type("text/plain").build();
     }
 

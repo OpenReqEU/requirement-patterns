@@ -26,11 +26,11 @@ public class PatternItemPutUnmarshaller {
     private boolean isFixed;
 
     private static int toInt(Integer i) {
-	return i != null ? i.intValue() : 0;
+	return i != null ? i : 0;
     }
 
     private static boolean toBool(Boolean b) {
-	return b != null ? b.booleanValue() : false;
+	return b != null && b;
     }
 
     @JsonCreator
@@ -41,7 +41,7 @@ public class PatternItemPutUnmarshaller {
 	    @JsonProperty(value = "statsNumInstances", required = false) Integer statsNumInstances,
 	    @JsonProperty(value = "parameters", required = false) Set<ParameterUnmarshaller> parameters,
 	    @JsonProperty(value = "artifactsRelation", required = false) String artifacts,
-	    @JsonProperty(value = "name", required = false) String name) throws SemanticallyIncorrectException {
+	    @JsonProperty(value = "name", required = false) String name) {
 	this.available = available;
 	this.numInstances = numInstances;
 	this.statsNumInstances = statsNumInstances;
@@ -72,12 +72,8 @@ public class PatternItemPutUnmarshaller {
      * @throws UnrecognizedPropertyException
      */
     public void checkFields() throws UnrecognizedPropertyException {
-	if (isFixed) {
-	    if (this.name != null) {
-		throw new UnrecognizedPropertyException(null, "unrecognized fields found", null, null, "", null);
-	    }
+	if (isFixed && this.name != null) throw new UnrecognizedPropertyException(null, "unrecognized fields found", null, null, "", null);
 	}
-    }
 
     public boolean availableIsPresent() {
 	return available != null;

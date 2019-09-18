@@ -17,6 +17,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import edu.upc.gessi.rptool.exceptions.IntegrityException;
+import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 import org.apache.log4j.Logger;
 
 import edu.upc.gessi.rptool.data.ObjectDataController;
@@ -94,8 +96,7 @@ public class PatternFunctionCost {
 	    @ApiParam(value = "Version ID", required = true) @PathParam("versionID") long versionId,
 	    @ApiParam(value = "Function ID", required = true) @PathParam("id") long id) {
 	CostFunction cf = retrieveCostFunction(id); // obtain the cost function with the given id
-	CostFunctionDTO cfdto = new CostFunctionDTO(cf); // create a dto with the cost function
-	return cfdto;
+		return new CostFunctionDTO(cf);
     }
 
     /**
@@ -119,7 +120,7 @@ public class PatternFunctionCost {
     public Response addCostFunction(
 	    @ApiParam(value = "Cost functions to be created", required = true) CostFunctionsUnmarshaller functionsUnmarshaller,
 	    @ApiParam(value = "Pattern ID", required = true) @PathParam("patternID") long id,
-	    @ApiParam(value = "Version ID", required = true) @PathParam("versionID") long versionId) throws Exception {
+	    @ApiParam(value = "Version ID", required = true) @PathParam("versionID") long versionId) throws SemanticallyIncorrectException, IntegrityException {
 	RequirementPatternVersion rpv = retrieveRequirementPatternVersion(versionId); // obtain the pattern version
 	Set<CostFunction> scf;
 	scf = functionsUnmarshaller.build();// build the cost function set
@@ -148,7 +149,7 @@ public class PatternFunctionCost {
     public Response updateCostFunctions(
 	    @ApiParam(value = "Functions to be substituted", required = true) CostFunctionsUnmarshaller function,
 	    @ApiParam(value = "Pattern ID", required = true) @PathParam("patternID") long id,
-	    @ApiParam(value = "Version ID", required = true) @PathParam("versionID") long versionId) throws Exception {
+	    @ApiParam(value = "Version ID", required = true) @PathParam("versionID") long versionId) throws SemanticallyIncorrectException {
 	RequirementPatternVersion rpv = retrieveRequirementPatternVersion(versionId); // obtain the pattern version
 	Set<CostFunction> scf = function.build(); // build the unmarshaller
 	ObjectDataController.updateAllCostFunctions(rpv, scf);// call the controller to update all the cost function
@@ -181,7 +182,7 @@ public class PatternFunctionCost {
 	    @ApiParam(value = "new fields to update", required = true) CostFunctionUnmarshaller functions,
 	    @ApiParam(value = "Pattern ID", required = true) @PathParam("patternID") long patternID,
 	    @ApiParam(value = "Version ID", required = true) @PathParam("versionID") long versionId,
-	    @ApiParam(value = "Cost function ID", required = true) @PathParam("id") long idFunction) throws Exception {
+	    @ApiParam(value = "Cost function ID", required = true) @PathParam("id") long idFunction) {
 	CostFunction cfOld = retrieveCostFunction(idFunction); // obtain the cost function to update
 	CostFunction cfNew = functions.build();
 	ObjectDataController.updateCostFunction(cfOld, cfNew); // call the controller to update that cost function
@@ -206,7 +207,7 @@ public class PatternFunctionCost {
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public Response deleteAllCostFunctions(
 	    @ApiParam(value = "Pattern ID", required = true) @PathParam("patternID") long patternID,
-	    @ApiParam(value = "Version ID", required = true) @PathParam("versionID") long versionId) throws Exception {
+	    @ApiParam(value = "Version ID", required = true) @PathParam("versionID") long versionId) {
 	RequirementPatternVersion rpv = retrieveRequirementPatternVersion(versionId); // Obtain the pattern version
 	ObjectDataController.removeAllCostFunctions(rpv); // call the controller to remove all the cost function
 	return Response.status(Status.OK).build();
@@ -234,7 +235,7 @@ public class PatternFunctionCost {
     public Response deleteCostFunction(
 	    @ApiParam(value = "Pattern ID", required = true) @PathParam("patternID") long patternID,
 	    @ApiParam(value = "Version ID", required = true) @PathParam("versionID") long versionId,
-	    @ApiParam(value = "Functions ID", required = true) @PathParam("id") long idFunction) throws Exception {
+	    @ApiParam(value = "Functions ID", required = true) @PathParam("id") long idFunction) {
 	RequirementPatternVersion rpv = retrieveRequirementPatternVersion(versionId); // Obtain the pattern version
 	CostFunction cf = retrieveCostFunction(idFunction); // Obtain the cost function to delete
 	rpv.getExternalObjects().remove(cf); // remove the cost function from the external objects

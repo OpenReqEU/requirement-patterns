@@ -114,13 +114,11 @@ public class ExtendedPart extends PatternItem implements Comparable<ExtendedPart
 	    return false;
 	ExtendedPart other = (ExtendedPart) obj;
 	if (name == null) {
-	    if (other.name != null)
-		return false;
+	    if (other.name != null) return false;
 	} else if (!name.equals(other.name))
 	    return false;
 	if (pos == null) {
-	    if (other.pos != null)
-		return false;
+	    if (other.pos != null) return false;
 	} else if (!pos.equals(other.pos))
 	    return false;
 	return true;

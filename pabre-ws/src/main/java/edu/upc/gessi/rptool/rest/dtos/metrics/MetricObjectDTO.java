@@ -22,10 +22,10 @@ public abstract class MetricObjectDTO {
 	this.id = s.getId();
 	this.description = s.getDescription();
 	this.comments = s.getComments();
-	this.sources = new HashSet<SourceDTO>();
+	this.sources = new HashSet<>();
 
-	Set<Source> sources = s.getSources();
-	for (Source source : sources) {
+	Set<Source> sourcesAux = s.getSources();
+	for (Source source : sourcesAux) {
 	    this.sources.add(new SourceDTO(source, true));
 	}
     }
@@ -37,7 +37,7 @@ public abstract class MetricObjectDTO {
 	this.sources = sources;
     }
 
-    public MetricObjectDTO(long id, String name, String description, String comments, Set<SourceDTO> sources) {
+    public MetricObjectDTO(long id, String description, String comments, Set<SourceDTO> sources) {
 	super();
 	this.id = id;
 	this.description = description;

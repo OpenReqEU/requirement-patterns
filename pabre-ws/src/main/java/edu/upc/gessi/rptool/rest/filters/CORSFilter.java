@@ -15,10 +15,11 @@ import org.apache.log4j.Logger;
 
 @Provider
 public class CORSFilter implements Filter {
-    final static Logger logger = Logger.getLogger(CORSFilter.class);
+    static final Logger logger = Logger.getLogger(CORSFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
+        //not implemented WHY?
     }
 
     @Override
@@ -34,6 +35,7 @@ public class CORSFilter implements Filter {
 
     @Override
     public void destroy() {
+        //not implemented WHY?
     }
 
 }

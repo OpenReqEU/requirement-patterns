@@ -2,6 +2,7 @@ package edu.upc.gessi.rptool.data.mediators;
 
 import java.io.Serializable;
 
+import edu.upc.gessi.rptool.config.Control;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
@@ -34,11 +35,11 @@ public class IdGenerator implements IdentifierGenerator {
     public static final String IDEXCEPTIONSTRING = "ID FAILED";
 
     public IdGenerator() {
+    	//utility class
     }
 
     public static synchronized long getCurrentID() {
-	long ret = idHolder.getNextIDToUse();
-	return ret;
+	return idHolder.getNextIDToUse();
     }
 
     public static synchronized void setCurrentID(long id) {
@@ -69,11 +70,7 @@ public class IdGenerator implements IdentifierGenerator {
 		return i.getId();
 	    }
 	} else {
-	    try {
-		throw new Exception("ID Generation failed due to object dosen't implements Identificable");
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
+		Control.getInstance().showErrorMessage("ID Generation failed due to object doesn't implements Identificable");
 	}
 	return s;
     }

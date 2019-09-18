@@ -9,17 +9,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RequirementPatternVersionPutUnmarshaller extends RequirementPatternVersionUnmarshaller {
 
-    private Boolean available;
-    private Integer numInstances;
-    private Integer statsNumInstances;
-    private Integer statsNumAssociates;
+    private Boolean availableAux;
+    private Integer numInstancesAux;
+    private Integer statsNumInstancesAux;
+    private Integer statsNumAssociatesAux;
 
     private static int toInt(Integer i) {
-	return i != null ? i.intValue() : 0;
+	return i != null ? i : 0;
     }
 
     private static boolean toBool(Boolean b) {
-	return b != null ? b.booleanValue() : false;
+	return b != null && b;
     }
 
     @JsonCreator
@@ -38,36 +38,37 @@ public class RequirementPatternVersionPutUnmarshaller extends RequirementPattern
     {
 	super(versionDate, author, goal, reason, toInt(numInstances), toBool(available), toInt(statsNumInstances),
 		toInt(statsNumAssociates), keywords, artifactsRelation, null);
-	this.available = available;
-	this.numInstances = numInstances;
-	this.statsNumInstances = statsNumInstances;
-	this.statsNumAssociates = statsNumAssociates;
+	this.availableAux = available;
+	this.numInstancesAux = numInstances;
+	this.statsNumInstancesAux = statsNumInstances;
+	this.statsNumAssociatesAux = statsNumAssociates;
 
     }
 
     @Override
     protected void buildForms() {
-
+        //not implemented WHY?
     }
 
     @Override
     protected void checkFormsSize() {
+        //not implemented WHY?
     }
 
     public boolean availableIsPresent() {
-	return available != null;
+	return availableAux != null;
     }
 
     public boolean numInstancesIsPresent() {
-	return numInstances != null;
+	return numInstancesAux != null;
     }
 
     public boolean statsNumInstancesIsPresent() {
-	return statsNumInstances != null;
+	return statsNumInstancesAux != null;
 
     }
 
     public boolean statsNumAssociatesIsPresent() {
-	return statsNumAssociates != null;
+	return statsNumAssociatesAux != null;
     }
 }
