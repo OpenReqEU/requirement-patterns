@@ -74,7 +74,7 @@ public class PatternItemPutUnmarshaller {
     public void checkFields() throws UnrecognizedPropertyException {
 	if (isFixed) {
 	    if (this.name != null) {
-		throw new UnrecognizedPropertyException(null, "unrecognized fields found", null, null, "", null);
+		throw new UnrecognizedPropertyException("unrecognized fields found", null, null, "", null);
 	    }
 	}
     }

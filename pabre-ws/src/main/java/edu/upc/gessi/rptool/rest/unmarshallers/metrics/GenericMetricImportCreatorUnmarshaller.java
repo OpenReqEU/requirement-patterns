@@ -55,7 +55,7 @@ public class GenericMetricImportCreatorUnmarshaller {
 	    }
 	} catch (IllegalArgumentException e) {
 	    e.printStackTrace();
-	    throw new JsonMappingException(null, e.getMessage());// Throw exception has Semmantically incorrect
+	    throw new JsonMappingException(e.getMessage());// Throw exception has Semmantically incorrect
 	}
 	Metric m = metric.build();
 	return m;
