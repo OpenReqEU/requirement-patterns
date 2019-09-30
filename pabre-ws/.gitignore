@@ -6,3 +6,5 @@ release.properties
 buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
+/derby.log
+/pabre-ws.iml

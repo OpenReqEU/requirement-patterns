@@ -3,3 +3,5 @@
 *.code-workspace
 venv/
 *.class
+/.idea/
+/execute/
