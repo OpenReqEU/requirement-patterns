@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import edu.upc.gessi.rptool.config.Control;
 import org.apache.log4j.Logger;
 
 import edu.upc.gessi.rptool.data.MetricDataController;
@@ -315,7 +316,7 @@ public class Metrics {
 	    }
 
 	} catch (Exception e) {
-	    e.printStackTrace();
+		Control.getInstance().showErrorMessage(e.getMessage());
 	    throw e;
 	}
 

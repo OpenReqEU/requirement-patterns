@@ -1,6 +1,7 @@
 package edu.upc.gessi.rptool.domain.patternelements;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -108,6 +109,11 @@ public abstract class PatternObject implements Identificable {
 	return deleted;
 
     }
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 
     @Override
     public boolean equals(Object obj) {

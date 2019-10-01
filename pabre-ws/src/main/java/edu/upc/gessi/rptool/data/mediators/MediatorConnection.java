@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import edu.upc.gessi.rptool.config.Control;
 import org.apache.log4j.Logger;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
@@ -66,14 +67,22 @@ public class MediatorConnection {
      * This atribute show the Path where the database is connected.<br/>
      * Example: jdbc:derby:C:\Users\AWAISI~1\AppData\Local\Temp\pabreDatabase
      */
-    public static String connectionURL = "";
+    private static String connectionURL = "";
 
-    /**
+	public static String getConnectionURL() {
+		return connectionURL;
+	}
+
+	/**
      * This atribute shows if the connection is maded in a Embedded Derby
      */
-    public static boolean isDerbyEmbedded = false;
+    private static boolean isDerbyEmbedded = false;
 
-    private static final Logger logger = Logger.getLogger(MediatorConnection.class.getName());
+	public static boolean isIsDerbyEmbedded() {
+		return isDerbyEmbedded;
+	}
+
+	private static final Logger logger = Logger.getLogger(MediatorConnection.class.getName());
 
     /**
      * This method check if the sessionFactory is initialized, if is not initialized
@@ -214,7 +223,7 @@ public class MediatorConnection {
 	    tempFilePath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
 	    Files.delete(Paths.get(absolutePath));// Delete temporary file
 	} catch (IOException e) {
-	    e.printStackTrace();
+		Control.getInstance().showErrorMessage(e.getMessage());
 	}
 	return new File(tempFilePath);
     }

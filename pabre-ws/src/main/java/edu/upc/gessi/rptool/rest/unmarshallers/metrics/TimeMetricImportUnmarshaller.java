@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import edu.upc.gessi.rptool.config.Control;
 import edu.upc.gessi.rptool.domain.metrics.TimePointMetric;
 import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
@@ -33,7 +34,7 @@ public class TimeMetricImportUnmarshaller extends TimeMetricUnmarshaller {
 	try {
 	    ((TimePointMetric) metric).setTimeAttrib(stringDate);
 	} catch (NullPointerException e) {
-	    e.printStackTrace();
+		Control.getInstance().showErrorMessage(e.getMessage());
 	}
     }
 

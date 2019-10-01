@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import edu.upc.gessi.rptool.config.Control;
 import edu.upc.gessi.rptool.domain.metrics.TimePointMetric;
 
 public class TimeMetricUnmarshaller extends UnmarshallerGenericMetric {
@@ -55,7 +56,7 @@ public class TimeMetricUnmarshaller extends UnmarshallerGenericMetric {
 	    try {
 		((TimePointMetric) metric).setTimeAttrib(date);
 	    } catch (NullPointerException e) {
-		e.printStackTrace();
+			Control.getInstance().showErrorMessage(e.getMessage());
 		throw e;
 	    }
 	}

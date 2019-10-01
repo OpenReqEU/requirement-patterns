@@ -1,9 +1,6 @@
 package edu.upc.gessi.rptool.domain.schema;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -482,6 +479,11 @@ public class Classifier extends ClassificationObject {
 
     public void setParentSchema(ClassificationSchema parentSchema) {
 	this.parentSchema = parentSchema;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name,parentClassifier,type);
     }
 
     @Override

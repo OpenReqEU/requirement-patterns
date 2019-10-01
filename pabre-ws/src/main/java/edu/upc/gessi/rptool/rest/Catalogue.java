@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import edu.upc.gessi.rptool.config.Control;
 import org.apache.log4j.Logger;
 import org.apache.uima.UIMAException;
 
@@ -107,7 +108,7 @@ public class Catalogue {
 	    return Response.status(Status.CREATED).entity(i).build();
 
 	} catch (Exception e) {
-	    e.printStackTrace();
+		Control.getInstance().showErrorMessage(e.getMessage());
 
 	    // When Jackson library throws a exception while deserializing a object is
 	    // always JsonMapping or something related to that library, so when we make our

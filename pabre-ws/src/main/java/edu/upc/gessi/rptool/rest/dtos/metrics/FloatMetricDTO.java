@@ -7,9 +7,9 @@ import edu.upc.gessi.rptool.domain.metrics.FloatMetric;
 
 @JsonInclude(Include.ALWAYS)
 public class FloatMetricDTO extends MetricDTO {
-    public Float minValue;
-    public Float maxValue;
-    public Float defaultValue;
+    private Float minValue;
+    private Float maxValue;
+    private Float defaultValue;
 
     public FloatMetricDTO(FloatMetric m) {
 	super(m);

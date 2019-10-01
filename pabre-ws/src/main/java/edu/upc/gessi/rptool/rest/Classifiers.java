@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import edu.upc.gessi.rptool.config.Control;
 import org.apache.commons.lang3.ObjectUtils.Null;
 import org.apache.log4j.Logger;
 
@@ -205,7 +206,7 @@ public class Classifiers {
 	    // Update Classifier with the given patterns
 	    SchemaDataController.updateInternalClassifier(old, newInternal);
 	} catch (Exception e) {
-	    e.printStackTrace();
+		Control.getInstance().showErrorMessage(e.getMessage());
 	    throw e;
 	}
 	return Response.status(Status.OK).build();

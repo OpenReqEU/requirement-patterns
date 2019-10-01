@@ -28,11 +28,11 @@ public class ResourceManagerListener implements ServletContextListener {
 	if (sessionFactory != null)
 	    sessionFactory.close();// Close session factory to releases resources
 
-	if (MediatorConnection.isDerbyEmbedded) { // Check if the conection is in a Embedded Derby
+	if (MediatorConnection.isIsDerbyEmbedded()) { // Check if the conection is in a Embedded Derby
 	    try {
-		logger.debug("Calling connection: " + MediatorConnection.connectionURL + ";shutdown=true");
+		logger.debug("Calling connection: " + MediatorConnection.getConnectionURL() + ";shutdown=true");
 		// Call the Driver to shutdown the Embedded client
-		DriverManager.getConnection(MediatorConnection.connectionURL + ";shutdown=true");
+		DriverManager.getConnection(MediatorConnection.getConnectionURL() + ";shutdown=true");
 	    } catch (SQLException e) {
 		logger.error("Derby is shutting down.", e);
 	    }
