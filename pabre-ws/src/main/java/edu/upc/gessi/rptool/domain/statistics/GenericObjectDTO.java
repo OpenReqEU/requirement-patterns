@@ -32,12 +32,28 @@ public abstract class GenericObjectDTO {
 	}
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public GenericObjectDTO(GenericObject s, Set<SourceDTO> sources) {
 	this.id = s.getId();
 	this.name = s.getName();
 	this.description = s.getDescription();
 	this.comments = s.getComments();
 	this.sources = sources;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public GenericObjectDTO(long id, String name, String description, String comments, Set<SourceDTO> sources) {
@@ -57,28 +73,12 @@ public abstract class GenericObjectDTO {
 	this.id = id;
     }
 
-    public String getName() {
-	return name;
-    }
-
-    public void setName(String name) {
-	this.name = name;
-    }
-
     public String getDescription() {
 	return description;
     }
 
     public void setDescription(String description) {
 	this.description = description;
-    }
-
-    public String getComments() {
-	return comments;
-    }
-
-    public void setComments(String comments) {
-	this.comments = comments;
     }
 
     public Set<SourceDTO> getSources() {

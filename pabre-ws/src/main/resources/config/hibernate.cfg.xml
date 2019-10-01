@@ -34,7 +34,7 @@
 		<property name="hibernate.default_schema">APP</property>
 
 		<!-- Drop and re-create the database schema on startup -->
-		<property name="hibernate.hbm2ddl.auto">${db.auto}</property>
+		<property name="hibernate.hbm2ddl.auto">${db.auto}</property> <!-- //NOSONAR -->
 
 
 		<mapping resource="config/MappingGenericObject.hbm.xml" />

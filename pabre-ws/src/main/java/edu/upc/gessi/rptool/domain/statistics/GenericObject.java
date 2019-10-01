@@ -62,45 +62,17 @@ public abstract class GenericObject {
 	this.description = description;
     }
 
-    public String getComments() {
-	return comments;
-    }
-
-    public void setComments(String comments) {
-	this.comments = comments;
+    public void setSources(Set<Source> s) {
+        sources = s;
     }
 
     public Set<Source> getSources() {
 	return sources;
     }
 
-    public void setSources(Set<Source> s) {
-	sources = s;
-    }
-
     /*
      * OTHER METHODS
      */
-
-    /**
-     * To add one source to the "sources" set
-     * 
-     * @param src
-     *            Source that we want to add to the set
-     */
-    public void addSource(Source src) {
-	sources.add(src);
-    }
-
-    /**
-     * To remove one source to the "sources" set
-     * 
-     * @param src
-     *            Source that we want to remove in the set
-     */
-    public void removeSource(Source src) {
-	sources.remove(src);
-    }
 
     /**
      * The method used to convert one GenericObject to string
@@ -110,6 +82,14 @@ public abstract class GenericObject {
     @Override
     public String toString() {
 	return name;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
 }

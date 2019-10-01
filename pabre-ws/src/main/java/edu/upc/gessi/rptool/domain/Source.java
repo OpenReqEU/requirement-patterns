@@ -69,13 +69,12 @@ public class Source implements Comparable<Source>, Identificable {
     /*
      * GET'S AND SET'S METHODS
      */
+    public void setId(long l) {
+        id = l;
+    }
 
     public long getId() {
 	return id;
-    }
-
-    public void setId(long l) {
-	id = l;
     }
 
     public String getIdentifier() {
@@ -86,16 +85,20 @@ public class Source implements Comparable<Source>, Identificable {
 	this.identifier = identifier;
     }
 
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
     public String getReference() {
 	return reference;
     }
 
-    public void setReference(String reference) {
-	this.reference = reference;
-    }
-
     public String getType() {
 	return type;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public void setType(String type) {
@@ -104,10 +107,6 @@ public class Source implements Comparable<Source>, Identificable {
 
     public String getComments() {
 	return comments;
-    }
-
-    public void setComments(String comments) {
-	this.comments = comments;
     }
 
     /*

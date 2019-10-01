@@ -33,16 +33,16 @@ public abstract class ClassificationObject implements Identificable {
     @GeneratedValue(generator = "customGenerator")
     private long id;
 
-    @Column(name = "DESCRIPTION", nullable = false, length = 2000)
-    private String description;
-
     @Column(name = "COMMENTS", nullable = false, length = 2000)
     private String comments;
 
     @ManyToMany
     @JoinTable(name = "SOURCES_AND_CLASSIFICATION_OBJECT", joinColumns = {
-	    @JoinColumn(name = "CO_ID") }, inverseJoinColumns = { @JoinColumn(name = "SOURCE_ID") })
+            @JoinColumn(name = "CO_ID") }, inverseJoinColumns = { @JoinColumn(name = "SOURCE_ID") })
     private Set<Source> sources;
+
+    @Column(name = "DESCRIPTION", nullable = false, length = 2000)
+    private String description;
 
     /*
      * CREATORS
@@ -67,28 +67,36 @@ public abstract class ClassificationObject implements Identificable {
 	return id;
     }
 
-    public void setId(long l) {
-	id = l;
+    public String getDescription() {
+        return description;
     }
 
-    public String getDescription() {
-	return description;
+    public String getComments() {
+        return comments;
+    }
+
+    public Set<Source> getSources() {
+        return sources;
+    }
+
+    public List<String> getSourcesIdentifier() {
+        Set<String> s = new HashSet<>();
+        for (Source source : sources) {
+            s.add(source.getIdentifier());
+        }
+        return new ArrayList<>(s);
+    }
+
+    public void setId(long l) {
+	id = l;
     }
 
     public void setDescription(String description) {
 	this.description = description;
     }
 
-    public String getComments() {
-	return comments;
-    }
-
     public void setComments(String comments) {
 	this.comments = comments;
-    }
-
-    public Set<Source> getSources() {
-	return sources;
     }
 
     public void clearAndSetSources(Set<Source> s) {
@@ -98,14 +106,6 @@ public abstract class ClassificationObject implements Identificable {
 
     public void setSources(Set<Source> s) {
 	sources = s;
-    }
-
-    public List<String> getSourcesIdentifier() {
-	Set<String> s = new HashSet<>();
-	for (Source source : sources) {
-	    s.add(source.getIdentifier());
-	}
-	return new ArrayList<>(s);
     }
 
     /*

@@ -2,6 +2,7 @@ package edu.upc.gessi.rptool.domain.schema;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -156,10 +157,7 @@ public class ClassificationSchema extends ClassificationObject {
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = super.hashCode();
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	return result;
+	return Objects.hash(name);
     }
 
     @Override
