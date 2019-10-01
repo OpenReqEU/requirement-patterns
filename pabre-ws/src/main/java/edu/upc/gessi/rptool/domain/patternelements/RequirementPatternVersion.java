@@ -418,6 +418,11 @@ public class RequirementPatternVersion extends PatternObject implements Serializ
 	this.externalObjects.addAll(exts);
     }
 
+	@Override
+	public int hashCode() {
+		return System.identityHashCode(this);
+	}
+
     @Override
     public boolean equals(Object obj) {
 	if (this == obj)

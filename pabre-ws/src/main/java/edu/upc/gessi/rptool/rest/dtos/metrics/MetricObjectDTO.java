@@ -45,35 +45,35 @@ public abstract class MetricObjectDTO {
 	this.sources = sources;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long getId() {
 	return id;
     }
 
-    public void setId(long id) {
-	this.id = id;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDescription() {
 	return description;
     }
 
-    public void setDescription(String description) {
-	this.description = description;
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public String getComments() {
 	return comments;
     }
 
-    public void setComments(String comments) {
-	this.comments = comments;
+    public void setSources(Set<SourceDTO> sources) {
+        this.sources = sources;
     }
 
     public Set<SourceDTO> getSources() {
 	return sources;
-    }
-
-    public void setSources(Set<SourceDTO> sources) {
-	this.sources = sources;
     }
 }

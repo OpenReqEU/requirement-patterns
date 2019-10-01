@@ -31,12 +31,12 @@ public class SourceExportDTO {
 	this.comments = comments;
     }
 
-    public long getId() {
-	return id;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setId(long id) {
-	this.id = id;
+    public long getId() {
+	return id;
     }
 
     public String getIdentifier() {
@@ -47,28 +47,28 @@ public class SourceExportDTO {
 	this.identifier = identifier;
     }
 
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
     public String getReference() {
 	return reference;
     }
 
-    public void setReference(String reference) {
-	this.reference = reference;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getType() {
 	return type;
     }
 
-    public void setType(String type) {
-	this.type = type;
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public String getComments() {
 	return comments;
-    }
-
-    public void setComments(String comments) {
-	this.comments = comments;
     }
 
 }

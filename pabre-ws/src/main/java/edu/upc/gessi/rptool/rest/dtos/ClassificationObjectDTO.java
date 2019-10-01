@@ -51,16 +51,20 @@ public abstract class ClassificationObjectDTO {
 	this.id = id;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getDescription() {
 	return description;
     }
 
-    public void setDescription(String description) {
-	this.description = description;
-    }
-
     public String getComments() {
 	return comments;
+    }
+
+    public void setSources(Set<SourceDTO> sources) {
+        this.sources = sources;
     }
 
     public void setComments(String comments) {
@@ -69,9 +73,5 @@ public abstract class ClassificationObjectDTO {
 
     public Set<SourceDTO> getSources() {
 	return sources;
-    }
-
-    public void setSources(Set<SourceDTO> sources) {
-	this.sources = sources;
     }
 }

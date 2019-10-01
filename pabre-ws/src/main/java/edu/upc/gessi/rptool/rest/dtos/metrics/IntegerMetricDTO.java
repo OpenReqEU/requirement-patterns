@@ -7,9 +7,9 @@ import edu.upc.gessi.rptool.domain.metrics.IntegerMetric;
 
 @JsonInclude(Include.ALWAYS)
 public class IntegerMetricDTO extends MetricDTO {
-    public Integer minValue;
-    public Integer maxValue;
-    public Integer defaultValue;
+    private Integer minValue;
+    private Integer maxValue;
+    private Integer defaultValue;
 
     public IntegerMetricDTO(IntegerMetric m) {
 	super(m);

@@ -37,12 +37,12 @@ public class PatternItemExportDTO {
 	this.artifactsRelation = artifactsRelation;
     }
 
-    public String getPatternText() {
-	return patternText;
+    public void setPatternText(String patternText) {
+        this.patternText = patternText;
     }
 
-    public void setPatternText(String patternText) {
-	this.patternText = patternText;
+    public String getPatternText() {
+	return patternText;
     }
 
     public String getQuestionText() {
@@ -53,12 +53,16 @@ public class PatternItemExportDTO {
 	this.questionText = questionText;
     }
 
+    public void setNumInstances(Integer numInstances) {
+        this.numInstances = numInstances;
+    }
+
     public Integer getNumInstances() {
 	return numInstances;
     }
 
-    public void setNumInstances(Integer numInstances) {
-	this.numInstances = numInstances;
+    public void setStatsNumInstances(Integer statsNumInstances) {
+        this.statsNumInstances = statsNumInstances;
     }
 
     public Boolean getAvailable() {
@@ -73,16 +77,12 @@ public class PatternItemExportDTO {
 	return statsNumInstances;
     }
 
-    public void setStatsNumInstances(Integer statsNumInstances) {
-	this.statsNumInstances = statsNumInstances;
+    public void setArtifactsRelation(String artifactsRelation) {
+        this.artifactsRelation = artifactsRelation;
     }
 
     public String getArtifactsRelation() {
 	return artifactsRelation;
-    }
-
-    public void setArtifactsRelation(String artifactsRelation) {
-	this.artifactsRelation = artifactsRelation;
     }
 
     public Set<ParameterExportDTO> getParameters() {

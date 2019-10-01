@@ -67,12 +67,12 @@ public class RequirementPatternVersionExportDTO implements Comparable<Requiremen
 	return this.versionDate.compareTo(arg0.getVersionDate());
     }
 
-    public long getId() {
-	return id;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setId(long id) {
-	this.id = id;
+    public long getId() {
+	return id;
     }
 
     public Date getVersionDate() {
@@ -83,12 +83,12 @@ public class RequirementPatternVersionExportDTO implements Comparable<Requiremen
 	this.versionDate = versionDate;
     }
 
-    public String getAuthor() {
-	return author;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public void setAuthor(String author) {
-	this.author = author;
+    public String getAuthor() {
+	return author;
     }
 
     public String getGoal() {
@@ -99,20 +99,20 @@ public class RequirementPatternVersionExportDTO implements Comparable<Requiremen
 	this.goal = goal;
     }
 
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     public String getReason() {
 	return reason;
     }
 
-    public void setReason(String reason) {
-	this.reason = reason;
+    public void setNumInstances(Integer numInstances) {
+        this.numInstances = numInstances;
     }
 
     public Integer getNumInstances() {
 	return numInstances;
-    }
-
-    public void setNumInstances(Integer numInstances) {
-	this.numInstances = numInstances;
     }
 
     public Boolean getAvailable() {
@@ -123,12 +123,12 @@ public class RequirementPatternVersionExportDTO implements Comparable<Requiremen
 	this.available = available;
     }
 
-    public Integer getStatsNumInstances() {
-	return statsNumInstances;
+    public void setStatsNumInstances(Integer statsNumInstances) {
+        this.statsNumInstances = statsNumInstances;
     }
 
-    public void setStatsNumInstances(Integer statsNumInstances) {
-	this.statsNumInstances = statsNumInstances;
+    public Integer getStatsNumInstances() {
+	return statsNumInstances;
     }
 
     public Integer getStatsNumAssociates() {
@@ -139,12 +139,12 @@ public class RequirementPatternVersionExportDTO implements Comparable<Requiremen
 	this.statsNumAssociates = statsNumAssociates;
     }
 
-    public Set<CostFunctionExportDTO> getCostFunctions() {
-	return costFunctions;
+    public void setCostFunctions(Set<CostFunctionExportDTO> costFunctions) {
+        this.costFunctions = costFunctions;
     }
 
-    public void setCostFunctions(Set<CostFunctionExportDTO> costFunctions) {
-	this.costFunctions = costFunctions;
+    public Set<CostFunctionExportDTO> getCostFunctions() {
+	return costFunctions;
     }
 
     public String getArtifactsRelation() {

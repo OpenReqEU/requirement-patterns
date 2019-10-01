@@ -105,44 +105,44 @@ public class RequirementFormDTO extends PatternElementDTO implements Comparable<
 	this.author = author;
     }
 
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
+    }
+
     public Date getModificationDate() {
 	return modificationDate;
     }
 
-    public void setModificationDate(Date modificationDate) {
-	this.modificationDate = modificationDate;
+    public void setNumInstances(Integer numInstances) {
+        this.numInstances = numInstances;
     }
 
     public Integer getNumInstances() {
 	return numInstances;
     }
 
-    public void setNumInstances(Integer numInstances) {
-	this.numInstances = numInstances;
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 
     public Boolean getAvailable() {
 	return available;
     }
 
-    public void setAvailable(Boolean available) {
-	this.available = available;
+    public void setStatsNumInstances(Integer statsNumInstances) {
+        this.statsNumInstances = statsNumInstances;
     }
 
     public Integer getStatsNumInstances() {
 	return statsNumInstances;
     }
 
-    public void setStatsNumInstances(Integer statsNumInstances) {
-	this.statsNumInstances = statsNumInstances;
+    public void setStatsNumAssociates(Integer statsNumAssociates) {
+        this.statsNumAssociates = statsNumAssociates;
     }
 
     public Integer getStatsNumAssociates() {
 	return statsNumAssociates;
-    }
-
-    public void setStatsNumAssociates(Integer statsNumAssociates) {
-	this.statsNumAssociates = statsNumAssociates;
     }
 
     public FixedPartDTO getFixedPart() {
