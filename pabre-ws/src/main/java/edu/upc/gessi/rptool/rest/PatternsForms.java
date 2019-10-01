@@ -69,7 +69,7 @@ public class PatternsForms {
 	// obtain the pattern version
 	RequirementPatternVersion rpv = Patterns.retrieveRequirementPatternVersion(versionId, patternId);
 	Set<RequirementForm> formsSet = rpv.getForms(); // get all the forms of that version
-	Set<RequirementFormDTO> formsDTOSet = new TreeSet<>();
+	Set<RequirementFormDTO> formsDTOSet = new TreeSet<RequirementFormDTO>();
 	for (RequirementForm rf : formsSet) {// for each form create DTO and add it the set
 	    formsDTOSet.add(new RequirementFormDTO(rf, patternId, versionId));
 	}
@@ -136,7 +136,8 @@ public class PatternsForms {
 	logger.debug("Getting form with ID: " + formId);
 	RequirementPatternVersion rpv = Patterns.retrieveRequirementPatternVersion(versionId, patternId);
 	RequirementForm rf = Patterns.retrieveRequirementForm(versionId, formId, rpv);
-		return new RequirementFormDTO(rf, patternId, versionId);
+	RequirementFormDTO formDTO = new RequirementFormDTO(rf, patternId, versionId);
+	return formDTO;
     }
 
     /**

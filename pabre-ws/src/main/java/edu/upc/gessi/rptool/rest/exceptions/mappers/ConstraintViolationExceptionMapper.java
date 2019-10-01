@@ -23,7 +23,7 @@ public class ConstraintViolationExceptionMapper
 	} else {
 	    message += exception.getMessage();
 	}
-	logger.error("Message: " + message);
+	System.err.println("Message: " + message);
 	return Response.status(Status.BAD_REQUEST).entity(message).type("text/plain").build();
     }
 }

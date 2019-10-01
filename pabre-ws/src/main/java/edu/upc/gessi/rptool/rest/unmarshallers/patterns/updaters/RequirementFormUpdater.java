@@ -3,17 +3,13 @@ package edu.upc.gessi.rptool.rest.unmarshallers.patterns.updaters;
 import edu.upc.gessi.rptool.data.GenericDataController;
 import edu.upc.gessi.rptool.domain.patternelements.RequirementForm;
 import edu.upc.gessi.rptool.exceptions.IntegrityException;
-import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 import edu.upc.gessi.rptool.rest.unmarshallers.patterns.RequirementFormPutUnmarshaller;
 
 public class RequirementFormUpdater {
     private RequirementForm f;
     private RequirementForm newFields;
     private RequirementFormPutUnmarshaller unmarshaller;
-    private boolean availableIsPresent;
-    private boolean numInstancesIsPresent;
-    private boolean statsNumInstancesIsPresent;
-    private boolean statsNumAssociatesIsPresent;
+    private boolean availableIsPresent, numInstancesIsPresent, statsNumInstancesIsPresent, statsNumAssociatesIsPresent;
 
     public RequirementFormUpdater(RequirementForm f, RequirementFormPutUnmarshaller unmarshaller) {
 	this.f = f;
@@ -53,7 +49,7 @@ public class RequirementFormUpdater {
 	    f.setComments(newFields.getComments());
     }
 
-    private void build() throws IntegrityException, SemanticallyIncorrectException {
+    private void build() throws Exception {
 	newFields = unmarshaller.build();
 	availableIsPresent = unmarshaller.availableIsPresent();
 	numInstancesIsPresent = unmarshaller.numInstancesIsPresent();

@@ -22,7 +22,7 @@ public class StringMetricUpdater extends GenericMetricUpdater {
     }
 
     @Override
-    protected void unmarshall() throws IOException, IntegrityException,
+    protected void unmarshall() throws JsonParseException, JsonMappingException, IOException, IntegrityException,
 	    ValueException, SemanticallyIncorrectException {
 	PutStringMetricUnmarshaller unm;
 	unm = Deserializer.deserialize(metricJson, PutStringMetricUnmarshaller.class);

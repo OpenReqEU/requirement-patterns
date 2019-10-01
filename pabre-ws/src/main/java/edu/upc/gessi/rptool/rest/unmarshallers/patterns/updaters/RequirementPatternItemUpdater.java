@@ -13,9 +13,7 @@ public class RequirementPatternItemUpdater {
     private PatternItem item;
     private PatternItem aux;
     private PatternItemPutUnmarshaller unmarshaller;
-    private boolean availableIsPresent;
-    private boolean numInstancesIsPresent;
-    private boolean statsNumInstancesIsPresent;
+    private boolean availableIsPresent, numInstancesIsPresent, statsNumInstancesIsPresent;
 
     public RequirementPatternItemUpdater(PatternItem item, PatternItemPutUnmarshaller metricJson) {
 	this.item = item;

@@ -21,11 +21,13 @@ public class CostFunctionImportUnmarshaller {
     }
 
     public CostFunction build() {
-        return new CostFunction(id, name, function);
+	CostFunction cf = new CostFunction(id, name, function);
+	return cf;
     }
 
     public CostFunction build(RequirementPatternVersion rpv) {
-        return new CostFunction(id, name, function, rpv);
+	CostFunction cf = new CostFunction(id, name, function, rpv);
+	return cf;
     }
 
     public boolean checkAllItemsContainsID() {

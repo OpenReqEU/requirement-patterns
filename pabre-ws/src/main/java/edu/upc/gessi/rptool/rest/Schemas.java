@@ -80,9 +80,9 @@ public class Schemas {
     public Set<SchemaDTO> getSchemas(
 	    @ApiParam(value = "List of all the names of schema to show, if is empty no filter will be applied", required = false) @QueryParam("names") List<String> namesList)
 	    throws SemanticallyIncorrectException {
-	boolean shouldFilter = namesList != null && !namesList.isEmpty(); // check if the result need to be filtered
+	boolean shouldFilter = namesList != null && namesList.size() != 0; // check if the result need to be filtered
 	List<ClassificationSchema> listSchemas = SchemaDataController.listSchemas(); // get all the schemas
-	Set<SchemaDTO> listSchemasDTOs = new LinkedHashSet<>();
+	Set<SchemaDTO> listSchemasDTOs = new LinkedHashSet<SchemaDTO>();
 	for (ClassificationSchema sch : listSchemas) { // for each schema obtained from the DB
 	    // check if it should be filtered, in hat case check if the name is inside the
 	    // given list, otherwise just create the DTOs and add it to the list to return
@@ -119,7 +119,7 @@ public class Schemas {
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public IdFormatter createSchema(
 	    @ApiParam(value = "Unmarshaller with schema to create", required = true) SchemaUnmarshaller creationgUnmarshaller)
-	    throws HibernateException, IntegrityException,
+	    throws HibernateException, JsonParseException, JsonMappingException, IOException, IntegrityException,
 	    RedundancyException, SemanticallyIncorrectException {
 	logger.debug("Creating Schema");
 	ClassificationSchema cs = creationgUnmarshaller.build();
@@ -165,7 +165,7 @@ public class Schemas {
 
 	// if the user want the unbinded patterns
 	if (unbinded) {
-	    Set<RequirementPatternDTO> unbindedPatterns = new HashSet<>();
+	    Set<RequirementPatternDTO> unbindedPatterns = new HashSet<RequirementPatternDTO>();
 	    PatternDataController.getUnbindedPatternsDTO(unbindedPatterns);
 	    schemaDTO.setUnbindedPatterns(unbindedPatterns);
 	}
@@ -194,7 +194,7 @@ public class Schemas {
     public Response updateSchemaFields(
 	    @ApiParam(value = "Unmarshaller with the fields to update", required = true) SchemaUnmarshaller unmarshaller,
 	    @ApiParam(value = "Schema ID to update", required = true) @PathParam("schemaid") long schemaid)
-	    throws IntegrityException, SemanticallyIncorrectException, NotFoundException, RedundancyException {
+	    throws Exception {
 	ClassificationSchema parent = retrieveClassificationSchema(schemaid);// get the schema
 	// Delete the old version of the schema
 	SchemaDataController.delete(parent);
@@ -202,7 +202,7 @@ public class Schemas {
 	// check if all the inner unmarshallers contains ID
 	boolean b = unmarshaller.checkAllItemsContainsID();
 	if (!b) {
-	    throw new NotFoundException("Missing ID in one of the fields");
+	    throw new Exception("Missing ID in one of the fields");
 	}
 
 	// build the new unmarshaller

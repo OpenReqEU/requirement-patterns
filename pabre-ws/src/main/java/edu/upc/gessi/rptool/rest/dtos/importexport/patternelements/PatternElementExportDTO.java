@@ -34,7 +34,7 @@ public abstract class PatternElementExportDTO {
 	this.sources = sources;
     }
 
-    public PatternElementExportDTO(long id, String description, String comments, List<String> sources) {
+    public PatternElementExportDTO(long id, String name, String description, String comments, List<String> sources) {
 	this.id = id;
 	this.description = description;
 	this.comments = comments;

@@ -22,7 +22,8 @@ public class DependenciesImportUnmarshaller {
 
     @JsonCreator
     public DependenciesImportUnmarshaller(@JsonProperty(value = "idDependant", required = true) long dependencyType,
-	    @JsonProperty(value = "dependencies", required = true) Set<PatternObjectDependencyUnmarshaller> dependencyDirection) {
+	    @JsonProperty(value = "dependencies", required = true) Set<PatternObjectDependencyUnmarshaller> dependencyDirection)
+	    throws SemanticallyIncorrectException {
 	this.idDependant = dependencyType;
 	this.dependencies = dependencyDirection;
     }

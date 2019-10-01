@@ -56,10 +56,10 @@ public class ClassifierExportDTO extends ClassificationObjectExportDTO implement
     @JsonIgnore
     public Set<ClassifierExportDTO> getAllInternalClassifiers() {
 	if (this.internalClassifiers == null) {
-	    return new HashSet<>();
+	    return new HashSet<ClassifierExportDTO>();
 	}
 
-	Set<ClassifierExportDTO> listClassifiers = new HashSet<>();
+	Set<ClassifierExportDTO> listClassifiers = new HashSet<ClassifierExportDTO>();
 	for (ClassifierExportDTO icDTO : this.internalClassifiers) {
 	    listClassifiers.addAll(icDTO.getAllInternalClassifiers());
 	}
@@ -115,7 +115,6 @@ public class ClassifierExportDTO extends ClassificationObjectExportDTO implement
 	this.name = name;
     }
 
-    @Override
     public void setId(long id) {
 	this.id = id;
     }

@@ -3,10 +3,6 @@ package edu.upc.gessi.rptool.rest.unmarshallers.metrics.updaters;
 import edu.upc.gessi.rptool.data.GenericDataController;
 import edu.upc.gessi.rptool.domain.metrics.Metric;
 import edu.upc.gessi.rptool.exceptions.IntegrityException;
-import edu.upc.gessi.rptool.exceptions.ValueException;
-import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
-
-import java.io.IOException;
 
 public abstract class GenericMetricUpdater {
     protected Metric m;
@@ -29,7 +25,7 @@ public abstract class GenericMetricUpdater {
 	    m.setSources(aux.getSources());
     }
 
-    protected abstract void unmarshall() throws IOException, IntegrityException, ValueException, SemanticallyIncorrectException;
+    protected abstract void unmarshall() throws Exception;
 
     public void update() throws Exception {
 	unmarshall();
@@ -43,5 +39,5 @@ public abstract class GenericMetricUpdater {
 	GenericDataController.update(m);
     }
 
-    protected abstract void updateParticularMetricFields() throws ValueException, SemanticallyIncorrectException;
+    protected abstract void updateParticularMetricFields() throws Exception;
 }

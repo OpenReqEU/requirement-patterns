@@ -21,10 +21,9 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class ClassifierImportUnmarshaller extends ClassifierUnmarshaller {
 
-    protected Set<String> sourcesAux;
-    protected Set<String> reqPatterns;
+    protected Set<String> sources, reqPatterns;
 
-    protected Set<ClassifierImportUnmarshaller> internalClassifiersAux;
+    protected Set<ClassifierImportUnmarshaller> internalClassifiers;
 
     @JsonCreator
     public ClassifierImportUnmarshaller(@JsonProperty(value = "id", required = false) long id,
@@ -35,7 +34,7 @@ public class ClassifierImportUnmarshaller extends ClassifierUnmarshaller {
 	    @JsonProperty(value = "sourcesByIdentifier", required = false) Set<String> sources,
 	    @JsonProperty(value = "requirementPatterns", required = false) Set<String> reqPatterns,
 	    @JsonProperty(value = "internalClassifiers", required = false) Set<ClassifierImportUnmarshaller> internalClassifiers)
-	    throws IntegrityException, SemanticallyIncorrectException {
+	    throws IntegrityException, IOException, SemanticallyIncorrectException {
 	super(id, name, description, comments, pos);
 
 	setBasicValues(sources, reqPatterns, internalClassifiers);
@@ -44,23 +43,23 @@ public class ClassifierImportUnmarshaller extends ClassifierUnmarshaller {
 
     protected void setBasicValues(Set<String> sources, Set<String> reqPatterns,
 	    Set<ClassifierImportUnmarshaller> internalClassifiers) {
-	this.sourcesAux = sources;
+	this.sources = sources;
 	this.reqPatterns = reqPatterns;
-	this.internalClassifiersAux = internalClassifiers;
+	this.internalClassifiers = internalClassifiers;
 
-	if (this.sourcesAux == null)
-	    this.sourcesAux = new HashSet<>();
+	if (this.sources == null)
+	    this.sources = new HashSet<>();
 	if (this.reqPatterns == null)
 	    this.reqPatterns = new HashSet<>();
-	if (this.internalClassifiersAux == null)
-	    this.internalClassifiersAux = new HashSet<>();
+	if (this.internalClassifiers == null)
+	    this.internalClassifiers = new HashSet<>();
     }
 
     @Override
     protected void checkClassifierAndAdd()
 	    throws SemanticallyIncorrectException, IntegrityException, RedundancyException {
 	Set<ClassifierUnmarshaller> s = new HashSet<>();
-	for (ClassifierUnmarshaller internalClassifiers : internalClassifiersAux) {
+	for (ClassifierUnmarshaller internalClassifiers : internalClassifiers) {
 	    s.add(internalClassifiers);
 	}
 	checkPosAndAddClassifier(s);
@@ -69,7 +68,7 @@ public class ClassifierImportUnmarshaller extends ClassifierUnmarshaller {
     @Override
     protected void setSources() throws SemanticallyIncorrectException {
 	try {
-	    classifierInstance.clearAndSetSources(IdToDomainObject.getSourcesByIdentifiers(sourcesAux));
+	    classifierInstance.clearAndSetSources(IdToDomainObject.getSourcesByIdentifiers(sources));
 	} catch (NotFoundException e) {
 	    throw new SemanticallyIncorrectException("invalid source id");
 	}
@@ -90,7 +89,7 @@ public class ClassifierImportUnmarshaller extends ClassifierUnmarshaller {
 
     @Transient
     public Set<String> getSourceNames() {
-	return sourcesAux;
+	return sources;
     }
 
     @Transient
@@ -100,7 +99,7 @@ public class ClassifierImportUnmarshaller extends ClassifierUnmarshaller {
 
     @Transient
     public Set<ClassifierImportUnmarshaller> getUnmImportInternalClassifiers() {
-	return internalClassifiersAux;
+	return internalClassifiers;
     }
 
     @Override

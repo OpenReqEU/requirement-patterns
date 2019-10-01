@@ -22,7 +22,7 @@ public class UnrecognizedPropertyExceptionMapper
 	} else {
 	    message += exception.getMessage();
 	}
-	logger.error(message);
+	System.err.println(message);
 	return Response.status(Status.BAD_REQUEST).entity(message).type("text/plain").build();
     }
 

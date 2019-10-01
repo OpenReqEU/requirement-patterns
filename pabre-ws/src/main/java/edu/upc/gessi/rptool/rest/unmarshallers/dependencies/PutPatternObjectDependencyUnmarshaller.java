@@ -17,6 +17,6 @@ public class PutPatternObjectDependencyUnmarshaller extends PatternObjectDepende
 
     @Override
     protected void setDependency() {
-        //not implemented WHY?
+
     }
 }

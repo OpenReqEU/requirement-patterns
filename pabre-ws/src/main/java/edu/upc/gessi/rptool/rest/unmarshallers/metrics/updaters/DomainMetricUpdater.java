@@ -1,11 +1,9 @@
 package edu.upc.gessi.rptool.rest.unmarshallers.metrics.updaters;
 
-import java.io.IOException;
 import java.util.Set;
 
 import edu.upc.gessi.rptool.domain.metrics.DomainMetric;
 import edu.upc.gessi.rptool.domain.metrics.DomainMetricValue;
-import edu.upc.gessi.rptool.exceptions.IntegrityException;
 import edu.upc.gessi.rptool.exceptions.PossibleValueException;
 import edu.upc.gessi.rptool.exceptions.ValueException;
 import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
@@ -18,7 +16,7 @@ public class DomainMetricUpdater extends GenericMetricUpdater {
     }
 
     @Override
-    protected void unmarshall() throws IOException, SemanticallyIncorrectException, IntegrityException, ValueException {
+    protected void unmarshall() throws Exception {
 	PutDomainMetricUnmarshaller unm;
 	unm = Deserializer.deserialize(metricJson, PutDomainMetricUnmarshaller.class);
 	aux = unm.build();
@@ -26,7 +24,7 @@ public class DomainMetricUpdater extends GenericMetricUpdater {
     }
 
     @Override
-    protected void updateParticularMetricFields() throws SemanticallyIncorrectException {
+    protected void updateParticularMetricFields() throws ValueException, SemanticallyIncorrectException {
 	Set<DomainMetricValue> values = ((DomainMetric) aux).getPossibleValues();
 	DomainMetricValue value = ((DomainMetric) aux).getDefaultValue();
 	DomainMetric dm = (DomainMetric) m;
@@ -35,7 +33,8 @@ public class DomainMetricUpdater extends GenericMetricUpdater {
 	}
 
 	try {
-	    if (value != null) dm.safeSetDefaultValue(value);
+	    if (value != null)
+		dm.safeSetDefaultValue(value);
 	} catch (PossibleValueException e1) {
 	    throw new SemanticallyIncorrectException("defaultValue not in possibleValues");
 	}

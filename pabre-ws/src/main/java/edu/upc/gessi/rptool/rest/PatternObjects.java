@@ -58,7 +58,8 @@ public class PatternObjects {
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public PatternObjectDTO getDependencies(@ApiParam(value = "Object ID", required = true) @PathParam("id") long id) {
 	PatternObject po = retrievePatternObject(id); // obtain the pattern object
-		return new PatternObjectDTO(po);
+	PatternObjectDTO ret = new PatternObjectDTO(po);// create the DTO to return
+	return ret;
 
     }
 
@@ -87,7 +88,7 @@ public class PatternObjects {
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public Response setNewDependencies(
 	    @ApiParam(value = "Dependecies to add", required = true) PatternObjectDependenciesUnmarshaller dependencies,
-	    @ApiParam(value = "PatternObject ID", required = true) @PathParam("id") long id) throws SemanticallyIncorrectException {
+	    @ApiParam(value = "PatternObject ID", required = true) @PathParam("id") long id) throws Exception {
 	logger.debug("Creating dependency");
 	PatternObject po = retrievePatternObject(id);// obtain the pattern object
 	Set<PatternObjectDependency> pod;
@@ -152,7 +153,8 @@ public class PatternObjects {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK: dependencies deleted", response = Response.class),
 	    @ApiResponse(code = 404, message = "Not Found: The requested element is not found.", response = String.class),
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
-    public Response deleteDependencies(@ApiParam(value = "Element ID", required = true) @PathParam("id") long id) {
+    public Response deleteDependencies(@ApiParam(value = "Element ID", required = true) @PathParam("id") long id)
+	    throws Exception {
 	PatternObject po = retrievePatternObject(id);// obtain the pattern object
 	ObjectDataController.deleteAllPatternObjectDependency(po); // Call the controllers to delete all the pattern
 								   // object
@@ -187,7 +189,7 @@ public class PatternObjects {
 	    @ApiParam(value = "Unmarshaller with the given fields", required = true) PutPatternObjectDependencyUnmarshaller unmarshaller,
 	    @ApiParam(value = "Element ID", required = true) @PathParam("id") long id,
 	    @ApiParam(value = "Dependency ID", required = true) @PathParam("idDependency") long idDependency)
-	    throws SemanticallyIncorrectException{
+	    throws Exception {
 	PatternObject po = retrievePatternObject(id); // obtain the pattern object
 	PatternObjectDependency pod = po.getDependency(idDependency); // Obtain the dependency
 	if (pod == null)

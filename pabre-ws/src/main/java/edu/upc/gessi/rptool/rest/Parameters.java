@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 import org.apache.log4j.Logger;
 
 import edu.upc.gessi.rptool.data.ObjectDataController;
@@ -39,7 +38,9 @@ public class Parameters {
 
     /**
      * Update all the params of the given part
-     *
+     * 
+     * @param sourceJson
+     *            String in JSON format
      * @param patternId
      *            Pattern id
      * @param versionId
@@ -63,7 +64,7 @@ public class Parameters {
 	    @ApiParam(value = "ID of the version", required = true) @PathParam("versionId") long versionId,
 	    @ApiParam(value = "ID of the form", required = true) @PathParam("formId") long formId,
 	    @ApiParam(value = "ID of the part to update", required = true) @PathParam("partId") long partId)
-	    throws SemanticallyIncorrectException {
+	    throws Exception {
 	PatternItem pi = retrievePatternItem(partId);// Obtain the pattern item
 	Set<Parameter> s = source.build();
 	for (Parameter aux : s) {
@@ -92,7 +93,8 @@ public class Parameters {
 	    @ApiParam(value = "ID of the pattern", required = true) @PathParam("patternId") long patternId,
 	    @ApiParam(value = "ID of the version", required = true) @PathParam("versionId") long versionId,
 	    @ApiParam(value = "ID of the form", required = true) @PathParam("formId") long formId,
-	    @ApiParam(value = "ID of the part where to delete all the parameters", required = true) @PathParam("partId") long partId) {
+	    @ApiParam(value = "ID of the part where to delete all the parameters", required = true) @PathParam("partId") long partId)
+	    throws Exception {
 	logger.debug("deleting");
 	PatternItem pi = retrievePatternItem(partId); // Obtain the paramneter
 	pi.getParameters().clear(); // Clear the old parameters
@@ -123,7 +125,8 @@ public class Parameters {
 	    @ApiParam(value = "ID of the version", required = true) @PathParam("versionId") long versionId,
 	    @ApiParam(value = "ID of the form", required = true) @PathParam("formId") long formId,
 	    @ApiParam(value = "ID of the fixed or extended part", required = true) @PathParam("partId") long partId,
-	    @ApiParam(value = "ID of the parameter to delete", required = true) @PathParam("id") long id) {
+	    @ApiParam(value = "ID of the parameter to delete", required = true) @PathParam("id") long id)
+	    throws Exception {
 	PatternItem pi = retrievePatternItem(partId);// Obtain the patternItem
 	Parameter p = retrieveParameter(pi, id);// Obtain the Parameter
 	pi.getParameters().remove(p);// Remove the parameter from the patternItem

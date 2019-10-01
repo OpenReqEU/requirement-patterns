@@ -20,7 +20,7 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 @JsonInclude(Include.NON_NULL)
 public class SchemaDTO extends ClassificationObjectDTO {
-    static final Logger logger = Logger.getLogger(SchemaDTO.class);
+    final static Logger logger = Logger.getLogger(SchemaDTO.class);
 
     private String name;
     @InjectLink(value = "schemas/${instance.id}", style = Style.ABSOLUTE)
@@ -55,7 +55,7 @@ public class SchemaDTO extends ClassificationObjectDTO {
      */
     public void setRootClassifiers(Set<Classifier> rootClassifiers) throws SemanticallyIncorrectException {
 	if (rootClassifiers != null) {
-	    this.rootClassifiers = new TreeSet<>(new PositionComparator());
+	    this.rootClassifiers = new TreeSet<ClassifierDTO>(new PositionComparator());
 	    for (Classifier rc : rootClassifiers) {
 		this.rootClassifiers.add(new ClassifierDTO(rc, this.getId()));
 	    }
@@ -64,7 +64,7 @@ public class SchemaDTO extends ClassificationObjectDTO {
 
     public void setRootClassifiersRecursive(Set<Classifier> rootClassifiers) throws SemanticallyIncorrectException {
 	if (rootClassifiers != null) {
-	    this.rootClassifiers = new TreeSet<>(new PositionComparator());
+	    this.rootClassifiers = new TreeSet<ClassifierDTO>(new PositionComparator());
 	    for (Classifier rc : rootClassifiers) {
 		ClassifierDTO rcDTO = new ClassifierDTO(rc, this.getId());
 		rcDTO.setInternalClassifiersRecursive(rc.getInternalClassifiers(), this.getId());
@@ -77,7 +77,7 @@ public class SchemaDTO extends ClassificationObjectDTO {
 
     @JsonIgnore
     public Set<ClassifierDTO> getAllInternalClassifiers() {
-	Set<ClassifierDTO> listClassifiers = new HashSet<>();
+	Set<ClassifierDTO> listClassifiers = new HashSet<ClassifierDTO>();
 	for (ClassifierDTO icDTO : this.rootClassifiers) {
 	    listClassifiers.addAll(icDTO.getAllInternalClassifiers());
 	}
@@ -94,7 +94,7 @@ public class SchemaDTO extends ClassificationObjectDTO {
 
     public void addUnbindedPattern(RequirementPatternDTO rpDTO) {
 	if (this.unbindedPatterns == null)
-	    this.unbindedPatterns = new HashSet<>();
+	    this.unbindedPatterns = new HashSet<RequirementPatternDTO>();
 	this.unbindedPatterns.add(rpDTO);
     }
 
@@ -132,7 +132,8 @@ public class SchemaDTO extends ClassificationObjectDTO {
 	    return false;
 	SchemaDTO other = (SchemaDTO) obj;
 	if (name == null) {
-	    if (other.name != null) return false;
+	    if (other.name != null)
+		return false;
 	} else if (!name.equals(other.name))
 	    return false;
 	return true;

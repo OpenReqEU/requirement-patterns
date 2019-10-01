@@ -13,8 +13,7 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 public class PatternObjectDependencyUnmarshaller {
 
     private long id;
-    private String stringType;
-    private String stringDirection;
+    private String stringType, stringDirection;
     protected DependencyTypeDomain depType;
     protected DependencyDirectionDomain depDirection;
     private long idDependency;
@@ -24,14 +23,16 @@ public class PatternObjectDependencyUnmarshaller {
     public PatternObjectDependencyUnmarshaller(@JsonProperty(value = "id", required = false) long id,
 	    @JsonProperty(value = "dependencyType", required = true) String dependencyType,
 	    @JsonProperty(value = "dependencyDirection", required = true) String dependencyDirection,
-	    @JsonProperty(value = "idDependency", required = true) long idDependendency) {
+	    @JsonProperty(value = "idDependency", required = true) long idDependendency)
+	    throws SemanticallyIncorrectException {
 	this.id = id;
 	this.idDependency = idDependendency;
 	this.stringType = dependencyType.toLowerCase();
 	this.stringDirection = dependencyDirection.toLowerCase();
     }
 
-    public PatternObjectDependencyUnmarshaller(String dependencyType, String dependencyDirection, long idDependendency){
+    public PatternObjectDependencyUnmarshaller(String dependencyType, String dependencyDirection, long idDependendency)
+	    throws SemanticallyIncorrectException {
 	this.idDependency = idDependendency;
 	this.stringType = dependencyType.toLowerCase();
 	this.stringDirection = dependencyDirection.toLowerCase();

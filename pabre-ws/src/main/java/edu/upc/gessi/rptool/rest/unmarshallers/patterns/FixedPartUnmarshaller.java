@@ -18,7 +18,8 @@ public class FixedPartUnmarshaller extends PatternItemUnmarhsaller {
 	    @JsonProperty(value = "available", required = true) boolean available,
 	    @JsonProperty(value = "statsNumInstances", required = true) int statsNumInstances,
 	    @JsonProperty(value = "parameters", required = false) Set<ParameterUnmarshaller> parameters,
-	    @JsonProperty(value = "artifactsRelation", required = false) String artifacts) {
+	    @JsonProperty(value = "artifactsRelation", required = false) String artifacts)
+	    throws SemanticallyIncorrectException {
 	this.id = id;
 	this.patternText = patternText;
 	this.questionText = questionText;
@@ -30,7 +31,8 @@ public class FixedPartUnmarshaller extends PatternItemUnmarhsaller {
     }
 
     public FixedPartUnmarshaller(String patternText, String questionText, int numInstances, boolean available,
-	    int statsNumInstances, Set<ParameterUnmarshaller> parameters, String artifacts) {
+	    int statsNumInstances, Set<ParameterUnmarshaller> parameters, String artifacts)
+	    throws SemanticallyIncorrectException {
 	this.patternText = patternText;
 	this.questionText = questionText;
 	this.numInstances = numInstances;
@@ -41,7 +43,7 @@ public class FixedPartUnmarshaller extends PatternItemUnmarhsaller {
     }
 
     public FixedPartUnmarshaller(long id, String patternText, String questionText, int numInstances, boolean available,
-	    int statsNumInstances, String artifacts) {
+	    int statsNumInstances, String artifacts) throws SemanticallyIncorrectException {
 	this.id = id;
 	this.patternText = patternText;
 	this.questionText = questionText;
@@ -52,7 +54,7 @@ public class FixedPartUnmarshaller extends PatternItemUnmarhsaller {
     }
 
     public FixedPartUnmarshaller(String patternText, String questionText, int numInstances, boolean available,
-	    int statsNumInstances, String artifacts) {
+	    int statsNumInstances, String artifacts) throws SemanticallyIncorrectException {
 
 	this.patternText = patternText;
 	this.questionText = questionText;

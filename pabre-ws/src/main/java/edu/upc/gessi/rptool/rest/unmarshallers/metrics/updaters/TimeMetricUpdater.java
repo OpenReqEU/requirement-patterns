@@ -23,7 +23,7 @@ public class TimeMetricUpdater extends GenericMetricUpdater {
     }
 
     @Override
-    protected void unmarshall() throws IOException, IntegrityException,
+    protected void unmarshall() throws JsonParseException, JsonMappingException, IOException, IntegrityException,
 	    ValueException, SemanticallyIncorrectException {
 	PutTimeMetricUnmarshaller unm;
 	unm = Deserializer.deserialize(metricJson, PutTimeMetricUnmarshaller.class);

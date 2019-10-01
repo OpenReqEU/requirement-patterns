@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.upc.gessi.rptool.domain.patternelements.RequirementPatternVersion;
-import edu.upc.gessi.rptool.exceptions.IntegrityException;
-import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class RequirementPatternVersionsUnmarshaller {
     private Set<RequirementPatternVersionUnmarshaller> versions;
@@ -20,7 +18,7 @@ public class RequirementPatternVersionsUnmarshaller {
 
     }
 
-    public Set<RequirementPatternVersion> build() throws SemanticallyIncorrectException, IntegrityException {
+    public Set<RequirementPatternVersion> build() throws Exception {
 	Set<RequirementPatternVersion> ret = new HashSet<>();
 	if (versions != null) {
 	    for (RequirementPatternVersionUnmarshaller aux : versions) {

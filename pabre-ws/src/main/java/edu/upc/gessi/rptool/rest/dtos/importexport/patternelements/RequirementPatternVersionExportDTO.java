@@ -45,20 +45,20 @@ public class RequirementPatternVersionExportDTO implements Comparable<Requiremen
 	this.statsNumAssociates = rpv.getStatsNumAssociates();
 	this.artifactsRelation = rpv.getArtifactRelation();
 
-	this.keywords = new HashSet<>();
+	this.keywords = new HashSet<String>();
 	for (Keyword kw : rpv.getKeywords()) {
 	    this.keywords.add(kw.getName());
 	}
 
-	this.costFunctions = new HashSet<>();
+	this.costFunctions = new HashSet<CostFunctionExportDTO>();
 	for (CostFunction costFunction : rpv.getCostFunction()) {
 	    this.costFunctions.add(new CostFunctionExportDTO(costFunction));
 	}
 
 	RequirementPattern rp = rpv.getRequirementPattern();
-	this.forms = new TreeSet<>();
+	this.forms = new TreeSet<RequirementFormExportDTO>();
 	for (RequirementForm rf : rpv.getForms()) {
-	    this.forms.add(new RequirementFormExportDTO(rf));
+	    this.forms.add(new RequirementFormExportDTO(rf, rp.getId(), rpv.getId()));
 	}
 
     }

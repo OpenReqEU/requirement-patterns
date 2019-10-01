@@ -23,11 +23,10 @@ public class SchemaSubstitutionUmarshaller extends SchemaUnmarshaller {
 
     @Override
     protected void setSchemaFields() {
-        //not implemented WHY?
+
     }
 
     @Override
     protected void setSources() {
-        //not implemented WHY?
     }
 }

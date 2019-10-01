@@ -69,7 +69,7 @@ public class PatternsVersions {
 	logger.debug("Getting all the versions");
 	RequirementPattern rp = Patterns.retrieveRequirementPattern(patternId); // get the pattern
 	// create a Treeset to sort the version
-	SortedSet<RequirementPatternVersionReducedDTO> rpvSet = new TreeSet<>();
+	SortedSet<RequirementPatternVersionReducedDTO> rpvSet = new TreeSet<RequirementPatternVersionReducedDTO>();
 	for (RequirementPatternVersion rpv : rp.getVersions()) {
 	    rpvSet.add(new RequirementPatternVersionReducedDTO(rpv));// create the DTO and add it to the treeset
 	}
@@ -185,7 +185,8 @@ public class PatternsVersions {
 	    @ApiResponse(code = 500, message = "Internal Server Error. For more information see ‘message’ in the Response Body.", response = String.class) })
     public Response deletePatternVersion(
 	    @ApiParam(value = "ID of the pattern", required = true) @PathParam("patternId") long id,
-	    @ApiParam(value = "ID of the version", required = true) @PathParam("versionId") long versionId) {
+	    @ApiParam(value = "ID of the version", required = true) @PathParam("versionId") long versionId)
+	    throws Exception {
 	logger.debug("Deleting version");
 	RequirementPattern rp = Patterns.retrieveRequirementPattern(id);// get the pattern
 

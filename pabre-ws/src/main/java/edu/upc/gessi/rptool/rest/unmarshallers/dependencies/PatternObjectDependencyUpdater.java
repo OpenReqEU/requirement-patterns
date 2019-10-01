@@ -2,7 +2,6 @@ package edu.upc.gessi.rptool.rest.unmarshallers.dependencies;
 
 import edu.upc.gessi.rptool.data.GenericDataController;
 import edu.upc.gessi.rptool.domain.PatternObjectDependency;
-import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class PatternObjectDependencyUpdater {
 
@@ -16,7 +15,7 @@ public class PatternObjectDependencyUpdater {
 	this.unmarshaller = unmarshall;
     }
 
-    private void unmarshall() throws SemanticallyIncorrectException {
+    private void unmarshall() throws Exception {
 	aux = unmarshaller.build();
 
     }
@@ -30,7 +29,7 @@ public class PatternObjectDependencyUpdater {
 	GenericDataController.update(m);
     }
 
-    public void update() throws SemanticallyIncorrectException {
+    public void update() throws Exception {
 	unmarshall();
 	updateFields();
 	save();

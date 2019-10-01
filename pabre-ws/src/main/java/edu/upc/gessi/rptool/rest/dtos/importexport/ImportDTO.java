@@ -36,12 +36,12 @@ public class ImportDTO {
     public ImportDTO(List<Source> sources, List<Keyword> keywords, List<Metric> metrics,
 	    List<RequirementPattern> patterns, List<ClassificationSchema> schemas,
 	    List<PatternObjectCompleteDependency> dependencies) {
-	sourceIDs = new HashMap<>();
-	keywordsIDs = new HashMap<>();
-	metricsIDs = new HashMap<>();
-	patternsIDs = new HashMap<>();
-	schemasIDs = new HashMap<>();
-	dependenciesIDs = new HashMap<>();
+	sourceIDs = new HashMap<String, Long>();
+	keywordsIDs = new HashMap<String, Long>();
+	metricsIDs = new HashMap<String, Long>();
+	patternsIDs = new HashMap<String, Long>();
+	schemasIDs = new HashMap<String, Long>();
+	dependenciesIDs = new HashMap<String, Long>();
 
 	for (int i = 0; i < sources.size(); i++) {
 	    sourceIDs.put(sources.get(i).getIdentifier(), sources.get(i).getId());

@@ -12,17 +12,17 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 public class RequirementFormPutUnmarshaller extends RequirementFormUnmarshaller {
 
     private static int toInt(Integer i) {
-	return i != null ? i : 0;
+	return i != null ? i.intValue() : 0;
     }
 
     private static boolean toBool(Boolean b) {
-	return b != null && b;
+	return b != null ? b.booleanValue() : false;
     }
 
-    private Integer numInstancesAux;
-    private Integer statsNumInstancesAux;
-    private Integer statsNumAssociatesAux;
-    private Boolean availableAux;
+    private Integer numInstances;
+    private Integer statsNumInstances;
+    private Integer statsNumAssociates;
+    private Boolean available;
 
     @JsonCreator
     public RequirementFormPutUnmarshaller(@JsonProperty(value = "name", required = false) String name,
@@ -34,24 +34,25 @@ public class RequirementFormPutUnmarshaller extends RequirementFormUnmarshaller 
 	    @JsonProperty(value = "numInstances", required = false) Integer numInstances,
 	    @JsonProperty(value = "statsNumInstances", required = false) Integer statsNumInstances,
 	    @JsonProperty(value = "statsNumAssociates", required = false) Integer statsNumAssociates,
-	    @JsonProperty(value = "available", required = false) Boolean available) {
+	    @JsonProperty(value = "available", required = false) Boolean available)
+	    throws SemanticallyIncorrectException {
 	super(name, description, comments, sources, author, modificationDate, toInt(numInstances),
 		toInt(statsNumInstances), toInt(statsNumAssociates), 0, null, null, toBool(available));
-	this.numInstancesAux = numInstances;
-	this.statsNumAssociatesAux = statsNumAssociates;
-	this.statsNumInstancesAux = statsNumInstances;
-	this.availableAux = available;
+	this.numInstances = numInstances;
+	this.statsNumAssociates = statsNumAssociates;
+	this.statsNumInstances = statsNumInstances;
+	this.available = available;
 
     }
 
     @Override
     protected void setParts() {
-        //not implemented WHY?
+
     }
 
     @Override
     protected void setFullFields() {
-        //not implemented WHY?
+
     }
 
     @Override
@@ -60,20 +61,20 @@ public class RequirementFormPutUnmarshaller extends RequirementFormUnmarshaller 
     }
 
     public boolean availableIsPresent() {
-	return availableAux != null;
+	return available != null;
     }
 
     public boolean numInstancesIsPresent() {
-	return numInstancesAux != null;
+	return numInstances != null;
     }
 
     public boolean statsNumInstancesIsPresent() {
-	return statsNumInstancesAux != null;
+	return statsNumInstances != null;
 
     }
 
     public boolean statsNumAssociatesIsPresent() {
-	return statsNumAssociatesAux != null;
+	return statsNumAssociates != null;
     }
 
 }

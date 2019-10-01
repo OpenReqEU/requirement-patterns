@@ -20,7 +20,7 @@ public class NotFoundExceptionMapper extends GenericUnsuccessfullExceptionMapper
 	} else {
 	    message += exception.getMessage();
 	}
-	logger.error(message);
+	System.err.println(message);
 	return Response.status(Status.NOT_FOUND).entity(message).type("text/plain").build();
     }
 }

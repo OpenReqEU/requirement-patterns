@@ -16,9 +16,7 @@ public abstract class UnmarshallerGenericMetric {
     protected Set<Long> sources; // initialize in the creator
     protected Set<String> sourcesByIdentifier; // initialize in the creator
     protected long id;
-    protected String name;
-    protected String description;
-    protected String comments;
+    protected String name, description, comments;
 
     /**
      * Should initialize metric with the correspondent type

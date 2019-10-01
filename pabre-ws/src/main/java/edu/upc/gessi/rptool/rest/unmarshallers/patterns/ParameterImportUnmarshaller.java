@@ -9,7 +9,7 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class ParameterImportUnmarshaller extends ParameterUnmarshaller {
     protected String metricName;
-    protected Long metricIdAux;
+    protected Long metricId;
 
     @JsonCreator
     public ParameterImportUnmarshaller(@JsonProperty(value = "id", required = false) long id,
@@ -20,7 +20,7 @@ public class ParameterImportUnmarshaller extends ParameterUnmarshaller {
 	    @JsonProperty(value = "metricId", required = false) Long metricId) {
 	super(id, name, correctnessCondition, description);
 	this.metricName = metricName;
-	this.metricIdAux = metricId;
+	this.metricId = metricId;
 
     }
 
@@ -29,10 +29,12 @@ public class ParameterImportUnmarshaller extends ParameterUnmarshaller {
 	Metric m = null;
 	if (metricName != null && !metricName.equals("")) {
 	    m = MetricDataController.getMetric(metricName);
-	    if (m == null) throw new SemanticallyIncorrectException("invalid metric name in parameter");
-	} else if (metricIdAux != 0) {
-	    m = MetricDataController.getMetric(metricIdAux);
-	    if (m == null) throw new SemanticallyIncorrectException("invalid metric id in parameter");
+	    if (m == null)
+		throw new SemanticallyIncorrectException("invalid metric name in parameter");
+	} else if (metricId != 0) {
+	    m = MetricDataController.getMetric(metricId);
+	    if (m == null)
+		throw new SemanticallyIncorrectException("invalid metric id in parameter");
 	} else {
 	    throw new SemanticallyIncorrectException("Metric ID or Metric name should be provided");
 	}

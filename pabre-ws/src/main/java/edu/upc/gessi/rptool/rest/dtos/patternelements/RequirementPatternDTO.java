@@ -86,7 +86,7 @@ public class RequirementPatternDTO extends PatternElementDTO
 	this.statsNumInstances = rpv.getStatsNumInstances();
 	this.statsNumAssociates = rpv.getStatsNumAssociates();
 
-	this.forms = new TreeSet<>();
+	this.forms = new TreeSet<RequirementFormDTO>();
 	for (RequirementForm rf : rpv.getForms()) {
 	    this.forms.add(new RequirementFormDTO(rf, this.getId(), rp.findLastVersion().getId()));
 	}
@@ -95,12 +95,12 @@ public class RequirementPatternDTO extends PatternElementDTO
 	    this.costFunction.add(new CostFunctionDTO(cf));
 	}
 
-	this.keywords = new HashSet<>();
+	this.keywords = new HashSet<String>();
 	for (Keyword kw : rp.findLastVersion().getKeywords()) {
 	    this.keywords.add(kw.getName());
 	}
 
-	this.versions = new TreeSet<>();
+	this.versions = new TreeSet<RequirementPatternVersionDTO>();
 	for (RequirementPatternVersion rpv2 : rp.getVersions()) {
 	    this.versions.add(new RequirementPatternVersionDTO(rpv2));
 	}

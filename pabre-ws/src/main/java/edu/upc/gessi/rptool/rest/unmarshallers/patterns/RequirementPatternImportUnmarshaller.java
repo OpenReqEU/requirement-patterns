@@ -17,8 +17,8 @@ import edu.upc.gessi.rptool.exceptions.IntegrityException;
 import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class RequirementPatternImportUnmarshaller extends RequirementPatternUnmarshaller {
-    private Set<String> sourcesAux;
-    private List<RequirementPatternVersionImportUnmarshaller> versionsAux;
+    private Set<String> sources;
+    private List<RequirementPatternVersionImportUnmarshaller> versions;
 
     @JsonCreator
     public RequirementPatternImportUnmarshaller(@JsonProperty(value = "id", required = false) long id,
@@ -30,14 +30,14 @@ public class RequirementPatternImportUnmarshaller extends RequirementPatternUnma
 	    @JsonProperty(value = "editable", required = true) boolean editable) throws IOException {
 
 	super(id, name, comments, description, editable);
-	this.versionsAux = versions;
-	this.sourcesAux = sources;
+	this.versions = versions;
+	this.sources = sources;
 
     }
 
     @Override
     protected void setVersions() throws IntegrityException, SemanticallyIncorrectException {
-	for (RequirementPatternVersionImportUnmarshaller rpvu : versionsAux) {
+	for (RequirementPatternVersionImportUnmarshaller rpvu : versions) {
 	    RequirementPatternVersion rpv = rpvu.build();
 	    rpv.setRequirementPattern(rp);
 	    rp.addVersion(rpv);
@@ -46,9 +46,9 @@ public class RequirementPatternImportUnmarshaller extends RequirementPatternUnma
 
     @Override
     protected void setSources() throws SemanticallyIncorrectException {
-	if (sourcesAux != null) {
+	if (sources != null) {
 	    try {
-		for (Source s : IdToDomainObject.getSourcesByIdentifiers(sourcesAux))
+		for (Source s : IdToDomainObject.getSourcesByIdentifiers(sources))
 		    rp.addSource(s);
 	    } catch (NotFoundException e) {
 		throw new SemanticallyIncorrectException("invalid source id in pattern");
@@ -59,7 +59,7 @@ public class RequirementPatternImportUnmarshaller extends RequirementPatternUnma
 
     @Override
     protected void checkNumberOfVersions() throws SemanticallyIncorrectException {
-	if (versionsAux.isEmpty())
+	if (versions.size() == 0)
 	    throw new SemanticallyIncorrectException("no requirement pattern versions provided in pattern");
     }
 
@@ -71,7 +71,7 @@ public class RequirementPatternImportUnmarshaller extends RequirementPatternUnma
      */
     public boolean checkAllItemsContainsID() {
 	boolean b = id != 0;
-	for (RequirementPatternVersionImportUnmarshaller rpvi : versionsAux) {
+	for (RequirementPatternVersionImportUnmarshaller rpvi : versions) {
 	    if(!rpvi.checkAllItemsContainsID()) {
 		b = false;
 	    }

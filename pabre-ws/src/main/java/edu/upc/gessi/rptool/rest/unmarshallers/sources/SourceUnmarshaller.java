@@ -8,10 +8,7 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class SourceUnmarshaller {
     protected long id;
-    protected String identifier;
-    protected String reference;
-    protected String type;
-    protected String comments;
+    protected String identifier, reference, type, comments;
 
     public SourceUnmarshaller(String identifier, String reference, String type, String comments) {
 	super();

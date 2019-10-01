@@ -36,7 +36,7 @@ public class SchemaUnmarshaller {
 	    @JsonProperty(value = "comments", required = true) String comments,
 	    @JsonProperty(value = "sources", required = false) Set<Long> sourcesIds,
 	    @JsonProperty(value = "rootClassifiers", required = true) Set<ClassifierUnmarshaller> rootClassifiersIds)
-	    throws IntegrityException {
+	    throws IntegrityException, IOException {
 	cs = new ClassificationSchema();
 	cs.setId(id);
 	this.id = id;
@@ -140,7 +140,8 @@ public class SchemaUnmarshaller {
 	    c.setTypeToRoot();
 	}
 	for (boolean b : positions) {
-	    if (!b) throw new SemanticallyIncorrectException("Incorrect pos value");
+	    if (!b)
+		throw new SemanticallyIncorrectException("Incorrect pos value");
 	}
     }
 

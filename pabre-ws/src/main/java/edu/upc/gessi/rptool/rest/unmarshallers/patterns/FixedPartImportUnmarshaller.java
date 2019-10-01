@@ -10,7 +10,7 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class FixedPartImportUnmarshaller extends FixedPartUnmarshaller {
 
-    protected Set<ParameterImportUnmarshaller> parametersAux;
+    protected Set<ParameterImportUnmarshaller> parameters;
 
     @JsonCreator
     public FixedPartImportUnmarshaller(@JsonProperty(value = "id", required = false) long id,
@@ -23,14 +23,14 @@ public class FixedPartImportUnmarshaller extends FixedPartUnmarshaller {
 	    @JsonProperty(value = "artifactsRelation", required = false) String artifacts)
 	    throws SemanticallyIncorrectException {
 	super(id, patternText, questionText, numInstances, available, statsNumInstances, artifacts);
-	this.parametersAux = parameters;
+	this.parameters = parameters;
     }
 
     @Override
     protected void assignParameters() throws SemanticallyIncorrectException {
-	if (parametersAux != null) {
+	if (parameters != null) {
 	    params = new HashSet<>();
-	    for (ParameterImportUnmarshaller pm : parametersAux) {
+	    for (ParameterImportUnmarshaller pm : parameters) {
 		params.add(pm.build());
 	    }
 	}
@@ -38,8 +38,8 @@ public class FixedPartImportUnmarshaller extends FixedPartUnmarshaller {
 
     public boolean checkAllItemsContainsID() {
 	boolean b = id != 0;
-	if (parametersAux != null) {
-	    for (ParameterImportUnmarshaller par : parametersAux) {
+	if (parameters != null) {
+	    for (ParameterImportUnmarshaller par : parameters) {
 		if (!par.checkAllItemsContainsID()) {
 		    b = false;
 		}

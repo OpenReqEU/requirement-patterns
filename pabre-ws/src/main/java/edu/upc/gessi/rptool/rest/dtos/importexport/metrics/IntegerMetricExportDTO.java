@@ -21,15 +21,20 @@ public class IntegerMetricExportDTO extends GenericMetricExportDTO {
 
     public IntegerMetricExportDTO(Metric m) {
 	super(m);
-		if (m.getType() == Type.INTEGER) {
-			type = Type.INTEGER;
-			IntegerMetric im = (IntegerMetric) m;
-			this.minValue = im.getMinValue();
-			this.maxValue = im.getMaxValue();
-			if (im.hasDefaultValue()) {
-				this.defaultValueFloat = im.getDefaultValue();
-			}
-		}
+	switch (m.getType()) {
+	case INTEGER:
+	    type = Type.INTEGER;
+	    IntegerMetric im = (IntegerMetric) m;
+	    this.minValue = im.getMinValue();
+	    this.maxValue = im.getMaxValue();
+	    if (im.hasDefaultValue()) {
+		this.defaultValueFloat = im.getDefaultValue();
+	    }
+
+	    break;
+	default:
+	    break;
+	}
     }
 
 }

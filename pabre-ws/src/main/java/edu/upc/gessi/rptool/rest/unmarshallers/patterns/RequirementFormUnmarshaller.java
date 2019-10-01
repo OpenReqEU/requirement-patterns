@@ -127,7 +127,7 @@ public class RequirementFormUnmarshaller {
 	if (extendedParts == null)
 	    extendedParts = new HashSet<>();
 
-	boolean[] positions = new boolean[extendedParts.size()]; // inicializado a falso
+	boolean positions[] = new boolean[extendedParts.size()]; // inicializado a falso
 
 	for (ExtendedPartUnmarshaller epu : extendedParts) {
 	    checkExtendedPartsBuildAndAdd(positions, epu);
@@ -161,7 +161,8 @@ public class RequirementFormUnmarshaller {
 	    throws SemanticallyIncorrectException {
 	try {
 
-	    if (positions[epu.getPos()]) throw new SemanticallyIncorrectException("Invalid pos value in form extended parts");
+	    if (positions[epu.getPos()])
+		throw new SemanticallyIncorrectException("Invalid pos value in form extended parts");
 	    positions[epu.getPos()] = true;
 	    rf.addExtendedPart((ExtendedPart) epu.build());
 	} catch (ArrayIndexOutOfBoundsException e) {
@@ -182,7 +183,8 @@ public class RequirementFormUnmarshaller {
      */
     protected void checkCorrectPosValues(boolean[] positions) throws SemanticallyIncorrectException {
 	for (boolean b : positions) {
-	    if (!b) throw new SemanticallyIncorrectException("Invalid pos value in form extended parts");
+	    if (!b)
+		throw new SemanticallyIncorrectException("Invalid pos value in form extended parts");
 	}
     }
 

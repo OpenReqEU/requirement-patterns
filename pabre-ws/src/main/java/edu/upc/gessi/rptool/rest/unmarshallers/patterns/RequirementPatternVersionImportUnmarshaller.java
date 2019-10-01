@@ -15,7 +15,7 @@ import edu.upc.gessi.rptool.rest.exceptions.SemanticallyIncorrectException;
 
 public class RequirementPatternVersionImportUnmarshaller extends RequirementPatternVersionUnmarshaller {
 
-    protected List<RequirementFormImportUnmarshaller> formsAux;
+    protected ArrayList<RequirementFormImportUnmarshaller> forms;
     protected List<CostFunctionImportUnmarshaller> costFunctions;
 
     @JsonCreator
@@ -30,20 +30,20 @@ public class RequirementPatternVersionImportUnmarshaller extends RequirementPatt
 	    @JsonProperty(value = "statsNumAssociates", required = true) int statsNumAssociates,
 	    @JsonProperty(value = "keywords", required = false) Set<String> keywords,
 	    @JsonProperty(value = "artifactsRelation", required = false) String artifactsRelation,
-	    @JsonProperty(value = "forms", required = true) List<RequirementFormImportUnmarshaller> forms,
-	    @JsonProperty(value = "costFunctions", required = false) List<CostFunctionImportUnmarshaller> costFunctions) {
+	    @JsonProperty(value = "forms", required = true) ArrayList<RequirementFormImportUnmarshaller> forms,
+	    @JsonProperty(value = "costFunctions", required = false) ArrayList<CostFunctionImportUnmarshaller> costFunctions) {
 
 	super(id, versionDate, author, goal, reason, numInstances, available, statsNumInstances, statsNumAssociates,
 		artifactsRelation);
 	this.costFunctions = costFunctions;
 	this.keywords = keywords;
-	this.formsAux = forms;
+	this.forms = forms;
     }
 
     @Override
     protected void buildForms() throws SemanticallyIncorrectException, IntegrityException {
-	boolean[] positions = new boolean[formsAux.size()]; // inicializado a falso
-	for (RequirementFormImportUnmarshaller requirementFormImportUnmarshaller : formsAux) {
+	boolean positions[] = new boolean[forms.size()]; // inicializado a falso
+	for (RequirementFormImportUnmarshaller requirementFormImportUnmarshaller : forms) {
 	    checkPositionsAndBuildForms(positions, requirementFormImportUnmarshaller);
 	}
 	checkContainsInvalidPosValue(positions);
@@ -51,7 +51,7 @@ public class RequirementPatternVersionImportUnmarshaller extends RequirementPatt
 
     @Override
     protected void checkFormsSize() throws SemanticallyIncorrectException {
-	if (formsAux.isEmpty())
+	if (forms.size() == 0)
 	    throw new SemanticallyIncorrectException("no forms provided in version");
     }
 
@@ -71,7 +71,7 @@ public class RequirementPatternVersionImportUnmarshaller extends RequirementPatt
 
     public boolean checkAllItemsContainsID() {
 	boolean b = id != 0;
-	for (RequirementFormImportUnmarshaller forms : formsAux) {
+	for (RequirementFormImportUnmarshaller forms : forms) {
 	    if(!forms.checkAllItemsContainsID()) {
 		b = false;
 	    }

@@ -19,7 +19,7 @@ public class RequirementFormPartsDTO {
 	super();
 	this.fixedPart = new FixedPartDTO(fixedPart, requirementPatternId, versionId, formId,
 		fixedPart.getArtifactRelation());
-	this.extendedParts = new TreeSet<>();
+	this.extendedParts = new TreeSet<ExtendedPartDTO>();
 	for (ExtendedPart ep : extendedParts) {
 	    this.extendedParts
 		    .add(new ExtendedPartDTO(ep, requirementPatternId, versionId, formId, ep.getArtifactRelation()));
