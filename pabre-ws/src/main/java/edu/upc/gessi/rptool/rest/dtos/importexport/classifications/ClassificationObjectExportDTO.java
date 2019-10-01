@@ -16,6 +16,18 @@ public abstract class ClassificationObjectExportDTO {
     @JsonProperty(value = "sourcesByIdentifier")
     private List<String> sources;
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public List<String> getSources() {
+        return sources;
+    }
+
     public ClassificationObjectExportDTO(ClassificationObject s) {
 	this.id = s.getId();
 	this.description = s.getDescription();
@@ -25,10 +37,6 @@ public abstract class ClassificationObjectExportDTO {
 
     public long getId() {
 	return id;
-    }
-
-    public void setId(long id) {
-	this.id = id;
     }
 
     public String getDescription() {
@@ -41,14 +49,6 @@ public abstract class ClassificationObjectExportDTO {
 
     public String getComments() {
 	return comments;
-    }
-
-    public void setComments(String comments) {
-	this.comments = comments;
-    }
-
-    public List<String> getSources() {
-	return sources;
     }
 
     public void setSources(List<String> sources) {

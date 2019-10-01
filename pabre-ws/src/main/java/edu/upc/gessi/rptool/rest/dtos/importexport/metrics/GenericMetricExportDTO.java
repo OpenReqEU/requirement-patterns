@@ -41,6 +41,34 @@ public class GenericMetricExportDTO {
     @JsonProperty(value = "idSimple")
     protected Long idSimple;
 
+    public Type getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public List<String> getSources() {
+        return sources;
+    }
+
+    public Long getIdSimple() {
+        return idSimple;
+    }
+
+    public String getDateInString() {
+        return dateInString;
+    }
+
     public GenericMetricExportDTO(Metric m) {
 	this.name = m.getName();
 
@@ -82,44 +110,22 @@ public class GenericMetricExportDTO {
 	}
     }
 
-    public Type getType() {
-	return type;
-    }
 
-    public String getName() {
-	return name;
-    }
 
     public void setName(String name) {
 	this.name = name;
-    }
-
-    public String getDescription() {
-	return description;
     }
 
     public void setDescription(String description) {
 	this.description = description;
     }
 
-    public String getComments() {
-	return comments;
-    }
-
     public void setComments(String comments) {
 	this.comments = comments;
     }
 
-    public List<String> getSources() {
-	return sources;
-    }
-
     public void setSources(List<String> sources) {
 	this.sources = sources;
-    }
-
-    public Long getIdSimple() {
-	return idSimple;
     }
 
     public void setIdSimple(Long idSimple) {
@@ -128,10 +134,6 @@ public class GenericMetricExportDTO {
 
     public void setType(Type type) {
 	this.type = type;
-    }
-
-    public String getDateInString() {
-	return dateInString;
     }
 
     public void setDateInString(String dateInString) {

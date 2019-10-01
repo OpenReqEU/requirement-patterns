@@ -29,12 +29,12 @@ public class ParameterExportDTO {
 	this.id = id;
     }
 
-    public String getName() {
-	return name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setName(String name) {
-	this.name = name;
+    public String getName() {
+	return name;
     }
 
     public String getCorrectnessCondition() {
@@ -45,20 +45,20 @@ public class ParameterExportDTO {
 	this.correctnessCondition = correctnessCondition;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getDescription() {
 	return description;
     }
 
-    public void setDescription(String description) {
-	this.description = description;
+    public void setMetricName(String metricName) {
+        this.metricName = metricName;
     }
 
     public String getMetricName() {
 	return metricName;
-    }
-
-    public void setMetricName(String metricName) {
-	this.metricName = metricName;
     }
 
 }

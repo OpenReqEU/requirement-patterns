@@ -195,7 +195,7 @@ public class RequirementPatternVersionDTO extends RequirementPatternVersionReduc
     }
 
     public int compareTo(RequirementPatternVersionDTO arg0) {
-	return this.versionDate.compareTo(arg0.getVersionDate());
+	return this.versionDate.compareTo(arg0.getVersionDate()); //NOSONAR
     }
 
     // Added lines

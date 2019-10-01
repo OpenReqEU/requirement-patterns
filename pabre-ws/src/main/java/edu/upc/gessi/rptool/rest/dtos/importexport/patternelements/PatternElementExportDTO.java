@@ -27,6 +27,22 @@ public abstract class PatternElementExportDTO {
 
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public List<String> getSources() {
+        return sources;
+    }
+
     public PatternElementExportDTO(PatternElement s, List<String> sources) {
 	this.id = s.getId();
 	this.description = s.getDescription();
@@ -41,32 +57,16 @@ public abstract class PatternElementExportDTO {
 	this.sources = sources;
     }
 
-    public long getId() {
-	return id;
-    }
-
     public void setId(long id) {
 	this.id = id;
-    }
-
-    public String getDescription() {
-	return description;
     }
 
     public void setDescription(String description) {
 	this.description = description;
     }
 
-    public String getComments() {
-	return comments;
-    }
-
     public void setComments(String comments) {
 	this.comments = comments;
-    }
-
-    public List<String> getSources() {
-	return sources;
     }
 
     public void setSources(List<String> sources) {
