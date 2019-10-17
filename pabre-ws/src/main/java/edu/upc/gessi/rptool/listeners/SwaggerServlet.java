@@ -35,7 +35,7 @@ public class SwaggerServlet extends HttpServlet {
 	    + "<li>TransactionException</li>" + "<li>UnknownExpcetion</li>" + "<li>UnrecognizedPropertyException</li>"
 	    + "<li>ValueException</li>" + "</ul></li>" + "</ul>";
 
-    private static final String BASEPATH = "pabre-ws/api";
+    private static final String BASEPATH = "requirement-patterns/pabre-ws/api";
 
     // Package to search for resources
     private static final String RESOURCE_PACKAGE = "edu.upc.gessi.rptool.rest";
