@@ -98,7 +98,7 @@
 					prefix="localhost_access_log." suffix=".txt" />
 
 
-				<Context docBase="pabre-ws" path="/pabre-ws"
+				<Context docBase="pabre-ws" path="/requirement-patterns/pabre-ws"
 					reloadable="true" source="org.eclipse.jst.jee.server:pabre-ws" />
 			</Host>
 		</Engine>
