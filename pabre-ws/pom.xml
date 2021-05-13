@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
 		<project.basedir>${project.basedir}</project.basedir>
-		<tomcat.version>7.0.86</tomcat.version>
+		<tomcat.version>7.0.107</tomcat.version>
 
 	</properties>
 	<profiles>
