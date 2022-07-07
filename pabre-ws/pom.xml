@@ -179,7 +179,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>4.2.0.Final</version>
+			<version>6.0.23.Final</version>
 		</dependency>
 		<!-- C3P0 -->
 		<dependency>
